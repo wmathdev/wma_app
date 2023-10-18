@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>wma_app.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>buildNumber</key>
+			<string>1.2.1</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+				<key>dateExpires</key>
+				<string>25/6/2567 BE</string>
+				<key>type</key>
+				<string>Apple Development</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1.0</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>App.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>FBLPromises.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>2.3.1</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>FirebaseAppCheckInterop.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>10.12.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>FirebaseAuth.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>10.12.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>FirebaseCore.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>10.12.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>FirebaseCoreInternal.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>10.12.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>FirebaseInstallations.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>10.12.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>FirebaseMessaging.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>10.12.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1.0</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>Flutter.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>GTMSessionFetcher.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>3.1.1</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>GoogleDataTransport.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>9.2.3</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>GoogleUtilities.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>7.11.4</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>flutter_exit_app.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.1.2</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>flutter_local_notifications.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>0.0.1</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>geolocator_apple.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.2.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>image_picker_ios.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>0.0.1</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>nanopb.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>2.30909.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>package_info_plus.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>0.4.5</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>path_provider_foundation.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>0.0.1</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>shared_preferences_foundation.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>0.0.1</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>ua_client_hints.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.1.3</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>449FA6BCF8E750C99FE3DC88303265BE9F8727FF</string>
+						<key>dateExpires</key>
+						<string>25/6/2567 BE</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>url_launcher_ios.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>798LL5US8B</string>
+						<key>name</key>
+						<string>Wastewater Management Authority</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>0.0.1</string>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>798LL5US8B.th.or.wma.app</string>
+				<key>aps-environment</key>
+				<string>development</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>798LL5US8B</string>
+				<key>get-task-allow</key>
+				<true/>
+			</dict>
+			<key>name</key>
+			<string>Runner.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>97e80450-e865-42c9-9c16-0c793e3a1b13</string>
+				<key>dateExpires</key>
+				<string>8/7/2567 BE</string>
+				<key>name</key>
+				<string>iOS Team Provisioning Profile: th.or.wma.app</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>798LL5US8B</string>
+				<key>name</key>
+				<string>Wastewater Management Authority</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>1.2.1</string>
+		</dict>
+	</array>
+</dict>
+</plist>

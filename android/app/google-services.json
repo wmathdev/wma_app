@@ -1,0 +1,101 @@
+{
+  "project_info": {
+    "project_number": "890497439317",
+    "firebase_url": "https://wmaappproject.firebaseio.com",
+    "project_id": "wmaappproject",
+    "storage_bucket": "wmaappproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890497439317:android:29cce2830eff59c5e8a6dc",
+        "android_client_info": {
+          "package_name": "com.pnd.wma_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890497439317-19e07s2fh5kg04h02vkde7mi2d2dr93e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pnd.wma_app",
+            "certificate_hash": "5aaf8b49baf7730639a0330cf7a7e9524edd2fdc"
+          }
+        },
+        {
+          "client_id": "890497439317-7ml7h4ns4s8uuiv7vsojut5pfbjulrkq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pnd.wma_app",
+            "certificate_hash": "eff30a3724a0ba7ce501041f3eaf33752c4d7441"
+          }
+        },
+        {
+          "client_id": "890497439317-69ihb9sso3sddjsq53nqs0njmjm3r87j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8MUUVsb9flg_ymZn_GZhE6zeeoeeWBIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890497439317-69ihb9sso3sddjsq53nqs0njmjm3r87j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "890497439317-5e6tp60fqa4ltr73o1ans3ta9pjhf7bj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "th.or.wma.app",
+                "app_store_id": "1543221045"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890497439317:android:1ecf9dc0d453e24ae8a6dc",
+        "android_client_info": {
+          "package_name": "com.pnd.wma_app.wma_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890497439317-69ihb9sso3sddjsq53nqs0njmjm3r87j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8MUUVsb9flg_ymZn_GZhE6zeeoeeWBIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890497439317-69ihb9sso3sddjsq53nqs0njmjm3r87j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "890497439317-5e6tp60fqa4ltr73o1ans3ta9pjhf7bj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "th.or.wma.app",
+                "app_store_id": "1543221045"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

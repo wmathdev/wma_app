@@ -1,6 +1,6 @@
 # wma_app
 
-A new Flutter project.
+WMA Application
 
 ## Getting Started
 
