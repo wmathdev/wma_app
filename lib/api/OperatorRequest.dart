@@ -11,7 +11,7 @@ class OperatorRequest {
     //     {'station_id': stationid, 'type': type, 'period': period});
 
     var params = {'station_id': stationid, 'type': type, 'period': period};
-    final response = await ApiConstants.dioNoLog
+    final response = await ApiConstants.dio
         .get('${ApiConstants.baseUrl}/api/v1/document/list',
             queryParameters: params,
             options: Options(

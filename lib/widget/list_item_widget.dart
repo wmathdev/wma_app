@@ -562,7 +562,7 @@ class ListItemWidget {
 
   static Widget reportListHeaderMonth(BuildContext context, String date,
       String fullDate, String time, String role, GestureTapCallback onClick) {
-    if ((Time.checkTimeStatus('00:00AM', '10:00AM') &&  role == 'OPERATOR') ||
+    if ((Time.checkTimeStatus('00:00AM', '10:00AM') && role == 'OPERATOR') ||
         role == 'ADMIN') {
       return Card(
         shape: RoundedRectangleBorder(
@@ -1746,7 +1746,7 @@ class ListItemWidget {
           data['workflow']['state'] == 'REVIEW' ||
                   data['workflow']['state'] == 'REVIEWING' ||
                   data['workflow']['state'] == 'REVISION' ||
-                  data['workflow']['state'] == 'COMPLETED' 
+                  data['workflow']['state'] == 'COMPLETED'
               ? ButtonApp.buttonOutline(context, 'ดูรายละเอียด', onClick)
               : ButtonApp.buttonMain(context, 'ตรวจสอบ', onClick, true)
         ],
@@ -2573,7 +2573,7 @@ class ListItemWidget {
                       icon: Image.asset(
                         'asset/images/hydroelectric.png',
                       ),
-                      onPressed: () {},
+                      onPressed: onPressed,
                     )),
                 Expanded(
                     flex: 5,
@@ -2591,7 +2591,7 @@ class ListItemWidget {
                       icon: Image.asset(
                         'asset/images/arrow_card.png',
                       ),
-                      onPressed: () {},
+                      onPressed: onPressed,
                     )),
               ],
             )
@@ -2848,13 +2848,17 @@ class ListItemWidget {
                   const SizedBox(
                     width: 5,
                   ),
-                  state == 'REVISION'
+                  state == 'REVISION' || state == 'PENDING'
                       ? Image.asset(
                           'asset/images/orangedot.png',
                         )
-                      : state == 'PENDING' || state == 'NEW'
+                      : state == 'REVIEW' ||
+                              state == 'REVIEWING' ||
+                              state == 'RECHECK'
                           ? Image.asset('asset/images/yellowdot.png')
-                          : Image.asset('asset/images/greendot.png')
+                          : state == 'COMPLETED'
+                              ? Image.asset('asset/images/greendot.png')
+                              : Image.asset('asset/images/greydot.png')
                 ],
               ),
             ),

@@ -66,7 +66,7 @@ class OfficerRequest {
 
   static dynamic getReportList(String authorization, String type,
       String workflow, String reportAt) async {
-    final response = await ApiConstants.dioNoLog.get(
+    final response = await ApiConstants.dio.get(
         '${ApiConstants.baseUrl}/api/v1/officer/report',
         queryParameters: {
           'type': type,
