@@ -237,7 +237,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
   Widget header() {
     bool _customTileExpanded = false;
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.17,
+      height: MediaQuery.of(context).size.height * 0.18,
       width: MediaQuery.of(context).size.width,
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -469,7 +469,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
                       ),
                       Container(
                         margin: const EdgeInsets.all(10),
-                        height: MediaQuery.of(context).size.height * 0.1,
+                        height: MediaQuery.of(context).size.height * 0.15,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: widget.isRule
@@ -584,7 +584,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
       }
     }
     return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.1,
+        height: MediaQuery.of(context).size.height * 0.15,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: listdata.length,
@@ -640,7 +640,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
         ScrollController(initialScrollOffset: defaultposition);
 
     return Container(
-        height: MediaQuery.of(context).size.height * 0.4,
+        height: MediaQuery.of(context).size.height * 0.45,
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20))),
         child: ListView.builder(

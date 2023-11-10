@@ -155,19 +155,21 @@ class _ReportFormState extends State<ReportForm> {
                     });
                   } else {
                     Get.to(RecheckPopUp(
-                        station: widget.station,
-                        role: widget.role,
-                        dateLabel: Month.getMonthTitleReverse(outputDate),
-                        authorization: authorization!,
-                        doo: doBeforeController.text,
-                        file: dataImg,
-                        ph: phBeforeController.text,
-                        temp: temperatureBeforeController.text,
-                        treatedDoo: doAfterController.text,
-                        treatedPh: phAfterController.text,
-                        treatedTemp: temperatureAfterController.text,
-                        treatedWater: totalController.text,
-                        type: 'DAILY', date:  outputDate,));
+                      station: widget.station,
+                      role: widget.role,
+                      dateLabel: Month.getMonthTitleReverse(outputDate),
+                      authorization: authorization!,
+                      doo: doBeforeController.text,
+                      file: dataImg,
+                      ph: phBeforeController.text,
+                      temp: temperatureBeforeController.text,
+                      treatedDoo: doAfterController.text,
+                      treatedPh: phAfterController.text,
+                      treatedTemp: temperatureAfterController.text,
+                      treatedWater: totalController.text,
+                      type: 'DAILY',
+                      date: outputDate,
+                    ));
                   }
                 }
               }, isCheckBox),
@@ -333,13 +335,18 @@ class _ReportFormState extends State<ReportForm> {
         const SizedBox(
           height: 5,
         ),
-        ButtonApp.buttonOutline(context, 'เปิดกล้องถ่ายภาพ', () async {
-          final ImagePicker _picker = ImagePicker();
-          final XFile? photo = await _picker.pickImage(
-              source: ImageSource.camera, imageQuality: 80);
-          File photofile = File(photo!.path);
-          img.add(photofile);
-          setState(() {});
+        ButtonApp.buttonOutline(context, 'เปิดกล้องถ่ายภาพ (${img.length}/4)',
+            () async {
+          if (img.length >= 4) {
+            _showSnackBar();
+          } else {
+            final ImagePicker _picker = ImagePicker();
+            final XFile? photo = await _picker.pickImage(
+                source: ImageSource.camera, imageQuality: 80);
+            File photofile = File(photo!.path);
+            img.add(photofile);
+            setState(() {});
+          }
         }),
         const SizedBox(
           height: 5,
@@ -354,6 +361,13 @@ class _ReportFormState extends State<ReportForm> {
                 totalValidate)),
       ],
     );
+  }
+
+  _showSnackBar() {
+    const snackBar = SnackBar(
+      content: Text('อัปโหลดภาพได้สูงสุด 4 ภาพ'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Widget after() {

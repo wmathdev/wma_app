@@ -456,7 +456,7 @@ class _OverviewState extends State<Overview> {
                     TextWidget.textTitleWithColorSize(
                         'ปริมาณน้ำเสียที่ผ่านการบำบัดจากทั้งหมด $total แห่ง',
                         Colors.black,
-                        13),
+                        10),
                   ],
                 ),
                 Row(
@@ -494,7 +494,7 @@ class _OverviewState extends State<Overview> {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white),
                 width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.15,
+                height: MediaQuery.of(context).size.height * 0.16,
                 child: Column(
                   children: [
                     Padding(
@@ -635,7 +635,7 @@ class _OverviewState extends State<Overview> {
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             height: isSubmited
-                ? MediaQuery.of(context).size.height * 0.4
+                ? MediaQuery.of(context).size.height * 0.45
                 : MediaQuery.of(context).size.height * 0.25,
             child: Center(
               child: Column(
@@ -709,7 +709,7 @@ class _OverviewState extends State<Overview> {
                   isSubmited
                       ? Container(
                           margin: const EdgeInsets.all(10),
-                          height: MediaQuery.of(context).size.height * 0.1,
+                          height: MediaQuery.of(context).size.height * 0.12,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: isRule

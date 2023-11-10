@@ -499,13 +499,18 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
         const SizedBox(
           height: 5,
         ),
-        ButtonApp.buttonOutline(context, 'เปิดกล้องถ่ายภาพ', () async {
-          final ImagePicker _picker = ImagePicker();
-          final XFile? photo = await _picker.pickImage(
-              source: ImageSource.camera, imageQuality: 80);
-          File photofile = File(photo!.path);
-          img.add({'type': 'file', 'value': photofile, 'uuid': ''});
-          setState(() {});
+        ButtonApp.buttonOutline(context, 'เปิดกล้องถ่ายภาพ (${img.length}/4)',
+            () async {
+          if (img.length >= 4) {
+            _showSnackBar();
+          } else {
+            final ImagePicker _picker = ImagePicker();
+            final XFile? photo = await _picker.pickImage(
+                source: ImageSource.camera, imageQuality: 80);
+            File photofile = File(photo!.path);
+            img.add({'type': 'file', 'value': photofile, 'uuid': ''});
+            setState(() {});
+          }
         }),
         const SizedBox(
           height: 5,
@@ -513,10 +518,17 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
         Container(
             alignment: Alignment.centerLeft,
             width: MediaQuery.of(context).size.width,
-            child: Edittext.edittextForm('ปริมาณน้ำเสียที่ผ่านการบำบัด', 'ลบ.ม.',
-                totalController, totalValidate)),
+            child: Edittext.edittextForm('ปริมาณน้ำเสียที่ผ่านการบำบัด',
+                'ลบ.ม.', totalController, totalValidate)),
       ],
     );
+  }
+
+   _showSnackBar() {
+    const snackBar = SnackBar(
+      content: Text('อัปโหลดภาพได้สูงสุด 4 ภาพ'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Widget after() {
