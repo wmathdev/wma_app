@@ -58,8 +58,8 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 22
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode 1303
+        targetSdkVersion 33
+        versionCode 1304
         versionName flutterVersionName
     }
     signingConfigs {

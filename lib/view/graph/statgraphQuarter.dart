@@ -285,7 +285,7 @@ class _StatGraphQuaterState extends State<StatGraphQuater> {
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 10,
+      fontSize: 9,
     );
 
     const style2 = TextStyle(
@@ -310,7 +310,7 @@ class _StatGraphQuaterState extends State<StatGraphQuater> {
     }
 
     if (text.length > 3) {
-      text = '${text.substring(0, 3)}K';
+         text = '${text.substring(0, text.length - 3)}K';
     }
 
     //  print(value.toInt());

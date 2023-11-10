@@ -1039,7 +1039,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10))),
                         child:
-                            Center(child: TextWidget.textTitle('อภิธานศัพท์')),
+                            Center(child: TextWidget.textTitle('อ่านเพิ่มเติม')),
                       ),
                     ),
                   ],

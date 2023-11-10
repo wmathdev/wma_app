@@ -183,7 +183,7 @@ class _StatGraphState extends State<StatGraph> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: maxValue > 1000 ? 1000 : 100,
+            interval: maxValue > 5000 ? 5000 : 1000,
             getTitlesWidget: leftTitleWidgets,
             reservedSize: 80,
           ),
@@ -294,11 +294,11 @@ class _StatGraphState extends State<StatGraph> {
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 15,
+      fontSize: 9,
     );
 
     const style2 = TextStyle(
-        fontWeight: FontWeight.bold, fontSize: 7, color: Colors.white);
+        fontWeight: FontWeight.bold, fontSize:5, color: Colors.white);
 
     // if (value.toInt() == int.parse(widget.rule)) {
     //   String text = '${value.toInt()} ค่ามาตรฐาน';
@@ -313,7 +313,7 @@ class _StatGraphState extends State<StatGraph> {
     // }
     String text = '${value.toInt()}';
      if (text.length > 3) {
-      text = '${text.substring(0, 3)}K';
+         text = '${text.substring(0, text.length - 3)}K';
     }
     // switch (value.toInt()) {
     //   case 1:

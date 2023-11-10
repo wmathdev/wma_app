@@ -197,7 +197,7 @@ class _StatGraphMonthState extends State<StatGraphMonth> {
       minX: 0,
       maxX: listPlot.length + 3,
       minY: 0,
-      maxY: maxValue.toInt() + 500,
+      maxY: maxValue.toInt() + 1000,
       lineBarsData: [
         LineChartBarData(
           spots: listPlot,
@@ -296,7 +296,7 @@ class _StatGraphMonthState extends State<StatGraphMonth> {
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 10,
+      fontSize: 9,
     );
 
     const style2 = TextStyle(
@@ -321,7 +321,7 @@ class _StatGraphMonthState extends State<StatGraphMonth> {
     //   case 3:
 
     if (text.length > 3) {
-      text = '${text.substring(0, 3)}K';
+      text = '${text.substring(0, text.length - 3)}K';
     }
     //     break;
     //   case 5:

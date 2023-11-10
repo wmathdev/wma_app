@@ -76,7 +76,7 @@ class _VocabDetailState extends State<VocabDetail> {
                       width: MediaQuery.of(context).size.width * 0.5,
                       height: MediaQuery.of(context).size.height * 0.15,
                       child: Center(
-                        child: TextWidget.textTitleBoldCenter('อภิธานศัพท์'),
+                        child: TextWidget.textTitleBoldCenter('อ่านเพิ่มเติม'),
                       )),
                 )
               ],
