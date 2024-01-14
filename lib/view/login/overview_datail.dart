@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wma_app/api/MapRequest.dart';
 
 import '../../Utils/Color.dart';
+import '../../Utils/MapUtils.dart';
 import '../../widget/button_app.dart';
 import '../../widget/text_widget.dart';
 import '../graph/TempGraphMonth.dart';
@@ -29,11 +31,13 @@ class OverviewDertail extends StatefulWidget {
   String stationId;
   bool isSubmited;
   bool isRule;
+  LatLng latlng;
   OverviewDertail({
     Key? key,
     required this.stationId,
     required this.isSubmited,
     required this.isRule,
+    required this.latlng,
   }) : super(key: key);
 
   @override
@@ -307,8 +311,14 @@ class _OverviewDertailState extends State<OverviewDertail> {
                 width: 5,
               ),
               Expanded(
-                  child: TextWidget.textTitle(
-                      data['data']['station']['address'] ?? '-')),
+                  child: GestureDetector(
+                    onTap: () async{
+                         await MapUtils.openMap(
+                      widget.latlng.latitude, widget.latlng.longitude);
+                    },
+                    child: TextWidget.textTitle(
+                        data['data']['station']['address'] ?? '-'),
+                  )),
             ]),
           ),
           Container(
@@ -1038,8 +1048,8 @@ class _OverviewDertailState extends State<OverviewDertail> {
                             color: Colors.white,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10))),
-                        child:
-                            Center(child: TextWidget.textTitle('อ่านเพิ่มเติม')),
+                        child: Center(
+                            child: TextWidget.textTitle('อ่านเพิ่มเติม')),
                       ),
                     ),
                   ],

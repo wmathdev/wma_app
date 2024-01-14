@@ -747,7 +747,7 @@ class ListItemWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    role == 'MANAGER'
+                    role == 'MANAGER' || role == 'OFFICER'
                         ? 'รอเจ้าหน้าที่ดำเนินการ'
                         : 'รอผู้จัดการตรวจสอบ',
                     style: const TextStyle(
@@ -833,7 +833,7 @@ class ListItemWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    role == 'MANAGER'
+                    role == 'MANAGER' || role == 'OFFICER'
                         ? 'รอเจ้าหน้าที่ดำเนินการ'
                         : 'รอผู้จัดการตรวจสอบ',
                     style: const TextStyle(

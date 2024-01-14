@@ -119,7 +119,9 @@ class _OverviewState extends State<Overview> {
                       }
 
                       showBottomSheet(mapData[i], true,
-                          mapData[i]['document']['evaluate']['result']);
+                          mapData[i]['document']['evaluate']['result'],
+                          LatLng(double.parse(words[0]),
+                                    double.parse(words[1])));
                     },
                     markerId: MarkerId(mapData[i]['id'].toString()),
                     position:
@@ -136,7 +138,7 @@ class _OverviewState extends State<Overview> {
             MarkerData(
                 marker: Marker(
                   onTap: () {
-                    showBottomSheet(mapData[i], false, false);
+                    showBottomSheet(mapData[i], false, false,const LatLng(0,0));
                   },
                   markerId: MarkerId(mapData[i]['id'].toString()),
                   position:
@@ -625,7 +627,7 @@ class _OverviewState extends State<Overview> {
     );
   }
 
-  showBottomSheet(dynamic station, bool isSubmited, bool isRule) {
+  showBottomSheet(dynamic station, bool isSubmited, bool isRule,LatLng latlng) {
     showModalBottomSheet<void>(
         context: context,
         enableDrag: false,
@@ -815,6 +817,7 @@ class _OverviewState extends State<Overview> {
                       stationId: '${station['id']}',
                       isSubmited: isSubmited,
                       isRule: isRule,
+                      latlng: latlng
                     ));
                   }, true),
                 ],

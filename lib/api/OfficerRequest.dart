@@ -31,7 +31,7 @@ class OfficerRequest {
     //     {'station_id': stationid, 'type': type, 'period': period});
     // print('ddddd $formData');
         var params = {'station_id': stationid, 'type': type, 'period': period};
-    final response = await ApiConstants.dioNoLog
+    final response = await ApiConstants.dio
         .get('${ApiConstants.baseUrl}/api/v1/officer/document/list',
             queryParameters: params,
             options: Options(

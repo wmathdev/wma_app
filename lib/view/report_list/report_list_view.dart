@@ -291,8 +291,9 @@ class _ReportListState extends State<ReportList> {
                 Month.getMonthTitleReverse(data[index]['date']),
                 '10.00',
                 widget.role, () async {
-              if ((  Time.checkTimeStatus('00:00AM', '10:00AM') &&  
-                  widget.role == 'OPERATOR') || widget.role == 'ADMIN') {
+              if ((Time.checkTimeStatus('00:00AM', '10:00AM') &&
+                      widget.role == 'OPERATOR') ||
+                  widget.role == 'ADMIN') {
                 await Get.to(ReportForm(
                     role: widget.role,
                     station: widget.station,
@@ -315,7 +316,8 @@ class _ReportListState extends State<ReportList> {
                   '10.00', () async {
                 if (data[index]['document']['workflow']['state'] == 'REVIEW' ||
                     data[index]['document']['workflow']['state'] == 'Review' ||
-                    data[index]['document']['workflow']['state'] == 'REVISION' ||
+                    data[index]['document']['workflow']['state'] ==
+                        'REVISION' ||
                     data[index]['document']['workflow']['state'] ==
                         'COMPLETED') {
                   Get.to(ReportDetail(
