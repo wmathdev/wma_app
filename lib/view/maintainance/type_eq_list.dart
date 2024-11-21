@@ -85,8 +85,8 @@ class _TypeEqListState extends State<TypeEqList> {
                     NavigateBar.NavBar(context, widget.name, () {
                       Get.back();
                     }),
-                    // eQType
-                    // .length > 0 ? contentView() :
+                    eQType
+                    .length > 0 ? contentView() :
                     SizedBox(
                         height: MediaQuery.of(context).size.height* 0.7,
                         child: Center(
