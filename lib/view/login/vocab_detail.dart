@@ -45,7 +45,7 @@ class _VocabDetailState extends State<VocabDetail> {
               onTap: () {
                 Get.back();
               },
-              child: Image.asset('asset/images/back.png')),
+              child: Image.asset('asset/images/arrow_left_n.png')),
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.25,
           ),

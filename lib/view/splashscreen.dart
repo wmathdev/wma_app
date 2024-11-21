@@ -36,6 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   late var resultNews;
   var userjson;
+  var passphase;
   List<dynamic> news = [];
   late User user;
 
@@ -79,7 +80,6 @@ class _SplashScreenState extends State<SplashScreen> {
         }, () {
           exit(0);
         });
-        
       } else {
         final SharedPreferences prefs = await _prefs;
         userjson = (prefs.getString('user') ?? '');
@@ -113,7 +113,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: ExactAssetImage('asset/images/waterbg.jpg'),
+          fit: BoxFit.fill,
+        ),
+      ),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Center(

@@ -15,7 +15,7 @@ class Month {
     } else if (mm == '03') {
       return '$dd มี.ค. $yyyy';
     } else if (mm == '04') {
-      return '$dd เม.ษ. $yyyy';
+      return '$dd เม.ย. $yyyy';
     } else if (mm == '05') {
       return '$dd พ.ค. $yyyy';
     } else if (mm == '06') {
@@ -53,7 +53,7 @@ class Month {
     } else if (mm == '03') {
       return '$dd มี.ค. $yyyy';
     } else if (mm == '04') {
-      return '$dd เม.ษ. $yyyy';
+      return '$dd เม.ย. $yyyy';
     } else if (mm == '05') {
       return '$dd พ.ค. $yyyy';
     } else if (mm == '06') {
@@ -84,7 +84,7 @@ class Month {
     } else if (mm == '03') {
       return 'มี.ค.';
     } else if (mm == '04') {
-      return 'เม.ษ.';
+      return 'เม.ย.';
     } else if (mm == '05') {
       return 'พ.ค.';
     } else if (mm == '06') {
@@ -192,7 +192,7 @@ class Month {
 
     // Stroing all the dates till the last date
     // since we have found the last date using generate
-    var listOfDates = new List<int>.generate(totalDays, (i) => i + 1);
+    var listOfDates = List<int>.generate(totalDays, (i) => i + 1);
     print(listOfDates);
     List<String> data = [];
     for (var i = 0; i < listOfDates.length; i++) {
@@ -202,8 +202,8 @@ class Month {
   }
 
   static int daysInMonth(DateTime date) {
-    var firstDayThisMonth = new DateTime(date.year, date.month, date.day);
-    var firstDayNextMonth = new DateTime(firstDayThisMonth.year,
+    var firstDayThisMonth = DateTime(date.year, date.month, date.day);
+    var firstDayNextMonth = DateTime(firstDayThisMonth.year,
         firstDayThisMonth.month + 1, firstDayThisMonth.day);
     return firstDayNextMonth.difference(firstDayThisMonth).inDays;
   }
@@ -268,9 +268,18 @@ class Month {
 
   static List<String> year() {
     int currentYear = DateTime.now().year;
-    int startingYear = 2000;
+    int startingYear = 2020;
     List<String> yearList = List.generate((currentYear - startingYear) + 1,
         (index) => '${startingYear + index + 543}');
+    List<String> reversedYear = yearList.reversed.toList();
+    return reversedYear;
+  }
+
+   static List<String> yearForward() {
+    int currentYear = DateTime.now().year;
+    int startingYear = 2020;
+    List<String> yearList = List.generate((currentYear - startingYear) + 1,
+        (index) => '${startingYear + index + 544}');
     List<String> reversedYear = yearList.reversed.toList();
     return reversedYear;
   }
@@ -295,7 +304,7 @@ class Month {
     } else if (mm == '03') {
       return '$dd\nมี.ค.';
     } else if (mm == '04') {
-      return '$dd\nเม.ษ.';
+      return '$dd\nเม.ย.';
     } else if (mm == '05') {
       return '$dd\nพ.ค.';
     } else if (mm == '06') {

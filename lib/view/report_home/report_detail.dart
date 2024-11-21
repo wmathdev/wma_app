@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wma_app/api/OfficerRequest.dart';
+import 'package:wma_app/model/user.dart';
 import 'package:wma_app/view/report_home/progress_detail.dart';
 
 import '../../Utils/Color.dart';
@@ -24,11 +25,13 @@ import '../../widget/text_widget.dart';
 class ReportDetail extends StatefulWidget {
   String documentId;
   String role;
+  Station station;
 
   ReportDetail({
     Key? key,
     required this.documentId,
     required this.role,
+    required this.station
   }) : super(key: key);
 
   @override
@@ -111,102 +114,194 @@ class _ReportDetailState extends State<ReportDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
-      child: loading
-          ? Container(
-              color: Colors.white,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Lottie.asset(
-                      'asset/lottie/animation_lk0uamsc.json',
-                      width: 200,
-                      height: 200,
+          child: loading
+              ? Container(
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset(
+                          'asset/lottie/Loading1.json',
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.fill,
+                        ),
+                        TextWidget.textGeneralWithColor(
+                            'กรุณารอสักครู่...', blueSelected)
+                      ],
+                    ),
+                  ),
+                )
+              : Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: ExactAssetImage('asset/images/waterbg.jpg'),
                       fit: BoxFit.fill,
                     ),
-                    TextWidget.textGeneralWithColor(
-                        'กรุณารอสักครู่...', blueSelected)
-                  ],
+                  ),
+                  child: contentView(),
                 ),
-              ),
-            )
-          : Container(
-              color: Colors.grey[60],
-              child: contentView(),
-            ),
-    ));
+        ));
   }
 
   Widget contentView() {
-    return Stack(
+    return Column(
       children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 110,
-              ),
-              // notice(),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneralWithColor(
-                    'ข้อมูลคุณภาพน้ำประจำวันที่ ${Month.getMonthTitleReverse(result['data']['report_at'])}',
-                    greyBorder),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral('สถานะปัจจุบัน'),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral(
-                    '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
-              ),
-              ButtonApp.buttonSecondary(context, 'ดูประวัติการส่งรายงานทั้งหมด',
-                  () {
-                Get.to(ProgressDetail(
-                  result: result,
-                  dateLebal:
-                      Month.getMonthTitleReverse(result['data']['report_at']),
-                ));
-              }),
-              Container(height: 5, color: greyBG),
-              uploadPhotoCard(),
-              before(),
-              Edittext.edittextFormDisable(
-                  'DO', 'mg/I', doBeforeController, doBeforeValidate),
-              Edittext.edittextFormDisable(
-                  'pH', '', phBeforeController, phBeforeValidate),
-              Edittext.edittextFormDisable('Temperature', 'ํC',
-                  temperatureBeforeController, temperatureBeforeValidate),
-              after(),
-              Edittext.edittextFormDisable(
-                  'DO', 'mg/I', doAfterController, doAfterValidate),
-              Edittext.edittextFormDisable(
-                  'pH', '', phAfterController, phAfterValidate),
-              Edittext.edittextFormDisable('Temperature', 'ํC',
-                  temperatureAfterController, temperatureAfterValidate),
-              Container(
-                height: 10,
-                color: greyBG,
-              ),
-              listViewComment()
-            ],
-          ),
-        ),
         Container(
-          height: 80,
+          height: 70,
           alignment: Alignment.topCenter,
           child: NavigateBar.NavBarWithNotebook(
               context, 'รายงานคุณภาพน้ำประจำวัน', () {
             Get.back();
           }),
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height - 100,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: Card(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(18, 10, 18, 0),
+                          width: MediaQuery.of(context).size.width,
+                          child: TextWidget.textTitleBold('ข้อมูลคุณภาพน้ำ'),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                          width: MediaQuery.of(context).size.width,
+                          child: TextWidget.textTitle(
+                            'ประจำวันที่ ${Month.getMonthTitleReverse(result['data']['report_at'])}',
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: green_n,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Expanded(
+                              child: TextWidget.textTitle(
+                                  '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
+                            ),
+                          ],
+                        ),
+                        ButtonApp.buttonSecondaryGradient(
+                            context, 'ดูประวัติการส่งรายงานทั้งหมด', () {
+                          Get.to(ProgressDetail(
+                            result: result,
+                            station: widget.station,
+                            dateLebal: Month.getMonthTitleReverse(
+                                result['data']['report_at']),
+                          ));
+                        }),
+                        const SizedBox(
+                          height: 7,
+                        ),
+                        Container(
+                            margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: Container(height: 1, color: Colors.black)),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        uploadPhotoCard(),
+                        const SizedBox(
+                          height: 7,
+                        ),
+                        Container(
+                            margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: Container(height: 1, color: Colors.black)),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        before(),
+                        Edittext.alignEdittextFormDisable(
+                            'ค่า DO  ',
+                            'mg/I',
+                            doBeforeController,
+                            doBeforeValidate,
+                            MediaQuery.of(context).size.width * 0.63),
+                        Edittext.alignEdittextFormDisable(
+                            'ค่า pH  ',
+                            '',
+                            phBeforeController,
+                            phBeforeValidate,
+                            MediaQuery.of(context).size.width * 0.63),
+                        Edittext.alignEdittextFormDisable(
+                            'ค่าอุณหภูมิ',
+                            'ํC',
+                            temperatureBeforeController,
+                            temperatureBeforeValidate,
+                            MediaQuery.of(context).size.width * 0.63),
+                        const SizedBox(
+                          height: 7,
+                        ),
+                        Container(
+                            margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: Container(height: 1, color: Colors.black)),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        after(),
+                        Edittext.alignEdittextFormDisable(
+                            'ค่า DO',
+                            'mg/I',
+                            doAfterController,
+                            doAfterValidate,
+                            MediaQuery.of(context).size.width * 0.63),
+                        Edittext.alignEdittextFormDisable(
+                            'ค่า pH',
+                            '',
+                            phAfterController,
+                            phAfterValidate,
+                            MediaQuery.of(context).size.width * 0.63),
+                        Edittext.alignEdittextFormDisable(
+                            'ค่าอุณหภูมิ',
+                            'ํC',
+                            temperatureAfterController,
+                            temperatureAfterValidate,
+                            MediaQuery.of(context).size.width * 0.63),
+                        const SizedBox(
+                          height: 7,
+                        ),
+                        Container(
+                            margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: Container(height: 1, color: Colors.black)),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        listViewComment()
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );
@@ -287,7 +382,7 @@ class _ReportDetailState extends State<ReportDetail> {
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: color,
+              color: blue_n_2,
               borderRadius: const BorderRadius.all(Radius.circular(5))),
           child: Column(children: [
             Row(
@@ -323,7 +418,6 @@ class _ReportDetailState extends State<ReportDetail> {
 
   Widget before() {
     return Container(
-      color: greyBG,
       child: Column(
         children: [
           const SizedBox(
@@ -350,8 +444,8 @@ class _ReportDetailState extends State<ReportDetail> {
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: yellow_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Center(
                 child: TextWidget.textGeneralWithColor('1', Colors.white),
               ),
@@ -365,8 +459,8 @@ class _ReportDetailState extends State<ReportDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextWidget.textBig('ก่อน'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำก่อนบำบัด', Colors.grey),
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('ก่อนการบำบัด'),
           ],
         )
       ],
@@ -469,19 +563,16 @@ class _ReportDetailState extends State<ReportDetail> {
   }
 
   Widget after() {
-    return Container(
-      color: blueButtonBorder,
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          afterHeader(),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        afterHeader(),
+        const SizedBox(
+          height: 20,
+        ),
+      ],
     );
   }
 
@@ -497,8 +588,8 @@ class _ReportDetailState extends State<ReportDetail> {
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: blue_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Center(
                 child: TextWidget.textGeneralWithColor('2', Colors.white),
               ),
@@ -512,8 +603,8 @@ class _ReportDetailState extends State<ReportDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextWidget.textBig('หลัง'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำหลังบำบัด', Colors.grey),
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('หลังการบำบัด'),
           ],
         )
       ],

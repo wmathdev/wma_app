@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wma_app/view/report_form/preview_img.dart';
 
 import 'package:wma_app/view/report_form/recheck_popup.dart';
 import 'package:wma_app/view/report_form/recheck_popup_edit.dart';
@@ -142,219 +143,278 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
-      child: Container(
-        color: Colors.grey[60],
-        child: loading
-            ? Container(
-                color: Colors.white,
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset(
-                        'asset/lottie/animation_lk0uamsc.json',
-                        width: 200,
-                        height: 200,
-                        fit: BoxFit.fill,
+          child: Container(
+            color: Colors.grey[60],
+            child: loading
+                ? Container(
+                    color: Colors.white,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Lottie.asset(
+                            'asset/lottie/Loading1.json',
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.fill,
+                          ),
+                          TextWidget.textGeneralWithColor(
+                              'กรุณารอสักครู่...', blueSelected)
+                        ],
                       ),
-                      TextWidget.textGeneralWithColor(
-                          'กรุณารอสักครู่...', blueSelected)
-                    ],
-                  ),
-                ),
-              )
-            : contentView(),
-      ),
-    ));
+                    ),
+                  )
+                : contentView(),
+          ),
+        ));
   }
 
   Widget contentView() {
     var outputDate = widget.data['date'];
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 130,
-              ),
-              // notice(),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneralWithColor(
-                    'ข้อมูลคุณภาพน้ำประจำวันที่ ${Month.getMonthTitleReverse(outputDate)}',
-                    greyBorder),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral('สถานะปัจจุบัน'),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral(
-                    '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
-              ),
-              ButtonApp.buttonSecondary(context, 'ดูประวัติการส่งรายงานทั้งหมด',
-                  () {
-                Get.to(ProgressDetail(
-                  result: result,
-                  dateLebal:
-                      Month.getMonthTitleReverse(result['data']['report_at']),
-                ));
-              }),
-              Container(height: 5, color: greyBG),
-              uploadPhotoCard(),
-              before(),
-              Edittext.edittextForm(
-                  'DO', 'mg/I', doBeforeController, doBeforeValidate),
-              Edittext.edittextForm(
-                  'pH', '', phBeforeController, phBeforeValidate),
-              Edittext.edittextForm('Temperature', 'ํC',
-                  temperatureBeforeController, temperatureBeforeValidate),
-              after(),
-              Edittext.edittextForm(
-                  'DO', 'mg/I', doAfterController, doAfterValidate),
-              Edittext.edittextForm(
-                  'pH', '', phAfterController, phAfterValidate),
-              Edittext.edittextForm('Temperature', 'ํC',
-                  temperatureAfterController, temperatureAfterValidate),
-              Container(
-                height: 10,
-                color: greyBG,
-              ),
-              listViewComment(),
-              // Column(
-              //   children: [
-              //     Row(
-              //       children: [
-              //         const SizedBox(
-              //           width: 20,
-              //         ),
-              //         Container(
-              //           decoration: BoxDecoration(
-              //               color: greyBG,
-              //               borderRadius:
-              //                   const BorderRadius.all(Radius.circular(5))),
-              //           child: const ImageIcon(
-              //               AssetImage('asset/images/bi_chat-left-dots.png')),
-              //         ),
-              //         const SizedBox(
-              //           width: 10,
-              //         ),
-              //         TextWidget.textSubTitleWithSize('โน้ต (Optional)', 18),
-              //       ],
-              //     ),
-              //     Container(
-              //       margin: const EdgeInsets.all(10),
-              //       padding: const EdgeInsets.all(10),
-              //       decoration: BoxDecoration(
-              //           color: orange,
-              //           borderRadius:
-              //               const BorderRadius.all(Radius.circular(5))),
-              //       child: Column(children: [
-              //         Row(
-              //           children: [
-              //             TextWidget.textTitleBold('จาก: '),
-              //             TextWidget.textTitle('เจ้าหน้าที่หน้างาน'),
-              //           ],
-              //         ),
-              //         Row(
-              //           children: [
-              //             TextWidget.textTitleBold('ถึง: '),
-              //             TextWidget.textTitle('ผู้จัดการ'),
-              //           ],
-              //         ),
-              //       ]),
-              //     ),
-              //     Edittext.edittextAreaForm('', '', commentController, false),
-              //     Padding(
-              //       padding: const EdgeInsets.all(10.0),
-              //       child: Row(
-              //         mainAxisAlignment: MainAxisAlignment.end,
-              //         children: [
-              //           TextWidget.textTitleBoldWithColor('', blueSelected),
-              //           TextWidget.textTitle(
-              //               Month.getMonthTitleReverse(outputDate))
-              //         ],
-              //       ),
-              //     )
-              //   ],
-              // ),
-              checkBox(),
-
-              Container(
-                height: 10,
-                color: greyBG,
-              ),
-              ButtonApp.buttonMain(context, 'ส่งรายงาน', () async {
-                final SharedPreferences prefs = await _prefs;
-                String? authorization = prefs.getString('access_token');
-
-                // if (validate()) {
-                List<String> dataImg = [];
-                for (var i = 0; i < img.length; i++) {
-                  if (img[i]['type'] == 'file') {
-                    String temp = convertIntoBase64(img[i]['value']);
-                    dataImg.add(temp);
-                  }
-                }
-                if (!img.isNotEmpty) {
-                  MyDialog.showAlertDialogOk(
-                      context, 'กรุณาแนบภาพอย่างน้อย 1 ภาพ', () {
-                    Get.back();
-                  });
-                } else {
-                  Get.to(RecheckPopupEdit(
-                    role: widget.role,
-                    station: widget.station,
-                    dateLabel: Month.getMonthTitleReverse(outputDate),
-                    authorization: authorization!,
-                    doo: doBeforeController.text,
-                    file: dataImg,
-                    ph: phBeforeController.text,
-                    temp: temperatureBeforeController.text,
-                    treatedDoo: doAfterController.text,
-                    treatedPh: phAfterController.text,
-                    treatedTemp: temperatureAfterController.text,
-                    treatedWater: totalController.text,
-                    type: 'DAILY',
-                    comment: commentController.text,
-                    documentId: '${widget.data['document']['id']}',
-                    mediaDelete: delete,
-                  ));
-                }
-              }, isCheckBox),
-              ButtonApp.buttonSecondary(
-                context,
-                'ยกเลิก',
-                () {
-                  Get.back();
-                },
-              )
-            ],
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: ExactAssetImage('asset/images/waterbg.jpg'),
+          fit: BoxFit.fill,
+        ),
+      ),
+      child: Column(
+        children: [
+          Container(
+            height: 70,
+            alignment: Alignment.topCenter,
+            child: NavigateBar.NavBarWithNotebook(
+                context, 'รายงานคุณภาพน้ำประจำวัน', () {
+              Get.back();
+            }),
           ),
-        ),
-        Container(
-          height: 80,
-          alignment: Alignment.topCenter,
-          child: NavigateBar.NavBarWithNotebook(
-              context, 'รายงานคุณภาพน้ำประจำวัน', () {
-            Get.back();
-          }),
-        ),
-      ],
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height - 100,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: Image.asset('asset/images/iconintro.png')),
+               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
+                  TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
+                ],
+              )
+                    ],
+                  ),
+                  Container(
+                      margin: const EdgeInsets.all(8),
+                      child: Card(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Column(children: [
+                                Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: TextWidget.textTitleBold(
+                                      'ข้อมูลคุณภาพน้ำ'),
+                                ),
+                                Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: TextWidget.textTitle(
+                                    'ประจำวันที่ ${Month.getMonthTitleReverse(outputDate)}',
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: green_n,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+                                      child: TextWidget.textTitle(
+                                          '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
+                                    ),
+                                  ],
+                                ),
+                                ButtonApp.buttonSecondaryGradient(
+                                    context, 'ดูประวัติการส่งรายงานทั้งหมด',
+                                    () {
+                                  Get.to(ProgressDetail(
+                                    result: result,
+                                    station: widget.station,
+                                    dateLebal: Month.getMonthTitleReverse(
+                                        result['data']['report_at']),
+                                  ));
+                                }),
+                                const SizedBox(
+                                  height: 7,
+                                ),
+                                Container(height: 1, color: Colors.black),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                uploadPhotoCard(),
+                                const SizedBox(
+                                  height: 7,
+                                ),
+                                Container(height: 1, color: Colors.black),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                before(),
+                                Edittext.alignEdittextForm(
+                                    'ค่า DO  ',
+                                    'mg/I',
+                                    doBeforeController,
+                                    doBeforeValidate,
+                                    MediaQuery.of(context).size.width * 0.63),
+                                Edittext.alignEdittextForm(
+                                    'ค่า pH  ',
+                                    '',
+                                    phBeforeController,
+                                    phBeforeValidate,
+                                    MediaQuery.of(context).size.width * 0.63),
+                                Edittext.alignEdittextForm(
+                                    'ค่าอุณหภูมิ',
+                                    'ํC',
+                                    temperatureBeforeController,
+                                    temperatureBeforeValidate,
+                                    MediaQuery.of(context).size.width * 0.63),
+                                const SizedBox(
+                                  height: 7,
+                                ),
+                                Container(height: 1, color: Colors.black),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                after(),
+                                Edittext.alignEdittextForm(
+                                    'ค่า DO',
+                                    'mg/I',
+                                    doAfterController,
+                                    doAfterValidate,
+                                    MediaQuery.of(context).size.width * 0.63),
+                                Edittext.alignEdittextForm(
+                                    'ค่า pH',
+                                    '',
+                                    phAfterController,
+                                    phAfterValidate,
+                                    MediaQuery.of(context).size.width * 0.63),
+                                Edittext.alignEdittextForm(
+                                    'ค่าอุณหภูมิ',
+                                    'ํC',
+                                    temperatureAfterController,
+                                    temperatureAfterValidate,
+                                    MediaQuery.of(context).size.width * 0.63),
+                                const SizedBox(
+                                  height: 7,
+                                ),
+                                Container(height: 1, color: Colors.black),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                listViewComment(),
+                                checkBox(),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ButtonApp.buttonSecondaryHalf(
+                                      context,
+                                      'ยกเลิก',
+                                      () {
+                                        Get.back();
+                                      },
+                                    ),
+                                    ButtonApp.buttonMainhalf(
+                                        context, 'ส่งรายงาน', () async {
+                                      final SharedPreferences prefs =
+                                          await _prefs;
+                                      String? authorization =
+                                          prefs.getString('access_token');
+
+                                      // if (validate()) {
+                                      List<String> dataImg = [];
+                                      for (var i = 0; i < img.length; i++) {
+                                        if (img[i]['type'] == 'file') {
+                                          String temp = convertIntoBase64(
+                                              img[i]['value']);
+                                          dataImg.add(temp);
+                                        }
+                                      }
+                                      if (!img.isNotEmpty) {
+                                        MyDialog.showAlertDialogOk(context,
+                                            'กรุณาแนบภาพอย่างน้อย 1 ภาพ', () {
+                                          Get.back();
+                                        });
+                                      } else {
+                                        Get.to(RecheckPopupEdit(
+                                          role: widget.role,
+                                          station: widget.station,
+                                          dateLabel: Month.getMonthTitleReverse(
+                                              outputDate),
+                                          authorization: authorization!,
+                                          doo: doBeforeController.text,
+                                          file: dataImg,
+                                          ph: phBeforeController.text,
+                                          temp:
+                                              temperatureBeforeController.text,
+                                          treatedDoo: doAfterController.text,
+                                          treatedPh: phAfterController.text,
+                                          treatedTemp:
+                                              temperatureAfterController.text,
+                                          treatedWater: totalController.text,
+                                          type: 'DAILY',
+                                          comment: commentController.text,
+                                          documentId:
+                                              '${widget.data['document']['id']}',
+                                          mediaDelete: delete,
+                                          img: img,
+                                        ));
+                                      }
+                                    }, isCheckBox),
+                                  ],
+                                )
+                              ])))),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget before() {
     return Container(
-      color: greyBG,
       child: Column(
         children: [
           const SizedBox(
@@ -381,8 +441,8 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: yellow_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Center(
                 child: TextWidget.textGeneralWithColor('1', Colors.white),
               ),
@@ -396,8 +456,8 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextWidget.textBig('ก่อน'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำก่อนบำบัด', Colors.grey),
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('ก่อนการบำบัด'),
           ],
         )
       ],
@@ -470,17 +530,24 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
                 return Stack(
                   children: [
                     Card(
-                      child: img[index]['type'] == 'url'
-                          ? Image.network(
-                              img[index]['value'],
-                              height: 170,
-                              width: 100,
-                            )
-                          : Image.file(
-                              img[index]['value'],
-                              height: 170,
-                              width: 100,
-                            ),
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.to(PreviewImage(
+                            img: img[index],
+                          ));
+                        },
+                        child: img[index]['type'] == 'url'
+                            ? Image.network(
+                                img[index]['value'],
+                                height: 170,
+                                width: 100,
+                              )
+                            : Image.file(
+                                img[index]['value'],
+                                height: 170,
+                                width: 100,
+                              ),
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -499,8 +566,8 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
         const SizedBox(
           height: 5,
         ),
-        ButtonApp.buttonOutline(context, 'เปิดกล้องถ่ายภาพ (${img.length}/4)',
-            () async {
+        ButtonApp.buttonMainGradient(
+            context, 'เปิดกล้องถ่ายภาพ (${img.length}/4)', () async {
           if (img.length >= 4) {
             _showSnackBar();
           } else {
@@ -511,7 +578,7 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
             img.add({'type': 'file', 'value': photofile, 'uuid': ''});
             setState(() {});
           }
-        }),
+        }, true),
         const SizedBox(
           height: 5,
         ),
@@ -524,7 +591,7 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
     );
   }
 
-   _showSnackBar() {
+  _showSnackBar() {
     const snackBar = SnackBar(
       content: Text('อัปโหลดภาพได้สูงสุด 4 ภาพ'),
     );
@@ -532,19 +599,16 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
   }
 
   Widget after() {
-    return Container(
-      color: blueButtonBorder,
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          afterHeader(),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        afterHeader(),
+        const SizedBox(
+          height: 20,
+        ),
+      ],
     );
   }
 
@@ -560,8 +624,8 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: blue_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Center(
                 child: TextWidget.textGeneralWithColor('2', Colors.white),
               ),
@@ -575,8 +639,8 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextWidget.textBig('หลัง'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำหลังบำบัด', Colors.grey),
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('หลังการบำบัด'),
           ],
         )
       ],
@@ -597,11 +661,11 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
           width: 20,
         ),
         Expanded(
-          child: TextWidget.textGeneralWithColor(
+          child: TextWidget.textSubTitleWithSize(
               widget.role == 'ADMIN'
                   ? 'กรุณาตรวจสอบความถูกต้องหลังจากกด “ยืนยัน”\nจะเข้าสู่สถานะ “เสร็จสิ้น”'
                   : 'กรุณาตรวจสอบความถูกต้องหลังจากกด “ยืนยัน”\nจะเข้าสู่สถานะ “รอผู้จัดการตรวจสอบ”',
-              Colors.grey),
+              10),
         ),
       ],
     );
@@ -751,7 +815,7 @@ class _ReportFormViewEditState extends State<ReportFormViewEdit> {
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: Colors.blue[200],
+              color: blue_n_2,
               borderRadius: const BorderRadius.all(Radius.circular(5))),
           child: Column(children: [
             Row(

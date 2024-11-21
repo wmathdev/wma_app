@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wma_app/view/notification/notificationlist.dart';
 
 import '../api/Authentication.dart';
 
@@ -83,7 +84,9 @@ class MyAppBarGeneral extends StatelessWidget {
                         icon: Image.asset(
                           'asset/images/bi_bell.png',
                         ),
-                        onPressed: () {}),
+                        onPressed: () {
+                                Get.to(NotificationList());
+                        }),
                   )
                 ],
               )),

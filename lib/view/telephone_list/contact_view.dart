@@ -104,6 +104,16 @@ class _ContactViewState extends State<ContactView> {
   Widget contentView() {
     return Stack(
       children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: ExactAssetImage('asset/images/waterbg.jpg'),
+              fit: BoxFit.fill,
+            ),
+          ),
+        ),
         SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(18.0),

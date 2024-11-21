@@ -101,9 +101,9 @@ class _StationListMonthState extends State<StationListMonth> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Lottie.asset(
-                        'asset/lottie/animation_lk0uamsc.json',
-                        width: 200,
-                        height: 200,
+                        'asset/lottie/Loading1.json',
+                        width: 150,
+                        height: 150,
                         fit: BoxFit.fill,
                       ),
                       TextWidget.textGeneralWithColor(
@@ -112,7 +112,16 @@ class _StationListMonthState extends State<StationListMonth> {
                   ),
                 ),
               )
-            : contentView(),
+            : Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: ExactAssetImage('asset/images/waterbg.jpg'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                child: contentView()),
       ),
     ));
   }
@@ -160,7 +169,7 @@ class _StationListMonthState extends State<StationListMonth> {
     return Row(
       children: [
         Expanded(
-            flex: 1,
+            flex: 3,
             child: TextButton(
                 onPressed: null,
                 child: Container(
@@ -173,13 +182,13 @@ class _StationListMonthState extends State<StationListMonth> {
                         color: blueButtonBorder,
                       ),
                       borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
+                          const BorderRadius.all(Radius.circular(15))),
                   child: Center(
-                      child: TextWidget.textGeneralWithColor(
-                          month, blueButtonText)),
+                      child:
+                          TextWidget.textGeneralWithColor(month, Colors.black)),
                 ))),
         Expanded(
-            flex: 1,
+            flex: 3,
             child: TextButton(
                 onPressed: null,
                 child: Container(
@@ -195,7 +204,7 @@ class _StationListMonthState extends State<StationListMonth> {
                           const BorderRadius.all(Radius.circular(10))),
                   child: Center(
                       child: TextWidget.textGeneralWithColor(
-                          '${int.parse(year) + 543}', blueButtonText)),
+                          '${int.parse(year) + 543}', Colors.black)),
                 ))),
         Expanded(
             flex: 1,
@@ -217,25 +226,113 @@ class _StationListMonthState extends State<StationListMonth> {
                     data = res['data'];
                     loading = false;
                   });
-                }else{
+                } else {
                   loading = false;
                 }
               },
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Image.asset(
-                      'asset/images/bi_funnel.png',
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: Colors.white,
                     ),
-                    onPressed: () {},
-                  ),
-                  TextWidget.textGeneralWithColor('ตัวกรอง', blueButtonText)
-                ],
+                    borderRadius: const BorderRadius.all(Radius.circular(15))),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Image.asset(
+                        'asset/images/setting.png',
+                      ),
+                      onPressed: null,
+                    ),
+                  ],
+                ),
               ),
             ))
       ],
     );
   }
+
+  // Widget filterMenu() {
+  //   return Row(
+  //     children: [
+  //       Expanded(
+  //           flex: 1,
+  //           child: TextButton(
+  //               onPressed: null,
+  //               child: Container(
+  //                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+  //                 width: MediaQuery.of(context).size.width,
+  //                 padding: const EdgeInsets.all(8.0),
+  //                 decoration: BoxDecoration(
+  //                     color: blueButton,
+  //                     border: Border.all(
+  //                       color: blueButtonBorder,
+  //                     ),
+  //                     borderRadius:
+  //                         const BorderRadius.all(Radius.circular(10))),
+  //                 child: Center(
+  //                     child: TextWidget.textGeneralWithColor(
+  //                         month, blueButtonText)),
+  //               ))),
+  //       Expanded(
+  //           flex: 1,
+  //           child: TextButton(
+  //               onPressed: null,
+  //               child: Container(
+  //                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+  //                 width: MediaQuery.of(context).size.width,
+  //                 padding: const EdgeInsets.all(8.0),
+  //                 decoration: BoxDecoration(
+  //                     color: blueButton,
+  //                     border: Border.all(
+  //                       color: blueButtonBorder,
+  //                     ),
+  //                     borderRadius:
+  //                         const BorderRadius.all(Radius.circular(10))),
+  //                 child: Center(
+  //                     child: TextWidget.textGeneralWithColor(
+  //                         '${int.parse(year) + 543}', blueButtonText)),
+  //               ))),
+  //       Expanded(
+  //           flex: 1,
+  //           child: GestureDetector(
+  //             onTap: () async {
+  //               setState(() {
+  //                 loading = true;
+  //               });
+
+  //               dynamic result = await Get.to(const StationListFilterView());
+  //               print('object : $result');
+
+  //               if (result != null) {
+  //                 var res = await OfficerRequest.getReportList(accessToken,
+  //                     'MONTHLY', result['workflow'], result['reportat']);
+  //                 setState(() {
+  //                   year = result['reportat'].substring(0, 4);
+  //                   month = Month.getMonthFullLabel(result['reportat']);
+  //                   data = res['data'];
+  //                   loading = false;
+  //                 });
+  //               }else{
+  //                 loading = false;
+  //               }
+  //             },
+  //             child: Row(
+  //               children: [
+  //                 IconButton(
+  //                   icon: Image.asset(
+  //                     'asset/images/bi_funnel.png',
+  //                   ),
+  //                   onPressed: () {},
+  //                 ),
+  //                 TextWidget.textGeneralWithColor('ตัวกรอง', blueButtonText)
+  //               ],
+  //             ),
+  //           ))
+  //     ],
+  //   );
+  // }
 
   Widget listView() {
     return ListView.builder(
@@ -254,10 +351,11 @@ class _StationListMonthState extends State<StationListMonth> {
             '${data[index]['state_code']}', () async {
           print(data[index]);
           Station station = Station(
-              id: data[index]['id'],
-        
-              name: data[index]['name'],
-              pivot: Pivot(stationId: data[index]['id'], userId: -1));
+            id: data[index]['id'],
+            name: data[index]['name'],
+            lite_name: data[index]['lite_name'] != null ? data[index]['lite_name'] :data[index]['name'],
+            pivot: Pivot(stationId: data[index]['id'], userId: -1),
+          );
           Get.to(ReportListMonthView(
             station: station,
             role: widget.role,

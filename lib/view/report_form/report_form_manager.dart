@@ -8,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wma_app/view/report_form/preview_img.dart';
+import 'package:wma_app/view/report_form/preview_img_value.dart';
 
 import 'package:wma_app/view/report_form/reject_popup.dart';
 
@@ -45,18 +47,25 @@ class ReportFormManager extends StatefulWidget {
 class _ReportFormManagerState extends State<ReportFormManager> {
   var totalController = TextEditingController();
   var totalValidate = false;
+  var totalValidateCb = false;
   var doBeforeController = TextEditingController();
   var doBeforeValidate = false;
+  var doBeforeValidateCb = false;
   var phBeforeController = TextEditingController();
   var phBeforeValidate = false;
+  var phBeforeValidateCb = false;
   var temperatureBeforeController = TextEditingController();
   var temperatureBeforeValidate = false;
+  var temperatureBeforeValidateCb = false;
   var doAfterController = TextEditingController();
   var doAfterValidate = false;
+  var doAfterValidateCb = false;
   var phAfterController = TextEditingController();
   var phAfterValidate = false;
+  var phAfterValidateCb = false;
   var temperatureAfterController = TextEditingController();
   var temperatureAfterValidate = false;
+  var temperatureAfterValidateCb = false;
 
   var loading = true;
   var isCheckBox = false;
@@ -134,9 +143,9 @@ class _ReportFormManagerState extends State<ReportFormManager> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Lottie.asset(
-                      'asset/lottie/animation_lk0uamsc.json',
-                      width: 200,
-                      height: 200,
+                      'asset/lottie/Loading1.json',
+                      width: 150,
+                      height: 150,
                       fit: BoxFit.fill,
                     ),
                     TextWidget.textGeneralWithColor(
@@ -155,139 +164,348 @@ class _ReportFormManagerState extends State<ReportFormManager> {
   Widget contentView() {
     return Stack(
       children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 80,
-              ),
-              notice(),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneralWithColor(
-                    'ข้อมูลคุณภาพน้ำประจำวันที่ ${Month.getMonthTitleReverse(result['data']['report_at'])}',
-                    greyBorder),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral('สถานะปัจจุบัน'),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral(
-                    '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
-              ),
-              ButtonApp.buttonSecondary(context, 'ดูประวัติการส่งรายงานทั้งหมด',
-                  () {
-                Get.to(ProgressDetail(
-                  result: result,
-                  dateLebal:
-                      Month.getMonthTitleReverse(result['data']['report_at']),
-                ));
-              }),
-              Container(height: 5, color: greyBG),
-              uploadPhotoCard(),
-              before(),
-              Edittext.edittextForm(
-                  'DO', 'mg/I', doBeforeController, doBeforeValidate),
-              Edittext.edittextForm(
-                  'pH', '', phBeforeController, phBeforeValidate),
-              Edittext.edittextForm('Temperature', 'ํC',
-                  temperatureBeforeController, temperatureBeforeValidate),
-              after(),
-              Edittext.edittextForm(
-                  'DO', 'mg/I', doAfterController, doAfterValidate),
-              Edittext.edittextForm(
-                  'pH', '', phAfterController, phAfterValidate),
-              Edittext.edittextForm('Temperature', 'ํC',
-                  temperatureAfterController, temperatureAfterValidate),
-              Container(
-                height: 10,
-                color: greyBG,
-              ),
-              listViewComment(),
-              checkBox(),
-              Container(
-                height: 10,
-                color: greyBG,
-              ),
-              ButtonApp.buttonMain(context, 'ยืนยัน', () async {
-                final SharedPreferences prefs = await _prefs;
-                String? authorization = prefs.getString('access_token');
-
-                List<String> dataImg = [];
-                for (var i = 0; i < img.length; i++) {
-                  if (img[i]['type'] == 'file') {
-                    print('ธธธธธธธธธธธธ');
-                    print(dataImg);
-                    String temp = convertIntoBase64(img[i]['value']);
-                    dataImg.add(temp);
-                  }
-                }
-
-                if (!img.isNotEmpty) {
-                  MyDialog.showAlertDialogOk(
-                      context, 'กรุณาแนบภาพอย่างน้อย 1 ภาพ', () {
-                    Get.back();
-                  });
-                } else {
-                  Get.to(ApprovePopup(
-                    role: widget.role,
-                    station: widget.station,
-                    dateLabel: Month.getMonthTitleReverse(widget.datelabel),
-                    authorization: authorization!,
-                    doo: doBeforeController.text,
-                    files: dataImg,
-                    ph: phBeforeController.text,
-                    temp: temperatureBeforeController.text,
-                    treatedDoo: doAfterController.text,
-                    treatedPh: phAfterController.text,
-                    treatedTemp: temperatureAfterController.text,
-                    treatedWater: totalController.text,
-                    type: 'DAILY',
-                    documentId: '${widget.document['id']}',
-                    mediaDelete: delete,
-                  ));
-                }
-              }, isCheckBox),
-              ButtonApp.buttonSecondaryWithColor(context, 'ตีกลับ', () async {
-                final SharedPreferences prefs = await _prefs;
-                String? authorization = prefs.getString('access_token');
-
-                Get.to(RejectPopup(
-                  role: widget.role,
-                  station: widget.station,
-                  dateLabel: widget.datelabel,
-                  authorization: authorization!,
-                  doo: doBeforeController.text,
-                  // file: img,
-                  ph: phBeforeController.text,
-                  temp: temperatureBeforeController.text,
-                  treatedDoo: doAfterController.text,
-                  treatedPh: phAfterController.text,
-                  treatedTemp: temperatureAfterController.text,
-                  treatedWater: totalController.text,
-                  type: 'DAILY',
-                  documentId: '${widget.document['id']}',
-                ));
-                // }
-              }, Colors.red)
-            ],
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: ExactAssetImage('asset/images/waterbg.jpg'),
+              fit: BoxFit.fill,
+            ),
           ),
         ),
-        Container(
-          height: 80,
-          alignment: Alignment.topCenter,
-          child: NavigateBar.NavBarWithNotebook(
-              context, 'รายงานคุณภาพน้ำประจำวัน', () {
-            Get.back();
-          }),
+        Column(
+          children: [
+            Container(
+              height: 70,
+              alignment: Alignment.topCenter,
+              child: NavigateBar.NavBarWithNotebook(
+                  context, 'รายงานคุณภาพน้ำประจำวัน', () {
+                Get.back();
+              }),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height - 100,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: Image.asset('asset/images/iconintro.png')),
+                Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
+                  TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
+                ],
+              )
+                      ],
+                    ),
+                    Container(
+                        margin: const EdgeInsets.all(8),
+                        child: Card(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(children: [
+                                  notice(),
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: TextWidget.textTitleBold(
+                                        'ข้อมูลคุณภาพน้ำประจำเดือน'),
+                                  ),
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: TextWidget.textTitle(
+                                      'ประจำวันที่ ${Month.getMonthTitleReverse(result['data']['report_at'])}',
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Container(
+                                        width: 10,
+                                        height: 10,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: yellow_n,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Container(
+                                        child: TextWidget.textTitle(
+                                            '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
+                                      ),
+                                    ],
+                                  ),
+                                  ButtonApp.buttonSecondaryGradient(
+                                      context, 'ดูประวัติการส่งรายงานทั้งหมด',
+                                      () {
+                                    Get.to(ProgressDetail(
+                                      result: result,
+                                      station: widget.station,
+                                      dateLebal: Month.getMonthTitleReverse(
+                                          result['data']['report_at']),
+                                    ));
+                                  }),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(height: 1, color: Colors.black),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  uploadPhotoCard(),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(height: 1, color: Colors.black),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  before(),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'ค่า DO',
+                                      'mg/I',
+                                      doBeforeController,
+                                      doBeforeValidate,
+                                      doBeforeValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        doBeforeValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'ค่า pH',
+                                      '',
+                                      phBeforeController,
+                                      phBeforeValidate,
+                                      phBeforeValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        phBeforeValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'ค่าอุณหภูมิ',
+                                      'ํC',
+                                      temperatureBeforeController,
+                                      temperatureBeforeValidate,
+                                      temperatureBeforeValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        temperatureBeforeValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(height: 1, color: Colors.black),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  after(),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'ค่า DO',
+                                      'mg/I',
+                                      doAfterController,
+                                      doAfterValidate,
+                                      doAfterValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        doAfterValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'ค่า pH',
+                                      '',
+                                      phAfterController,
+                                      phAfterValidate,
+                                      phAfterValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        phAfterValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'ค่าอุณหภูมิ',
+                                      'ํC',
+                                      temperatureAfterController,
+                                      temperatureAfterValidate,
+                                      temperatureAfterValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        temperatureAfterValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  listViewComment(),
+                                  checkBox(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ButtonApp.buttonSecondaryHalf(
+                                        context,
+                                        'ตีกลับ',
+                                        () async {
+                                          final SharedPreferences prefs =
+                                              await _prefs;
+                                          String? authorization =
+                                              prefs.getString('access_token');
+
+                                          Get.to(RejectPopup(
+                                            role: widget.role,
+                                            station: widget.station,
+                                            dateLabel: widget.datelabel,
+                                            authorization: authorization!,
+                                            doo: doBeforeController.text,
+                                            // file: img,
+                                            ph: phBeforeController.text,
+                                            temp: temperatureBeforeController
+                                                .text,
+                                            treatedDoo: doAfterController.text,
+                                            treatedPh: phAfterController.text,
+                                            treatedTemp:
+                                                temperatureAfterController.text,
+                                            treatedWater: totalController.text,
+                                            type: 'DAILY',
+                                            documentId:
+                                                '${widget.document['id']}',
+                                            img: img,
+                                          ));
+                                        },
+                                      ),
+                                      ButtonApp.buttonMainhalf(
+                                          context, 'ยืนยัน', () async {
+                                        if (checkValidate()) {
+                                          final SharedPreferences prefs =
+                                              await _prefs;
+                                          String? authorization =
+                                              prefs.getString('access_token');
+
+                                          List<String> dataImg = [];
+                                          for (var i = 0; i < img.length; i++) {
+                                            if (img[i]['type'] == 'file') {
+                                              print(dataImg);
+                                              String temp = convertIntoBase64(
+                                                  img[i]['value']);
+                                              dataImg.add(temp);
+                                            }
+                                          }
+
+                                          if (!img.isNotEmpty) {
+                                            MyDialog.showAlertDialogOk(context,
+                                                'กรุณาแนบภาพอย่างน้อย 1 ภาพ',
+                                                () {
+                                              Get.back();
+                                            });
+                                          } else {
+                                            Get.to(ApprovePopup(
+                                              role: widget.role,
+                                              station: widget.station,
+                                              dateLabel:
+                                                  Month.getMonthTitleReverse(
+                                                      widget.datelabel),
+                                              authorization: authorization!,
+                                              doo: doBeforeController.text,
+                                              files: dataImg,
+                                              ph: phBeforeController.text,
+                                              temp: temperatureBeforeController
+                                                  .text,
+                                              treatedDoo:
+                                                  doAfterController.text,
+                                              treatedPh: phAfterController.text,
+                                              treatedTemp:
+                                                  temperatureAfterController
+                                                      .text,
+                                              treatedWater:
+                                                  totalController.text,
+                                              type: 'DAILY',
+                                              documentId:
+                                                  '${widget.document['id']}',
+                                              mediaDelete: delete,
+                                              img: img,
+                                            ));
+                                          }
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(const SnackBar(
+                                            content: Text(
+                                                "กรุณาตรวจสอบข้อมูลให้ครบทุกช่อง"),
+                                          ));
+                                        }
+                                      }, isCheckBox),
+                                    ],
+                                  )
+                                ])))),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
+  }
+
+  bool checkValidate() {
+    if (totalValidateCb == false) {
+      return false;
+    }
+
+    if (doBeforeValidateCb == false) {
+      return false;
+    }
+
+    if (phBeforeValidateCb == false) {
+      return false;
+    }
+    if (temperatureBeforeValidateCb == false) {
+      return false;
+    }
+
+    if (doAfterValidateCb == false) {
+      return false;
+    }
+
+    if (phAfterValidateCb == false) {
+      return false;
+    }
+
+    if (temperatureAfterValidateCb == false) {
+      return false;
+    }
+
+    return true;
   }
 
   Widget checkBox() {
@@ -304,10 +522,9 @@ class _ReportFormManagerState extends State<ReportFormManager> {
           width: 20,
         ),
         Expanded(
-          child: TextWidget.textGeneralWithColor(
-              'กรุณาตรวจสอบความถูกต้อง หลังจากกด “ยืนยัน”\nจะเข้าสู่สถานะ “รอส่วนกลางการตรวจสอบ”',
-              Colors.grey),
-        ),
+            child: TextWidget.textSubTitleWithSize(
+                'กรุณาตรวจสอบความถูกต้องก่อนกด “ยืนยัน” เมื่อกด “ยืนยัน” \nแล้วสถานะจะเปลี่ยนเป็น “รอส่วนกลางการตรวจสอบ”',
+                10)),
       ],
     );
   }
@@ -371,7 +588,7 @@ class _ReportFormManagerState extends State<ReportFormManager> {
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: orange,
+              color: blue_n_2,
               borderRadius: const BorderRadius.all(Radius.circular(5))),
           child: Column(children: [
             Row(
@@ -407,7 +624,6 @@ class _ReportFormManagerState extends State<ReportFormManager> {
 
   Widget before() {
     return Container(
-      color: greyBG,
       child: Column(
         children: [
           const SizedBox(
@@ -434,8 +650,8 @@ class _ReportFormManagerState extends State<ReportFormManager> {
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: yellow_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Center(
                 child: TextWidget.textGeneralWithColor('1', Colors.white),
               ),
@@ -449,8 +665,8 @@ class _ReportFormManagerState extends State<ReportFormManager> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextWidget.textBig('ก่อน'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำก่อนบำบัด', Colors.grey),
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('ก่อนการบำบัด'),
           ],
         )
       ],
@@ -523,62 +739,77 @@ class _ReportFormManagerState extends State<ReportFormManager> {
                 return Stack(
                   children: [
                     Card(
-                      child: img[index]['type'] == 'url'
-                          ? Image.network(
-                              img[index]['value'],
-                              height: 170,
-                              width: 100,
-                            )
-                          : Image.file(
-                              img[index]['value'],
-                              height: 170,
-                              width: 100,
-                            ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        delete.add(img[index]['uuid']);
-                        img.removeAt(index);
-                        setState(() {});
-                      },
-                      child: Image.asset(
-                        'asset/images/close.png',
+                      child: GestureDetector(
+                    onTap: () {
+                         Get.to(PreviewImageValue(img:  img[index],));
+                    },
+                        child: img[index]['type'] == 'url'
+                            ? Image.network(
+                                img[index]['value'],
+                                height: 170,
+                                width: 100,
+                              )
+                            : Image.file(
+                                img[index]['value'],
+                                height: 170,
+                                width: 100,
+                              ),
                       ),
                     ),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     delete.add(img[index]['uuid']);
+                    //     img.removeAt(index);
+                    //     setState(() {});
+                    //   },
+                    //   child: Image.asset(
+                    //     'asset/images/close.png',
+                    //   ),
+                    // ),
                   ],
                 );
               },
             )),
-        const SizedBox(
-          height: 5,
-        ),
-        ButtonApp.buttonOutline(context, 'เปิดกล้องถ่ายภาพ (${img.length}/4)',
-            () async {
-          if (img.length >= 4) {
-            _showSnackBar();
-          } else {
-            final ImagePicker _picker = ImagePicker();
-            final XFile? photo = await _picker.pickImage(
-              source: ImageSource.camera,
-              imageQuality: 80,
-            );
-            File photofile = File(photo!.path);
-            img.add({'type': 'file', 'value': photofile, 'uuid': ''});
-            setState(() {});
-          }
-        }),
+        // const SizedBox(
+        //   height: 5,
+        // ),
+        // ButtonApp.buttonOutline(context, 'เปิดกล้องถ่ายภาพ (${img.length}/4)',
+        //     () async {
+        //   if (img.length >= 4) {
+        //     _showSnackBar();
+        //   } else {
+        //     final ImagePicker _picker = ImagePicker();
+        //     final XFile? photo = await _picker.pickImage(
+        //       source: ImageSource.camera,
+        //       imageQuality: 80,
+        //     );
+        //     File photofile = File(photo!.path);
+        //     img.add({'type': 'file', 'value': photofile, 'uuid': ''});
+        //     setState(() {});
+        //   }
+        // }),
         const SizedBox(
           height: 5,
         ),
         Container(
             alignment: Alignment.centerLeft,
             width: MediaQuery.of(context).size.width,
-            child: Edittext.edittextForm('ปริมาณน้ำเสียที่ผ่านการบำบัด',
-                'ลบ.ม.', totalController, totalValidate)),
+            child: Edittext.edittextFormWithCheckbox(
+                context,
+                'ปริมาณน้ำเสียที่ผ่านการบำบัด',
+                'ลบ.ม.',
+                totalController,
+                totalValidate,
+                totalValidateCb, (value) {
+              setState(() {
+                if (value != null) {
+                  totalValidateCb = value;
+                }
+              });
+            })),
       ],
     );
   }
-
 
   _showSnackBar() {
     const snackBar = SnackBar(
@@ -589,7 +820,6 @@ class _ReportFormManagerState extends State<ReportFormManager> {
 
   Widget after() {
     return Container(
-      color: blueButtonBorder,
       child: Column(
         children: [
           const SizedBox(
@@ -616,8 +846,8 @@ class _ReportFormManagerState extends State<ReportFormManager> {
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: blue_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Center(
                 child: TextWidget.textGeneralWithColor('2', Colors.white),
               ),
@@ -631,8 +861,8 @@ class _ReportFormManagerState extends State<ReportFormManager> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextWidget.textBig('หลัง'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำหลังบำบัด', Colors.grey),
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('หลังการบำบัด'),
           ],
         )
       ],

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:wma_app/view/notification/notificationlist.dart';
 
 class NavigateBar {
   static Widget NavBar(
       BuildContext context, String title, GestureTapCallback onBack) {
     return Container(
-      color: Colors.white,
+      color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 18.0),
         child: Stack(
@@ -23,7 +25,7 @@ class NavigateBar {
                       splashFactory: NoSplash.splashFactory,
                     ),
                     icon: Image.asset(
-                      'asset/images/arrow_back.png',
+                      'asset/images/arrow_left_n.png',
                     ),
                     onPressed: onBack,
                   ),
@@ -32,7 +34,7 @@ class NavigateBar {
               child: Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 12,
                   fontWeight: FontWeight.w800,
                   color: Colors.black,
                 ),
@@ -47,7 +49,7 @@ class NavigateBar {
   static Widget NavBarWithNotification(
       BuildContext context, String title, GestureTapCallback onBack) {
     return Container(
-      color: Colors.white,
+      color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 18.0),
         child: Stack(
@@ -99,7 +101,9 @@ class NavigateBar {
                           icon: Image.asset(
                             'asset/images/bi_bell.png',
                           ),
-                          onPressed: () {}),
+                          onPressed: () {
+                            Get.to(NotificationList());
+                          }),
                     )
                   ],
                 )),
@@ -112,19 +116,7 @@ class NavigateBar {
   static Widget NavBarWithNotebook(
       BuildContext context, String title, GestureTapCallback onBack) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 10,
-            offset: const Offset(3, 0), // changes position of shadow
-          ),
-          const BoxShadow(color: Colors.white, offset: Offset(0, -16)),
-        ],
-      ),
-      // color: Colors.white,
+      color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 18.0),
         child: Stack(
@@ -143,7 +135,7 @@ class NavigateBar {
                       splashFactory: NoSplash.splashFactory,
                     ),
                     icon: Image.asset(
-                      'asset/images/arrow_back.png',
+                      'asset/images/arrow_left_n.png',
                     ),
                     onPressed: onBack,
                   ),
@@ -158,34 +150,33 @@ class NavigateBar {
                 ),
               ),
             ),
-            Align(
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Theme(
-                      data: Theme.of(context).copyWith(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                      ),
-                      child: IconButton(
-                          style: ElevatedButton.styleFrom(
-                            splashFactory: NoSplash.splashFactory,
-                          ),
-                          icon: Image.asset(
-                            'asset/images/notebook.png',
-                          ),
-                          onPressed: () {}),
-                    )
-                  ],
-                )),
+            // Align(
+            //     alignment: Alignment.centerRight,
+            //     child: Row(
+            //       mainAxisSize: MainAxisSize.min,
+            //       children: [
+            //         Theme(
+            //           data: Theme.of(context).copyWith(
+            //             highlightColor: Colors.transparent,
+            //             splashColor: Colors.transparent,
+            //             hoverColor: Colors.transparent,
+            //           ),
+            //           child: IconButton(
+            //               style: ElevatedButton.styleFrom(
+            //                 splashFactory: NoSplash.splashFactory,
+            //               ),
+            //               icon: Image.asset(
+            //                 'asset/images/notebook.png',
+            //               ),
+            //               onPressed: () {}),
+            //         )
+            //       ],
+            //     )),
           ],
         ),
       ),
     );
   }
-
 
   static Widget NavBarHome(
       BuildContext context, String title, GestureTapCallback onBack) {

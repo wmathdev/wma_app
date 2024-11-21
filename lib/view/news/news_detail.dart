@@ -66,9 +66,9 @@ class _NewsDetailState extends State<NewsDetail> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Lottie.asset(
-                      'asset/lottie/animation_lk0uamsc.json',
-                      width: 200,
-                      height: 200,
+                      'asset/lottie/Loading1.json',
+                      width: 150,
+                      height: 150,
                       fit: BoxFit.fill,
                     ),
                     TextWidget.textGeneralWithColor(
@@ -120,10 +120,10 @@ class _NewsDetailState extends State<NewsDetail> {
                             ),
                           ),
                           Container(
-                              alignment: Alignment.bottomCenter,
+                            alignment: Alignment.bottomCenter,
                             height: 215.0,
                             child: Container(
-                                  height: 30.0,
+                              height: 30.0,
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
                                   color: Colors.white,
@@ -153,7 +153,8 @@ class _NewsDetailState extends State<NewsDetail> {
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: TextWidget.textTitleHTMLBoldBlue(
-                            widget.news['title']['rendered'],),
+                          widget.news['title']['rendered'],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),

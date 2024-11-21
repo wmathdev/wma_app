@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
+import 'package:wma_app/Utils/MapUtils.dart';
+import 'package:wma_app/Utils/label.dart';
 
 import 'package:wma_app/widget/text_widget.dart';
 
@@ -40,8 +42,9 @@ class _OverviewState extends State<Overview> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   bool loading = true;
+  bool bottomfiltermenu = false;
 
-  String searchtitle = 'ค้นหาศูนย์บำบัดน้ำ';
+  String searchtitle = 'ค้นหาศูนย์บริหารจัดการคุณภาพน้ำ';
 
   static const CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
@@ -88,6 +91,7 @@ class _OverviewState extends State<Overview> {
     for (var i = 0; i < mapData.length; i++) {
       List<String> words = mapData[i]['location'].trim().split(",");
       try {
+        print('doMin $doMin : doMax $doMax');
         if (mapData[i]['document'] != null) {
           if (mapData[i]['document']['treated_doo'] >= doMin &&
               mapData[i]['document']['treated_doo'] <= doMax) {
@@ -118,10 +122,12 @@ class _OverviewState extends State<Overview> {
                         }
                       }
 
-                      showBottomSheet(mapData[i], true,
+                      showBottomSheet(
+                          mapData[i],
+                          true,
                           mapData[i]['document']['evaluate']['result'],
-                          LatLng(double.parse(words[0]),
-                                    double.parse(words[1])));
+                          LatLng(
+                              double.parse(words[0]), double.parse(words[1])));
                     },
                     markerId: MarkerId(mapData[i]['id'].toString()),
                     position:
@@ -138,7 +144,8 @@ class _OverviewState extends State<Overview> {
             MarkerData(
                 marker: Marker(
                   onTap: () {
-                    showBottomSheet(mapData[i], false, false,const LatLng(0,0));
+                    showBottomSheet(mapData[i], false, false,
+                        LatLng(double.parse(words[0]), double.parse(words[1])));
                   },
                   markerId: MarkerId(mapData[i]['id'].toString()),
                   position:
@@ -183,9 +190,9 @@ class _OverviewState extends State<Overview> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               lottie.Lottie.asset(
-                'asset/lottie/animation_lk0uamsc.json',
-                width: 200,
-                height: 200,
+                'asset/lottie/Loading1.json',
+                width: 150,
+                height: 150,
                 fit: BoxFit.fill,
               ),
               TextWidget.textGeneralWithColor('กรุณารอสักครู่...', blueSelected)
@@ -201,7 +208,7 @@ class _OverviewState extends State<Overview> {
             'WMA Clear Water APP collects location data to enable identification of nearby Wastewater Stations even when the app is closed or not in use.',
             () async {
           final SharedPreferences prefs = await _prefs;
-          prefs.setBool('location_consent', true);
+          await prefs.setBool('location_consent', true);
           Get.back();
         }, () {
           exit(0);
@@ -278,21 +285,22 @@ class _OverviewState extends State<Overview> {
             width: 60,
             height: 60,
             child: rule == 1
-                ? Image.asset('asset/images/marker.png')
+                ? Image.asset('asset/images/blue_pin_n.png')
                 : rule == 2
-                    ? Image.asset('asset/images/markeryellow.png')
-                    : Image.asset('asset/images/markergrey.png')),
+                    ? Image.asset('asset/images/red_pin_n.png')
+                    : Image.asset('asset/images/blue_pin_n.png')),
         Positioned(
-          left: 20,
-          top: 8,
+          left: 15,
+          top: 10,
           child: Container(
-            width: 20,
-            height: 20,
+            width: 30,
+            height: 30,
             decoration: BoxDecoration(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.circular(10)),
             child: Center(
-                child: TextWidget.textTitleBoldWithColorMarker(symbol, Colors.white)),
+                child: TextWidget.textTitleBoldWithColorMarker(
+                    symbol, Colors.white)),
           ),
         )
       ],
@@ -316,7 +324,8 @@ class _OverviewState extends State<Overview> {
                 color: Colors.transparent,
                 borderRadius: BorderRadius.circular(10)),
             child: Center(
-                child: TextWidget.textTitleBoldWithColorMarker(symbol, Colors.white)),
+                child: TextWidget.textTitleBoldWithColorMarker(
+                    symbol, Colors.white)),
           ),
         )
       ],
@@ -327,40 +336,47 @@ class _OverviewState extends State<Overview> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      child: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(flex: 10, child: searchbar()),
-            Expanded(
-                flex: 2,
-                child: MaterialButton(
-                  onPressed: () async {
-                    var loc = await Geolocator.getCurrentPosition(
-                        desiredAccuracy: LocationAccuracy.low);
+      child: Stack(
+        children: [
+          bottomfiltermenu ? bottomBar() : iconmenu(),
+          Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(flex: 10, child: searchbar()),
+                Expanded(
+                    flex: 2,
+                    child: MaterialButton(
+                      minWidth: 10,
+                      height: 20,
+                      onPressed: () async {
+                        var loc = await Geolocator.getCurrentPosition(
+                            desiredAccuracy: LocationAccuracy.low);
 
-                    GoogleMapController controller = await _controller.future;
+                        GoogleMapController controller =
+                            await _controller.future;
 
-                    Timer(const Duration(milliseconds: 500), () async {
-                      controller.animateCamera(CameraUpdate.newLatLngZoom(
-                          LatLng(loc.latitude, loc.longitude), 14.4746));
-                    });
-                  },
-                  color: Colors.white,
-                  textColor: Colors.white,
-                  padding: EdgeInsets.all(10),
-                  shape: CircleBorder(),
-                  child: SizedBox(
-                    width: 15,
-                    height: 15,
-                    child: Image.asset('asset/images/target.png'),
-                  ),
-                )),
-          ],
-        ),
-        headerBar(),
-        bottomBar(),
-      ]),
+                        Timer(const Duration(milliseconds: 500), () async {
+                          controller.animateCamera(CameraUpdate.newLatLngZoom(
+                              LatLng(loc.latitude, loc.longitude), 14.4746));
+                        });
+                      },
+                      color: Colors.white,
+                      textColor: Colors.white,
+                      padding: EdgeInsets.all(10),
+                      shape: CircleBorder(),
+                      child: SizedBox(
+                        width: 15,
+                        height: 15,
+                        child: Image.asset('asset/images/target.png'),
+                      ),
+                    )),
+              ],
+            ),
+            headerBar(),
+          ]),
+        ],
+      ),
     );
   }
 
@@ -397,19 +413,21 @@ class _OverviewState extends State<Overview> {
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: 44,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(15),
                     color: Colors.white),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     const SizedBox(
-                      width: 5,
+                      width: 10,
                     ),
-                    Image.asset('asset/images/homewater.png'),
+                    Image.asset('asset/images/start_search_icon.png'),
                     const SizedBox(
                       width: 10,
                     ),
-                    Expanded(child: TextWidget.textTitle(searchtitle)),
+                    Expanded(
+                        child: TextWidget.textSubTitleWithSizeColor(
+                            searchtitle, 10, Colors.black45)),
                   ],
                 )),
           ),
@@ -428,6 +446,9 @@ class _OverviewState extends State<Overview> {
                   ),
                 ),
               ),
+              const SizedBox(
+                width: 5,
+              )
             ],
           ),
         ],
@@ -445,7 +466,7 @@ class _OverviewState extends State<Overview> {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Image.asset('asset/images/wave.png'),
+            Image.asset('asset/images/drop.png'),
             const SizedBox(
               width: 10,
             ),
@@ -467,12 +488,12 @@ class _OverviewState extends State<Overview> {
                   children: [
                     TextWidget.textTitleWithColorSize(
                         'ล่าสุด ', Colors.grey, 13),
-                    TextWidget.textTitleWithColorSize(today, blueSelected, 13),
+                    TextWidget.textTitleWithGradient(today, blueSelected, 13),
                     TextWidget.textTitleWithColorSize(
-                        ' ลบ.ม. ', Colors.grey, 13),
-                    TextWidget.textTitleWithColorSize('สะสม ', Colors.grey, 13),
+                        ' ลบ.ม. |', Colors.grey, 13),
                     TextWidget.textTitleWithColorSize(
-                        summary, blueSelected, 13),
+                        ' สะสม ', Colors.grey, 13),
+                    TextWidget.textTitleWithGradient(summary, blueSelected, 13),
                     TextWidget.textTitleWithColorSize(
                         ' ลบ.ม. ', Colors.grey, 13),
                   ],
@@ -485,18 +506,56 @@ class _OverviewState extends State<Overview> {
     );
   }
 
+  Widget iconmenu() {
+    return Align(
+      alignment: FractionalOffset.bottomRight,
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            bottomfiltermenu = true;
+          });
+        },
+        child: Container(
+          height: 50,
+          width: 50,
+          margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Image.asset('asset/images/setting.png'),
+        ),
+      ),
+    );
+  }
+
   Widget bottomBar() {
-    return Expanded(
-      child: Align(
-          alignment: FractionalOffset.bottomCenter,
-          child: Padding(
-              padding: EdgeInsets.only(bottom: 20.0),
-              child: Container(
+    return Align(
+        alignment: FractionalOffset.bottomCenter,
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              bottomfiltermenu = false;
+            });
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white),
                 width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.16,
+                height: MediaQuery.of(context).size.height * 0.13,
                 child: Column(
                   children: [
                     Padding(
@@ -549,13 +608,13 @@ class _OverviewState extends State<Overview> {
                                   begin: Alignment.topRight,
                                   end: Alignment.bottomLeft,
                                   colors: [
-                                    darkblue_range,
-                                    darkblue_range,
-                                    darkblue_range,
-                                    darkblue_range,
-                                    darkblue_range,
-                                    yellow_range,
-                                    yellow_range
+                                    blue_n,
+                                    blue_n,
+                                    blue_n,
+                                    blue_n,
+                                    blue_n,
+                                    red_n,
+                                    red_n
                                   ],
                                 )),
                           ),
@@ -609,6 +668,7 @@ class _OverviewState extends State<Overview> {
                                       16,
                                       Colors.black)),
                               onChanged: (SfRangeValues values) async {
+                                print(values);
                                 setState(() {
                                   _values = values;
                                   doMin = values.start;
@@ -623,11 +683,17 @@ class _OverviewState extends State<Overview> {
                     ),
                   ],
                 ),
-              ))),
-    );
+              ),
+              const SizedBox(
+                height: 20,
+              )
+            ],
+          ),
+        ));
   }
 
-  showBottomSheet(dynamic station, bool isSubmited, bool isRule,LatLng latlng) {
+  showBottomSheet(
+      dynamic station, bool isSubmited, bool isRule, LatLng latlng) {
     showModalBottomSheet<void>(
         context: context,
         enableDrag: false,
@@ -637,7 +703,7 @@ class _OverviewState extends State<Overview> {
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             height: isSubmited
-                ? MediaQuery.of(context).size.height * 0.45
+                ? MediaQuery.of(context).size.height * 0.4
                 : MediaQuery.of(context).size.height * 0.25,
             child: Center(
               child: Column(
@@ -665,8 +731,17 @@ class _OverviewState extends State<Overview> {
                       children: [
                         SizedBox(width: 30, height: 30, child: Container()),
                         Expanded(
+                            child: TextWidget.textTitle(
+                                'ศูนย์บริหารจัดการคุณภาพน้ำ')),
+                      ]),
+                  Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(width: 30, height: 30, child: Container()),
+                        Expanded(
                             child: TextWidget.textTitleBoldWithColor(
-                                station['name'], Colors.black)),
+                                station['lite_name'], Colors.black)),
                       ]),
                   Row(
                     mainAxisSize: MainAxisSize.max,
@@ -675,9 +750,11 @@ class _OverviewState extends State<Overview> {
                       SizedBox(
                         width: 30,
                         height: 30,
-                        child: Image.asset('asset/images/carbon_location.png'),
+                        child: Image.asset('asset/images/mappin.png'),
                       ),
-                      Expanded(child: TextWidget.textTitle(station['address'])),
+                      Expanded(
+                          child: TextWidget.textTitleHTMLBoldLimit1(
+                              station['address'])),
                     ],
                   ),
                   isSubmited
@@ -688,8 +765,7 @@ class _OverviewState extends State<Overview> {
                             SizedBox(
                               width: 30,
                               height: 30,
-                              child: Image.asset(
-                                  'asset/images/water-voc-outline.png'),
+                              child: Image.asset('asset/images/mapdrop.png'),
                             ),
                             Expanded(
                                 flex: 2,
@@ -697,10 +773,12 @@ class _OverviewState extends State<Overview> {
                                     'ล่าสุดบำบัดน้ำเสียแล้ว')),
                             Expanded(
                               flex: 1,
-                              child: TextWidget.textTitleBoldWithColor(
+                              child: TextWidget.textSubTitleWithSizeGradient(
                                   station['document'] == null
                                       ? '-'
-                                      : station['document']['treated_water'],
+                                      : Label.commaFormat(
+                                          station['document']['treated_water']),
+                                  15,
                                   blueSelected),
                             ),
                             Expanded(
@@ -710,116 +788,179 @@ class _OverviewState extends State<Overview> {
                       : Container(),
                   isSubmited
                       ? Container(
-                          margin: const EdgeInsets.all(10),
-                          height: MediaQuery.of(context).size.height * 0.12,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: isRule
-                                  ? blueGreenlight
-                                  : Color.fromARGB(255, 255, 246, 174)),
                           child: Row(
                             children: [
-                              Expanded(
-                                  flex: 1,
-                                  child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.1,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                topLeft: Radius.circular(10),
-                                                bottomLeft: Radius.circular(10),
-                                              ),
-                                              color: isRule
-                                                  ? blueGreen
-                                                  : Color.fromARGB(
-                                                      255, 255, 209, 102)),
-                                        ),
-                                        Container(
-                                            padding: const EdgeInsets.all(10),
-                                            child: isRule
-                                                ? Image.asset(
-                                                    'asset/images/circlewater.png')
-                                                : Image.asset(
-                                                    'asset/images/circlewateryellow.png')),
-                                        TextWidget.textTitleBoldWithColor(
-                                            station['document'] == null
-                                                ? '-'
-                                                : '${station['document']['treated_doo']}',
-                                            Colors.white)
-                                      ])),
-                              Expanded(
-                                  flex: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        TextWidget.textBigWithColor(
-                                            station['document'] == null
-                                                ? '- mg/l'
-                                                : '${station['document']['treated_doo']} mg/l',
-                                            isRule
-                                                ? blueGreen
-                                                : Color.fromARGB(
-                                                    255, 255, 193, 48)),
-                                        TextWidget.textSubTitleWithSizeColor(
-                                            'ค่ามาตรฐานออกซิเจนในน้ำ\nDissolved oxygen (Do)',
-                                            8,
-                                            isRule
-                                                ? blueGreen
-                                                : Color.fromARGB(
-                                                    255, 255, 193, 48))
-                                      ],
-                                    ),
-                                  )),
-                              Expanded(
-                                  flex: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        TextWidget.textBigWithColor(
-                                            station['document'] == null
-                                                ? '-'
-                                                : station['document']
-                                                        ['evaluate']['result']
-                                                    ? 'ผ่าน'
-                                                    : 'ไม่ผ่าน',
-                                            isRule
-                                                ? blueGreen
-                                                : Color.fromARGB(
-                                                    255, 255, 193, 48)),
-                                        TextWidget.textSubTitleWithSizeColor(
-                                            'คุณภาพ',
-                                            8,
-                                            isRule
-                                                ? blueGreen
-                                                : Color.fromARGB(
-                                                    255, 255, 193, 48))
-                                      ],
-                                    ),
-                                  )),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              TextWidget.textSubTitleBoldWithSizeGradient(
+                                station['document'] == null
+                                    ? '-'
+                                    : '${station['document']['treated_doo']}',
+                                55,
+                                blue_n,
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextWidget.textSubTitleWithSizeColor(
+                                      'mg/I', 15, Colors.black),
+                                  TextWidget.textSubTitleWithSizeColor(
+                                      'ค่ามาตรฐานออกซิเจนในน้ำ\nDissolved Oxygen (Do)',
+                                      10,
+                                      Colors.black26)
+                                ],
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                width: 1,
+                                height: 50,
+                                color: blue_navy_n,
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextWidget.textSubTitleWithSizeColor(
+                                      station['document'] == null
+                                          ? '-'
+                                          : station['document']['evaluate']
+                                                  ['result']
+                                              ? 'ผ่าน'
+                                              : 'ไม่ผ่าน',
+                                      15,
+                                      Colors.black),
+                                  TextWidget.textSubTitleWithSizeColor(
+                                      'คุณภาพ\n', 10, Colors.black26)
+                                ],
+                              ),
                             ],
                           ),
                         )
+
+                      // Container(
+                      //     margin: const EdgeInsets.all(10),
+                      //     height: MediaQuery.of(context).size.height * 0.12,
+                      //     decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(10),
+                      //         color: isRule
+                      //             ? blueGreenlight
+                      //             : Color.fromARGB(255, 255, 246, 174)),
+                      //     child: Row(
+                      //       children: [
+                      //         Expanded(
+                      //             flex: 1,
+                      //             child: Stack(
+                      //                 alignment: Alignment.center,
+                      //                 children: [
+                      //                   Container(
+                      //                     height: MediaQuery.of(context)
+                      //                             .size
+                      //                             .height *
+                      //                         0.1,
+                      //                     decoration: BoxDecoration(
+                      //                         borderRadius:
+                      //                             const BorderRadius.only(
+                      //                           topLeft: Radius.circular(10),
+                      //                           bottomLeft: Radius.circular(10),
+                      //                         ),
+                      //                         color: isRule
+                      //                             ? blueGreen
+                      //                             : Color.fromARGB(
+                      //                                 255, 255, 209, 102)),
+                      //                   ),
+                      //                   Container(
+                      //                       padding: const EdgeInsets.all(10),
+                      //                       child: isRule
+                      //                           ? Image.asset(
+                      //                               'asset/images/circlewater.png')
+                      //                           : Image.asset(
+                      //                               'asset/images/circlewateryellow.png')),
+                      //                   TextWidget.textTitleBoldWithColor(
+                      //                       station['document'] == null
+                      //                           ? '-'
+                      //                           : '${station['document']['treated_doo']}',
+                      //                       Colors.white)
+                      //                 ])),
+                      //         Expanded(
+                      //             flex: 1,
+                      //             child: Padding(
+                      //               padding: const EdgeInsets.all(8.0),
+                      //               child: Column(
+                      //                 mainAxisAlignment:
+                      //                     MainAxisAlignment.center,
+                      //                 children: [
+                      //                   TextWidget.textBigWithColor(
+                      //                       station['document'] == null
+                      //                           ? '- mg/l'
+                      //                           : '${station['document']['treated_doo']} mg/l',
+                      //                       isRule
+                      //                           ? blueGreen
+                      //                           : Color.fromARGB(
+                      //                               255, 255, 193, 48)),
+                      //                   TextWidget.textSubTitleWithSizeColor(
+                      //                       'ค่ามาตรฐานออกซิเจนในน้ำ\nDissolved oxygen (Do)',
+                      //                       8,
+                      //                       isRule
+                      //                           ? blueGreen
+                      //                           : Color.fromARGB(
+                      //                               255, 255, 193, 48))
+                      //                 ],
+                      //               ),
+                      //             )),
+                      //         Expanded(
+                      //             flex: 1,
+                      //             child: Padding(
+                      //               padding: const EdgeInsets.all(8.0),
+                      //               child: Column(
+                      //                 mainAxisAlignment:
+                      //                     MainAxisAlignment.center,
+                      //                 children: [
+                      //                   TextWidget.textBigWithColor(
+                      //                       station['document'] == null
+                      //                           ? '-'
+                      //                           : station['document']
+                      //                                   ['evaluate']['result']
+                      //                               ? 'ผ่าน'
+                      //                               : 'ไม่ผ่าน',
+                      //                       isRule
+                      //                           ? blueGreen
+                      //                           : Color.fromARGB(
+                      //                               255, 255, 193, 48)),
+                      //                   TextWidget.textSubTitleWithSizeColor(
+                      //                       'คุณภาพ',
+                      //                       8,
+                      //                       isRule
+                      //                           ? blueGreen
+                      //                           : Color.fromARGB(
+                      //                               255, 255, 193, 48))
+                      //                 ],
+                      //               ),
+                      //             )),
+                      //       ],
+                      //     ),
+                      //   )
                       : Container(),
-                  ButtonApp.buttonMain(context, 'ดูรายละเอียด', () async {
+                  ButtonApp.buttonMainGradientWithIcon(context, 'ดูรายละเอียด',
+                      () async {
                     Get.to(OverviewDertail(
-                      stationId: '${station['id']}',
-                      isSubmited: isSubmited,
-                      isRule: isRule,
-                      latlng: latlng
-                    ));
+                        stationId: '${station['id']}',
+                        isSubmited: isSubmited,
+                        isRule: isRule,
+                        latlng: latlng));
                   }, true),
+                  ButtonApp.buttonSecondary(context, 'นำทาง', () async {
+                    await MapUtils.openMap(latlng.latitude, latlng.longitude);
+                  }),
                 ],
               ),
             ),

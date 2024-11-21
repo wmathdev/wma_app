@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wma_app/model/user.dart';
 
 import 'package:wma_app/model/workflow.dart';
 import 'package:wma_app/widget/text_widget.dart';
@@ -16,11 +17,14 @@ import '../../widget/navigatebar.dart';
 class ProgressDetail extends StatefulWidget {
   String dateLebal;
   dynamic result;
-  ProgressDetail({
-    Key? key,
-    required this.dateLebal,
-    required this.result,
-  }) : super(key: key);
+  Station station;
+
+  ProgressDetail(
+      {Key? key,
+      required this.dateLebal,
+      required this.result,
+      required this.station})
+      : super(key: key);
 
   @override
   State<ProgressDetail> createState() => _ProgressDetailState();
@@ -44,6 +48,12 @@ class _ProgressDetailState extends State<ProgressDetail> {
         trans.add(tempTrans);
       }
 
+      // for (var i = temp.length - 1 ; i > 0; i--) {
+      //   Transactions tempTrans = Transactions.fromMap(temp[i]);
+
+      //   trans.add(tempTrans);
+      // }
+
       setState(() {
         workflow = Workflow(
             id: widget.result['data']['workflow']['id'],
@@ -51,7 +61,8 @@ class _ProgressDetailState extends State<ProgressDetail> {
             progress: widget.result['data']['workflow']['progress'],
             label: widget.result['data']['workflow']['label'],
             tansactions: trans,
-            completedAt: widget.result['data']['workflow']['completed_at'] ?? '');
+            completedAt:
+                widget.result['data']['workflow']['completed_at'] ?? '');
 
         loading = false;
       });
@@ -63,15 +74,14 @@ class _ProgressDetailState extends State<ProgressDetail> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          // decoration: BoxDecoration(
-          //     gradient: LinearGradient(
-          //   begin: Alignment.topRight,
-          //   end: Alignment.bottomLeft,
-          //   colors: [
-          //     blueGradientTop,
-          //     blueGradientBottom,
-          //   ],
-          // )),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: ExactAssetImage('asset/images/waterbg.jpg'),
+              fit: BoxFit.fill,
+            ),
+          ),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           child: Column(
             children: [
               Container(
@@ -94,29 +104,80 @@ class _ProgressDetailState extends State<ProgressDetail> {
     return trans.isNotEmpty
         ? Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Row(
-                  children: [
-                    TextWidget.textGeneral(
-                        'ข้อมูลคุณภาพน้ำประจำวันที่ ${widget.dateLebal}'),
-                  ],
-                ),
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Image.asset('asset/images/iconintro.png')),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
+                      TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
+                    ],
+                  )
+                ],
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.7,
-                child: ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: trans.length + 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index == trans.length) {
-                        return ListItemWidget.progressItemHightlight(
-                            '${workflow.completedAt.length > 0 ? workflow.completedAt.substring(12) : '--:--'} น.', workflow.label);
-                      }
-                      return ListItemWidget.progressItem(
-                          '${trans[index].time}', trans[index].type);
-                    }),
+                height: MediaQuery.of(context).size.height * 0.4,
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+     
+                    ),
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            TextWidget.textTitle('ข้อมูลคุณภาพน้ำ'),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Row(
+                          children: [
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            TextWidget.textSubTitleBold(
+                                'ประจำวันที่ ${widget.dateLebal}'),
+                          ],
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: MediaQuery.of(context).size.height * 0.25,
+                          child: ListView.builder(
+                              padding: const EdgeInsets.all(8),
+                              itemCount: trans.length + 1,
+                              itemBuilder: (BuildContext context, int index) {
+                                if (index == 0) {
+                                  return ListItemWidget.progressItemHightlight(
+                                      '${workflow.completedAt.length > 0 ? workflow.completedAt.substring(12) : '--:--'} น.',
+                                      workflow.label);
+                                }
+                                return ListItemWidget.progressItem(
+                                    '${trans[index - 1].time}',
+                                    trans[index - 1].type);
+                              }),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ],
           )

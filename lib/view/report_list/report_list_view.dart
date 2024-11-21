@@ -57,6 +57,7 @@ class _ReportListState extends State<ReportList> {
   var loading = true;
 
   List<dynamic> data = [];
+  List<bool> publicList = [];
 
   Future<void> _getDocumentList(
     String peroid,
@@ -86,6 +87,9 @@ class _ReportListState extends State<ReportList> {
     } else {
       setState(() {
         data = result['data'];
+        for (var i = 0; i < data.length; i++) {
+          publicList.add(false);
+        }
         loading = false;
       });
       print(result['data']);
@@ -111,33 +115,48 @@ class _ReportListState extends State<ReportList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
-      child: Container(
-        color: Colors.white,
-        child: loading
-            ? Container(
-                color: Colors.white,
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset(
-                        'asset/lottie/animation_lk0uamsc.json',
-                        width: 200,
-                        height: 200,
+          child: Container(
+            color: Colors.white,
+            child: loading
+                ? Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: ExactAssetImage('asset/images/waterbg.jpg'),
                         fit: BoxFit.fill,
                       ),
-                      TextWidget.textGeneralWithColor(
-                          'กรุณารอสักครู่...', blueSelected)
-                    ],
-                  ),
-                ),
-              )
-            : contentView(),
-      ),
-    ));
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Lottie.asset(
+                            'asset/lottie/Loading1.json',
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.fill,
+                          ),
+                          TextWidget.textGeneralWithColor(
+                              'กรุณารอสักครู่...', blueSelected)
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: ExactAssetImage('asset/images/waterbg.jpg'),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: contentView()),
+          ),
+        ));
   }
 
   Widget contentView() {
@@ -145,26 +164,8 @@ class _ReportListState extends State<ReportList> {
       onRefresh: () => _getDocumentList(
         '',
       ),
-      child: Stack(
+      child: Column(
         children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 80,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: TextWidget.textSubTitle(widget.station.name),
-                  ),
-                  filterMenu(),
-                  listView()
-                ],
-              ),
-            ),
-          ),
           Container(
             height: 80,
             alignment: Alignment.topCenter,
@@ -172,6 +173,45 @@ class _ReportListState extends State<ReportList> {
                 context, 'รายงานประจำวันทั้งหมด', () {
               Get.back();
             }),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 110,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: Image.asset('asset/images/iconintro.png')),
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
+                  TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
+                ],
+              )
+                      ],
+                    ),
+                    filterMenu(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: TextWidget.textTitleBold('รายงานประจำวัน'),
+                      ),
+                    ),
+                    listView()
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -182,11 +222,11 @@ class _ReportListState extends State<ReportList> {
     return Row(
       children: [
         Expanded(
-            flex: 1,
+            flex: 3,
             child: TextButton(
                 onPressed: null,
                 child: Container(
-                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   width: MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
@@ -195,17 +235,17 @@ class _ReportListState extends State<ReportList> {
                         color: blueButtonBorder,
                       ),
                       borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
+                          const BorderRadius.all(Radius.circular(15))),
                   child: Center(
-                      child: TextWidget.textGeneralWithColor(
-                          month, blueButtonText)),
+                      child:
+                          TextWidget.textGeneralWithColor(month, Colors.black)),
                 ))),
         Expanded(
-            flex: 1,
+            flex: 3,
             child: TextButton(
                 onPressed: null,
                 child: Container(
-                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   width: MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
@@ -214,10 +254,10 @@ class _ReportListState extends State<ReportList> {
                         color: blueButtonBorder,
                       ),
                       borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
+                          const BorderRadius.all(Radius.circular(15))),
                   child: Center(
                       child: TextWidget.textGeneralWithColor(
-                          '${int.parse(year) + 543}', blueButtonText)),
+                          '${int.parse(year) + 543}', Colors.black)),
                 ))),
         Expanded(
             flex: 1,
@@ -242,16 +282,25 @@ class _ReportListState extends State<ReportList> {
                   loading = false;
                 });
               },
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Image.asset(
-                      'asset/images/bi_funnel.png',
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: Colors.white,
                     ),
-                    onPressed: () {},
-                  ),
-                  TextWidget.textGeneralWithColor('ตัวกรอง', blueButtonText)
-                ],
+                    borderRadius: const BorderRadius.all(Radius.circular(15))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: Image.asset(
+                        'asset/images/setting.png',
+                        scale: 1,
+                      ),
+                      onPressed: null,
+                    ),
+                  ],
+                ),
               ),
             ))
       ],
@@ -291,7 +340,7 @@ class _ReportListState extends State<ReportList> {
                 Month.getMonthTitleReverse(data[index]['date']),
                 '10.00',
                 widget.role, () async {
-              if ((Time.checkTimeStatus('00:00AM', '10:00AM') &&
+              if (( //Time.checkTimeStatus('00:00AM', '10:00AM') &&
                       widget.role == 'OPERATOR') ||
                   widget.role == 'ADMIN') {
                 await Get.to(ReportForm(
@@ -322,6 +371,7 @@ class _ReportListState extends State<ReportList> {
                         'COMPLETED') {
                   Get.to(ReportDetail(
                       documentId: '${data[index]['document']['id']}',
+                      station: widget.station,
                       role: widget.role));
                 } else {
                   await Get.to(ReportFormManager(
@@ -344,29 +394,42 @@ class _ReportListState extends State<ReportList> {
               return ListItemWidget.reportListItemTodayOfficer(
                   context,
                   '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
-                  '10.00', () async {
-                if (data[index]['document']['workflow']['state'] == 'REVIEW' ||
-                    data[index]['document']['workflow']['state'] == 'Review' ||
-                    data[index]['document']['workflow']['state'] ==
-                        'REVIEWING') {
-                  await Get.to(ReportFormOfficer(
-                    document: data[index]['document'],
-                    datelabel: data[index]['date'],
-                    role: widget.role,
-                    station: widget.station,
-                  ));
-                  setState(() {
-                    loading = true;
-                    _getDocumentList(
-                      '',
-                    );
-                  });
-                } else {
-                  Get.to(ReportDetail(
-                      documentId: '${data[index]['document']['id']}',
-                      role: widget.role));
-                }
-              }, data[index]['document'], () {});
+                  '10.00',
+                  () async {
+                    if (data[index]['document']['workflow']
+                                ['state'] ==
+                            'REVIEW' ||
+                        data[index]['document']['workflow']['state'] ==
+                            'Review' ||
+                        data[index]['document']['workflow']['state'] ==
+                            'REVIEWING') {
+                      await Get.to(ReportFormOfficer(
+                        document: data[index]['document'],
+                        datelabel: data[index]['date'],
+                        role: widget.role,
+                        station: widget.station,
+                      ));
+                      setState(() {
+                        loading = true;
+                        _getDocumentList(
+                          '',
+                        );
+                      });
+                    } else {
+                      Get.to(ReportDetail(
+                          documentId: '${data[index]['document']['id']}',
+                          station: widget.station,
+                          role: widget.role));
+                    }
+                  },
+                  data[index]['document'],
+                  () {},
+                  (value) {
+                    setState(() {
+                      publicList[index] = value;
+                    });
+                  },
+                  publicList[index]);
             }
 
             if (widget.role == 'ADMIN') {
@@ -379,7 +442,7 @@ class _ReportListState extends State<ReportList> {
                     'COMPLETED') {
                   Get.to(ReportDetail(
                       documentId: '${data[index]['document']['id']}',
-                      role: widget.role));
+                      role: widget.role, station: widget.station,));
                 } else {
                   final SharedPreferences prefs = await _prefs;
                   accessToken = (prefs.getString('access_token') ?? '');
@@ -420,7 +483,7 @@ class _ReportListState extends State<ReportList> {
                   data[index]['document']['workflow']['state'] == 'REVIEWING') {
                 Get.to(ReportDetail(
                     documentId: '${data[index]['document']['id']}',
-                    role: widget.role));
+                    role: widget.role, station: widget.station,));
               } else {
                 final SharedPreferences prefs = await _prefs;
                 accessToken = (prefs.getString('access_token') ?? '');
@@ -460,7 +523,7 @@ class _ReportListState extends State<ReportList> {
             '10.00', () {
           Get.to(ReportDetail(
               documentId: '${data[index]['document']['id']}',
-              role: widget.role));
+              role: widget.role, station: widget.station,));
         }, data[index]['document']);
       },
     );

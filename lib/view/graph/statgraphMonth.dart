@@ -62,23 +62,25 @@ class _StatGraphMonthState extends State<StatGraphMonth> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
-    List<dynamic> temp = widget.data;
-    for (var i = 0; i < temp.length; i++) {
-      if (temp[i]['total'] != null) {
-        listPlot.add(FlSpot(i.toDouble(), temp[i]['total'] * 1.0));
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      List<dynamic> temp = widget.data;
+      for (var i = 0; i < temp.length; i++) {
+        if (temp[i]['total'] != null) {
+          listPlot.add(FlSpot(i.toDouble(), temp[i]['total'] * 1.0));
 
-        lebelactive.add(false);
+          lebelactive.add(false);
 
-        if (maxValue < temp[i]['total'].toDouble()) {
-          maxValue = temp[i]['total'].toDouble();
+          if (maxValue < temp[i]['total'].toDouble()) {
+            maxValue = temp[i]['total'].toDouble();
+          }
+        } else {
+          listPlot.add(FlSpot(i.toDouble(), 0));
+          lebelactive.add(false);
         }
-      } else {
-        listPlot.add(FlSpot(i.toDouble(), 0));
-        lebelactive.add(false);
       }
-    }
+      setState(() {});
+    });
+    super.initState();
   }
 
   @override
@@ -184,7 +186,7 @@ class _StatGraphMonthState extends State<StatGraphMonth> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: maxValue > 5000 ? 5000 : 1000,
+            interval: maxValue > 200000 ? 200000 : 100000,
             getTitlesWidget: leftTitleWidgets,
             reservedSize: 80,
           ),
@@ -256,18 +258,18 @@ class _StatGraphMonthState extends State<StatGraphMonth> {
       text = Container(
           margin: const EdgeInsets.all(4),
           padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.3),
-                spreadRadius: 2,
-                blurRadius: 4,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-            color: lebelactive[i] ? Colors.blue : Colors.white,
-          ),
+          // decoration: BoxDecoration(
+          //   borderRadius: const BorderRadius.all(Radius.circular(5)),
+          //   boxShadow: [
+          //     BoxShadow(
+          //       color: Colors.grey.withOpacity(0.3),
+          //       spreadRadius: 2,
+          //       blurRadius: 4,
+          //       offset: const Offset(0, 3), // changes position of shadow
+          //     ),
+          //   ],
+          //   color: lebelactive[i] ? Colors.blue : Colors.white,
+          // ),
           child: Center(
             child: Text(Month.getGraphDayMonth(widget.data[i]['report_at']),
                 style: style2),

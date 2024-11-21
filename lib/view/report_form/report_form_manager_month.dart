@@ -42,35 +42,50 @@ class ReportFormManagerMonth extends StatefulWidget {
 class _ReportFormManagerMonthState extends State<ReportFormManagerMonth> {
   var powerElectricController = TextEditingController();
   var powerElectricValidate = false;
+  var powerElectricValidateCb = false;
 
   var bodBeforeController = TextEditingController();
   var bodBeforeValidate = false;
+  var bodBeforeValidateCb = false;
   var codBeforeController = TextEditingController();
   var codBeforeValidate = false;
+  var codBeforeValidateCb = false;
   var ssBeforeController = TextEditingController();
   var ssBeforeValidate = false;
+  var ssBeforeValidateCb = false;
   var fogBeforeController = TextEditingController();
   var fogBeforeValidate = false;
+  var fogBeforeValidateCb = false;
   var totalNitrogenBeforeController = TextEditingController();
   var totalNitrogenBeforeValidate = false;
+  var totalNitrogenBeforeValidateCb = false;
   var totalPhosphorusBeforeController = TextEditingController();
   var totalPhosphorusBeforeValidate = false;
+  var totalPhosphorusBeforeValidateCb = false;
   var saltBeforeController = TextEditingController();
   var saltBeforeValidate = false;
+  var saltBeforeValidateCb = false;
   var bodAfterController = TextEditingController();
   var bodAfterValidate = false;
+  var bodAfterValidateCb = false;
   var codAfterController = TextEditingController();
   var codAfterValidate = false;
+  var codAfterValidateCb = false;
   var ssAfterController = TextEditingController();
   var ssAfterValidate = false;
+  var ssAfterValidateCb = false;
   var fogAfterController = TextEditingController();
   var fogAfterValidate = false;
+  var fogAfterValidateCb = false;
   var totalNitrogenAfterController = TextEditingController();
   var totalNitrogenAfterValidate = false;
+  var totalNitrogenAfterValidateCb = false;
   var totalPhosphorusAfterController = TextEditingController();
   var totalPhosphorusAfterValidate = false;
+  var totalPhosphorusAfterValidateCb = false;
   var saltAfterController = TextEditingController();
   var saltAfterValidate = false;
+  var saltAfterValidateCb = false;
 
   var loading = true;
   var isCheckBox = false;
@@ -96,26 +111,26 @@ class _ReportFormManagerMonthState extends State<ReportFormManagerMonth> {
         accessToken, '${widget.document['id']}');
 
     setState(() {
-      powerElectricController.text = '${result['data']['electric_unit']?? ''}';
-      bodBeforeController.text = '${result['data']['bod']?? ''}';
-      codBeforeController.text = '${result['data']['cod']?? ''}';
-      ssBeforeController.text = '${result['data']['ss']?? ''}';
-      fogBeforeController.text = '${result['data']['fog']?? ''}';
+      powerElectricController.text = '${result['data']['electric_unit'] ?? ''}';
+      bodBeforeController.text = '${result['data']['bod'] ?? ''}';
+      codBeforeController.text = '${result['data']['cod'] ?? ''}';
+      ssBeforeController.text = '${result['data']['ss'] ?? ''}';
+      fogBeforeController.text = '${result['data']['fog'] ?? ''}';
       totalNitrogenBeforeController.text =
-          '${result['data']['total_nitrogen']?? ''}';
+          '${result['data']['total_nitrogen'] ?? ''}';
       totalPhosphorusBeforeController.text =
-          '${result['data']['total_phosphorous']?? ''}';
-      saltBeforeController.text = '${result['data']['salt']?? ''}';
+          '${result['data']['total_phosphorous'] ?? ''}';
+      saltBeforeController.text = '${result['data']['salt'] ?? ''}';
 
-      bodAfterController.text = '${result['data']['treated_bod']?? ''}';
-      codAfterController.text = '${result['data']['treated_cod']?? ''}';
-      ssAfterController.text = '${result['data']['treated_ss']?? ''}';
-      fogAfterController.text = '${result['data']['treated_fog']?? ''}';
+      bodAfterController.text = '${result['data']['treated_bod'] ?? ''}';
+      codAfterController.text = '${result['data']['treated_cod'] ?? ''}';
+      ssAfterController.text = '${result['data']['treated_ss'] ?? ''}';
+      fogAfterController.text = '${result['data']['treated_fog'] ?? ''}';
       totalNitrogenAfterController.text =
-          '${result['data']['treated_total_nitrogen']?? ''}';
+          '${result['data']['treated_total_nitrogen'] ?? ''}';
       totalPhosphorusAfterController.text =
-          '${result['data']['treated_total_phosphorous']?? ''}';
-      saltAfterController.text = '${result['data']['treated_salt']?? ''}';
+          '${result['data']['treated_total_phosphorous'] ?? ''}';
+      saltAfterController.text = '${result['data']['treated_salt'] ?? ''}';
 
       if (result['data']['files'] != null) {
         List<dynamic> files = result['data']['files'];
@@ -159,9 +174,9 @@ class _ReportFormManagerMonthState extends State<ReportFormManagerMonth> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Lottie.asset(
-                      'asset/lottie/animation_lk0uamsc.json',
-                      width: 200,
-                      height: 200,
+                      'asset/lottie/Loading1.json',
+                      width: 150,
+                      height: 150,
                       fit: BoxFit.fill,
                     ),
                     TextWidget.textGeneralWithColor(
@@ -180,168 +195,587 @@ class _ReportFormManagerMonthState extends State<ReportFormManagerMonth> {
   Widget contentView() {
     return Stack(
       children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 150,
-              ),
-              //notice(),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneralWithColor(
-                    'ข้อมูลคุณภาพน้ำประจำเดือน วันที่ ${Month.getMonthTitleReverse(result['data']['report_at'])}',
-                    greyBorder),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral('สถานะปัจจุบัน'),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral(
-                '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
-              ),
-              ButtonApp.buttonSecondary(
-                  context, 'ดูประวัติการส่งรายงานทั้งหมด', () {
-                Get.to(ProgressDetail(
-                  result: result,
-                  dateLebal:
-                      Month.getMonthTitleReverse(result['data']['report_at']),
-                ));
-              }),
-              Container(height: 5, color: greyBG),
-              uploadPhotoCard(),
-              before(),
-              Edittext.edittextForm(
-                  'BOD', 'mg/I', bodBeforeController, bodBeforeValidate),
-              Edittext.edittextForm(
-                  'COD', 'mg/I', codBeforeController, codBeforeValidate),
-              Edittext.edittextForm(
-                  'SS', 'mg/I', ssBeforeController, ssBeforeValidate),
-              Edittext.edittextForm('Fat, Oil and Grease', 'mg/I',
-                  fogBeforeController, fogBeforeValidate),
-              Edittext.edittextForm('Total Nitrogen', 'mg/I',
-                  totalNitrogenBeforeController, totalNitrogenBeforeValidate),
-              Edittext.edittextForm(
-                  'Total Phosphorus',
-                  'mg/I',
-                  totalPhosphorusBeforeController,
-                  totalPhosphorusBeforeValidate),
-              Edittext.edittextForm('ความเค็ม', 'ppt.', saltBeforeController,
-                  saltBeforeValidate),
-              after(),
-              Edittext.edittextForm(
-                  'BOD', 'mg/I', bodAfterController, bodAfterValidate),
-              Edittext.edittextForm(
-                  'COD', 'mg/I', codAfterController, codAfterValidate),
-              Edittext.edittextForm(
-                  'SS', 'mg/I', ssAfterController, ssAfterValidate),
-              Edittext.edittextForm('Fat, Oil and Grease', 'mg/I',
-                  fogAfterController, fogAfterValidate),
-              Edittext.edittextForm('Total Nitrogen', 'mg/I',
-                  totalNitrogenAfterController, totalNitrogenAfterValidate),
-              Edittext.edittextForm(
-                  'Total Phosphorus',
-                  'mg/I',
-                  totalPhosphorusAfterController,
-                  totalPhosphorusAfterValidate),
-              Edittext.edittextForm(
-                  'ความเค็ม', 'ppt.', saltAfterController, saltAfterValidate),
-              Container(
-                height: 10,
-                color: greyBG,
-              ),
-              listViewComment(),
-              checkBox(),
-              Container(
-                height: 10,
-                color: greyBG,
-              ),
-              ButtonApp.buttonMain(context, 'ยืนยัน', () async {
-                final SharedPreferences prefs = await _prefs;
-                String? authorization = prefs.getString('access_token');
-
-                   List<String> dataImg = [];
-                for (var i = 0; i < img.length; i++) {
-                  if (img[i]['type'] == 'file') {
-                    String temp = convertIntoBase64(img[i]['value']);
-                    dataImg.add(temp);
-                  }
-                }
-
-                Get.to(ApprovePopupMonth(
-                  role: widget.role,
-                  station: widget.station,
-                  dateLabel: Month.getMonthTitleReverse(widget.datelabel),
-                  authorization: authorization!,
-                  type: 'MONTHLY',
-                  documentId: '${widget.document['id']}',
-                  bod: bodBeforeController.text,
-                  cod: codBeforeController.text,
-                  electric_unit: powerElectricController.text,
-                  file: dataImg,
-                  fog: fogBeforeController.text,
-                  salt: saltBeforeController.text,
-                  ss: ssBeforeController.text,
-                  totalNitrogen: totalNitrogenBeforeController.text,
-                  totalPhosphorous: totalPhosphorusBeforeController.text,
-                  treated_bod: bodAfterController.text,
-                  treated_cod: codAfterController.text,
-                  treated_fog: fogAfterController.text,
-                  treated_salt: saltAfterController.text,
-                  treated_ss: ssAfterController.text,
-                  treated_total_nitrogen: totalNitrogenAfterController.text,
-                  treated_total_phosphorous:
-                      totalPhosphorusAfterController.text, mediaDelete: delete,
-                ));
-              }, isCheckBox),
-              ButtonApp.buttonSecondaryWithColor(context, 'ตีกลับ', () async {
-                final SharedPreferences prefs = await _prefs;
-                String? authorization = prefs.getString('access_token');
-
-                Get.to(RejectPopupMonth(
-                  role: widget.role,
-                  station: widget.station,
-                  dateLabel: widget.datelabel,
-                  authorization: authorization!,
-                  type: 'MONTHLY',
-                  documentId: '${widget.document['id']}',
-                  bod: bodBeforeController.text,
-                  cod: codBeforeController.text,
-                  electric_unit: powerElectricController.text,
-                  fog: fogBeforeController.text,
-                  salt: saltBeforeController.text,
-                  ss: ssBeforeController.text,
-                  totalNitrogen: totalNitrogenBeforeController.text,
-                  totalPhosphorous: totalPhosphorusBeforeController.text,
-                  treated_bod: bodAfterController.text,
-                  treated_cod: codAfterController.text,
-                  treated_fog: fogAfterController.text,
-                  treated_salt: saltAfterController.text,
-                  treated_ss: ssAfterController.text,
-                  treated_total_nitrogen: totalNitrogenAfterController.text,
-                  treated_total_phosphorous:
-                      totalPhosphorusAfterController.text,
-                ));
-                // }
-              }, Colors.red)
-            ],
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: ExactAssetImage('asset/images/waterbg.jpg'),
+              fit: BoxFit.fill,
+            ),
           ),
         ),
-        Container(
-          height: 80,
-          alignment: Alignment.topCenter,
-          child: NavigateBar.NavBarWithNotebook(
-              context, 'รายงานคุณภาพน้ำประจำวัน', () {
-            Get.back();
-          }),
+        Column(
+          children: [
+            Container(
+              height: 70,
+              alignment: Alignment.topCenter,
+              child: NavigateBar.NavBarWithNotebook(
+                  context, 'รายงานคุณภาพน้ำประจำเดือน', () {
+                Get.back();
+              }),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height - 100,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: Image.asset('asset/images/iconintro.png')),
+                    Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
+                  TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
+                ],
+              )
+                      ],
+                    ),
+                    //notice(),
+                    Container(
+                        margin: const EdgeInsets.all(8),
+                        child: Card(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(children: [
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: TextWidget.textTitleBold(
+                                        'ข้อมูลคุณภาพน้ำประจำเดือน'),
+                                  ),
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: TextWidget.textTitle(
+                                      'ประจำวันที่ ${Month.getMonthTitleReverse(result['data']['report_at'])}',
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Container(
+                                        width: 10,
+                                        height: 10,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: yellow_n,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Expanded(
+                                        child: TextWidget.textTitle(
+                                            '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
+                                      ),
+                                    ],
+                                  ),
+                                  ButtonApp.buttonSecondaryGradient(
+                                      context, 'ดูประวัติการส่งรายงานทั้งหมด',
+                                      () {
+                                    Get.to(ProgressDetail(
+                                      result: result,
+                                      dateLebal: Month.getMonthTitleReverse(
+                                          result['data']['report_at']), station: widget.station,
+                                    ));
+                                  }),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(height: 1, color: Colors.black),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  uploadPhotoCard(),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(height: 1, color: Colors.black),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  before(),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'BOD',
+                                      'mg/I',
+                                      bodBeforeController,
+                                      bodBeforeValidate,
+                                      bodBeforeValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        bodBeforeValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'COD',
+                                      'mg/I',
+                                      codBeforeController,
+                                      codBeforeValidate,
+                                      codBeforeValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        codBeforeValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'SS',
+                                      'mg/I',
+                                      ssBeforeController,
+                                      ssBeforeValidate,
+                                      ssBeforeValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        ssBeforeValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'Fat, Oil and Grease',
+                                      'mg/I',
+                                      fogBeforeController,
+                                      fogBeforeValidate,
+                                      fogBeforeValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        fogBeforeValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'Total Nitrogen',
+                                      'mg/I',
+                                      totalNitrogenBeforeController,
+                                      totalNitrogenBeforeValidate,
+                                      totalNitrogenBeforeValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        totalNitrogenBeforeValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'Total Phosphorus',
+                                      'mg/I',
+                                      totalPhosphorusBeforeController,
+                                      totalPhosphorusBeforeValidate,
+                                      totalPhosphorusBeforeValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        totalPhosphorusBeforeValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'ความเค็ม',
+                                      'ppt.',
+                                      saltBeforeController,
+                                      saltBeforeValidate,
+                                      saltBeforeValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        saltBeforeValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(height: 1, color: Colors.black),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  after(),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'BOD',
+                                      'mg/I',
+                                      bodAfterController,
+                                      bodAfterValidate,
+                                      bodAfterValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        bodAfterValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'COD',
+                                      'mg/I',
+                                      codAfterController,
+                                      codAfterValidate,
+                                      codAfterValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        codAfterValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'SS',
+                                      'mg/I',
+                                      ssAfterController,
+                                      ssAfterValidate,
+                                      ssAfterValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        ssAfterValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'Fat, Oil and Grease',
+                                      'mg/I',
+                                      fogAfterController,
+                                      fogAfterValidate,
+                                      fogAfterValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        fogAfterValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'Total Nitrogen',
+                                      'mg/I',
+                                      totalNitrogenAfterController,
+                                      totalNitrogenAfterValidate,
+                                      totalNitrogenAfterValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        totalNitrogenAfterValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'Total Phosphorus',
+                                      'mg/I',
+                                      totalPhosphorusAfterController,
+                                      totalPhosphorusAfterValidate,
+                                      totalPhosphorusAfterValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        totalPhosphorusAfterValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  Edittext.edittextFormWithCheckbox(
+                                      context,
+                                      'ความเค็ม',
+                                      'ppt.',
+                                      saltAfterController,
+                                      saltAfterValidate,
+                                      saltAfterValidateCb, (value) {
+                                    setState(() {
+                                      if (value != null) {
+                                        saltAfterValidateCb = value;
+                                      }
+                                    });
+                                  }),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(height: 1, color: Colors.black),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  listViewComment(),
+                                  checkBox(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ButtonApp.buttonSecondaryHalf(
+                                        context,
+                                        'ตีกลับ',
+                                        () async {
+                                          final SharedPreferences prefs =
+                                              await _prefs;
+                                          String? authorization =
+                                              prefs.getString('access_token');
+
+                                          Get.to(RejectPopupMonth(
+                                              role: widget.role,
+                                              station: widget.station,
+                                              dateLabel: widget.datelabel,
+                                              authorization: authorization!,
+                                              type: 'MONTHLY',
+                                              documentId:
+                                                  '${widget.document['id']}',
+                                              bod: bodBeforeController.text,
+                                              cod: codBeforeController.text,
+                                              electric_unit:
+                                                  powerElectricController.text,
+                                              fog: fogBeforeController.text,
+                                              salt: saltBeforeController.text,
+                                              ss: ssBeforeController.text,
+                                              totalNitrogen:
+                                                  totalNitrogenBeforeController
+                                                      .text,
+                                              totalPhosphorous:
+                                                  totalPhosphorusBeforeController
+                                                      .text,
+                                              treated_bod:
+                                                  bodAfterController.text,
+                                              treated_cod:
+                                                  codAfterController.text,
+                                              treated_fog:
+                                                  fogAfterController.text,
+                                              treated_salt:
+                                                  saltAfterController.text,
+                                              treated_ss:
+                                                  ssAfterController.text,
+                                              treated_total_nitrogen:
+                                                  totalNitrogenAfterController
+                                                      .text,
+                                              treated_total_phosphorous:
+                                                  totalPhosphorusAfterController
+                                                      .text,
+                                              img: img));
+                                        },
+                                      ),
+                                      ButtonApp.buttonMainhalf(
+                                          context, 'ส่งรายงาน', () async {
+                                        if (checkValidate()) {
+                                          final SharedPreferences prefs =
+                                              await _prefs;
+                                          String? authorization =
+                                              prefs.getString('access_token');
+
+                                          List<String> dataImg = [];
+                                          for (var i = 0; i < img.length; i++) {
+                                            if (img[i]['type'] == 'file') {
+                                              String temp = convertIntoBase64(
+                                                  img[i]['value']);
+                                              dataImg.add(temp);
+                                            }
+                                          }
+
+                                          Get.to(ApprovePopupMonth(
+                                            role: widget.role,
+                                            station: widget.station,
+                                            dateLabel:
+                                                Month.getMonthTitleReverse(
+                                                    widget.datelabel),
+                                            authorization: authorization!,
+                                            type: 'MONTHLY',
+                                            documentId:
+                                                '${widget.document['id']}',
+                                            bod: bodBeforeController.text,
+                                            cod: codBeforeController.text,
+                                            electric_unit:
+                                                powerElectricController.text,
+                                            file: dataImg,
+                                            fog: fogBeforeController.text,
+                                            salt: saltBeforeController.text,
+                                            ss: ssBeforeController.text,
+                                            totalNitrogen:
+                                                totalNitrogenBeforeController
+                                                    .text,
+                                            totalPhosphorous:
+                                                totalPhosphorusBeforeController
+                                                    .text,
+                                            treated_bod:
+                                                bodAfterController.text,
+                                            treated_cod:
+                                                codAfterController.text,
+                                            treated_fog:
+                                                fogAfterController.text,
+                                            treated_salt:
+                                                saltAfterController.text,
+                                            treated_ss: ssAfterController.text,
+                                            treated_total_nitrogen:
+                                                totalNitrogenAfterController
+                                                    .text,
+                                            treated_total_phosphorous:
+                                                totalPhosphorusAfterController
+                                                    .text,
+                                            mediaDelete: delete,
+                                          ));
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(const SnackBar(
+                                            content: Text(
+                                                "กรุณาตรวจสอบข้อมูลให้ครบทุกช่อง"),
+                                          ));
+                                        }
+                                      }, isCheckBox),
+                                    ],
+                                  )
+                                ])))),
+
+                    // ButtonApp.buttonMain(context, 'ยืนยัน', () async {
+                    //   final SharedPreferences prefs = await _prefs;
+                    //   String? authorization = prefs.getString('access_token');
+
+                    //   List<String> dataImg = [];
+                    //   for (var i = 0; i < img.length; i++) {
+                    //     if (img[i]['type'] == 'file') {
+                    //       String temp = convertIntoBase64(img[i]['value']);
+                    //       dataImg.add(temp);
+                    //     }
+                    //   }
+
+                    //   Get.to(ApprovePopupMonth(
+                    //     role: widget.role,
+                    //     station: widget.station,
+                    //     dateLabel: Month.getMonthTitleReverse(widget.datelabel),
+                    //     authorization: authorization!,
+                    //     type: 'MONTHLY',
+                    //     documentId: '${widget.document['id']}',
+                    //     bod: bodBeforeController.text,
+                    //     cod: codBeforeController.text,
+                    //     electric_unit: powerElectricController.text,
+                    //     file: dataImg,
+                    //     fog: fogBeforeController.text,
+                    //     salt: saltBeforeController.text,
+                    //     ss: ssBeforeController.text,
+                    //     totalNitrogen: totalNitrogenBeforeController.text,
+                    //     totalPhosphorous: totalPhosphorusBeforeController.text,
+                    //     treated_bod: bodAfterController.text,
+                    //     treated_cod: codAfterController.text,
+                    //     treated_fog: fogAfterController.text,
+                    //     treated_salt: saltAfterController.text,
+                    //     treated_ss: ssAfterController.text,
+                    //     treated_total_nitrogen:
+                    //         totalNitrogenAfterController.text,
+                    //     treated_total_phosphorous:
+                    //         totalPhosphorusAfterController.text,
+                    //     mediaDelete: delete,
+                    //   ));
+                    // }, isCheckBox),
+                    // ButtonApp.buttonSecondaryWithColor(context, 'ตีกลับ',
+                    //     () async {
+                    //   final SharedPreferences prefs = await _prefs;
+                    //   String? authorization = prefs.getString('access_token');
+
+                    //   Get.to(RejectPopupMonth(
+                    //     role: widget.role,
+                    //     station: widget.station,
+                    //     dateLabel: widget.datelabel,
+                    //     authorization: authorization!,
+                    //     type: 'MONTHLY',
+                    //     documentId: '${widget.document['id']}',
+                    //     bod: bodBeforeController.text,
+                    //     cod: codBeforeController.text,
+                    //     electric_unit: powerElectricController.text,
+                    //     fog: fogBeforeController.text,
+                    //     salt: saltBeforeController.text,
+                    //     ss: ssBeforeController.text,
+                    //     totalNitrogen: totalNitrogenBeforeController.text,
+                    //     totalPhosphorous: totalPhosphorusBeforeController.text,
+                    //     treated_bod: bodAfterController.text,
+                    //     treated_cod: codAfterController.text,
+                    //     treated_fog: fogAfterController.text,
+                    //     treated_salt: saltAfterController.text,
+                    //     treated_ss: ssAfterController.text,
+                    //     treated_total_nitrogen:
+                    //         totalNitrogenAfterController.text,
+                    //     treated_total_phosphorous:
+                    //         totalPhosphorusAfterController.text,
+                    //   ));
+                    //   // }
+                    // }, Colors.red)
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
+  }
+
+  bool checkValidate() {
+    if (powerElectricValidateCb == false) {
+      return false;
+    }
+
+    if (bodBeforeValidateCb == false) {
+      return false;
+    }
+
+    if (codBeforeValidateCb == false) {
+      return false;
+    }
+    if (ssBeforeValidateCb == false) {
+      return false;
+    }
+
+    if (fogBeforeValidateCb == false) {
+      return false;
+    }
+
+    if (totalNitrogenBeforeValidateCb == false) {
+      return false;
+    }
+
+    if (totalPhosphorusBeforeValidateCb == false) {
+      return false;
+    }
+
+    if (saltBeforeValidateCb == false) {
+      return false;
+    }
+
+    if (bodAfterValidateCb == false) {
+      return false;
+    }
+
+    if (codAfterValidateCb == false) {
+      return false;
+    }
+
+    if (ssAfterValidateCb == false) {
+      return false;
+    }
+
+    if (fogAfterValidateCb == false) {
+      return false;
+    }
+
+    if (totalNitrogenAfterValidateCb == false) {
+      return false;
+    }
+
+    if (totalPhosphorusAfterValidateCb == false) {
+      return false;
+    }
+
+    if (saltAfterValidateCb == false) {
+      return false;
+    }
+
+    return true;
   }
 
   Widget checkBox() {
@@ -358,10 +792,9 @@ class _ReportFormManagerMonthState extends State<ReportFormManagerMonth> {
           width: 20,
         ),
         Expanded(
-          child: TextWidget.textGeneralWithColor(
-              'กรุณาตรวจสอบความถูกต้อง หลังจากกด “ยืนยัน”\nจะเข้าสู่สถานะ “รอส่วนกลางการตรวจสอบ”',
-              Colors.grey),
-        ),
+            child: TextWidget.textSubTitleWithSize(
+                'กรุณาตรวจสอบความถูกต้องก่อนกด “ยืนยัน” เมื่อกด “ยืนยัน” \nแล้วสถานะจะเปลี่ยนเป็น “รอผู้จัดการตรวจสอบ”',
+                10)),
       ],
     );
   }
@@ -425,7 +858,7 @@ class _ReportFormManagerMonthState extends State<ReportFormManagerMonth> {
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: orange,
+                   color: blue_n_2,
               borderRadius: const BorderRadius.all(Radius.circular(5))),
           child: Column(children: [
             Row(
@@ -461,7 +894,6 @@ class _ReportFormManagerMonthState extends State<ReportFormManagerMonth> {
 
   Widget before() {
     return Container(
-      color: greyBG,
       child: Column(
         children: [
           const SizedBox(
@@ -488,8 +920,8 @@ class _ReportFormManagerMonthState extends State<ReportFormManagerMonth> {
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: yellow_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Center(
                 child: TextWidget.textGeneralWithColor('1', Colors.white),
               ),
@@ -503,8 +935,8 @@ class _ReportFormManagerMonthState extends State<ReportFormManagerMonth> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextWidget.textBig('ก่อน'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำก่อนบำบัด', Colors.grey),
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('ก่อนการบำบัด'),
           ],
         )
       ],
@@ -620,15 +1052,25 @@ class _ReportFormManagerMonthState extends State<ReportFormManagerMonth> {
         Container(
             alignment: Alignment.centerLeft,
             width: MediaQuery.of(context).size.width,
-            child: Edittext.edittextForm('ปริมาณพลังงานไฟฟ้าที่ใช้', 'kW-hr',
-                powerElectricController, powerElectricValidate)),
+            child: Edittext.edittextFormWithCheckbox(
+                context,
+                'ปริมาณพลังงานไฟฟ้าที่ใช้',
+                'kW-hr',
+                powerElectricController,
+                powerElectricValidate,
+                powerElectricValidateCb, (value) {
+              setState(() {
+                if (value != null) {
+                  powerElectricValidateCb = value;
+                }
+              });
+            })),
       ],
     );
   }
 
   Widget after() {
     return Container(
-      color: blueButtonBorder,
       child: Column(
         children: [
           const SizedBox(
@@ -655,8 +1097,8 @@ class _ReportFormManagerMonthState extends State<ReportFormManagerMonth> {
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: blue_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Center(
                 child: TextWidget.textGeneralWithColor('2', Colors.white),
               ),
@@ -670,8 +1112,8 @@ class _ReportFormManagerMonthState extends State<ReportFormManagerMonth> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextWidget.textBig('หลัง'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำหลังบำบัด', Colors.grey),
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('หลังการบำบัด'),
           ],
         )
       ],

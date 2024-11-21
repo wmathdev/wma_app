@@ -7,12 +7,16 @@ class DropDown {
       BuildContext context, String title, GestureTapCallback onBack) {
     return Container(
       padding: const EdgeInsets.all(3.0),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(18)),
+      ),
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18.0),
           ),
-          side: BorderSide(width: 2, color: greyBorder),
+          side: BorderSide(width: 2, color: Colors.white),
         ),
         onPressed: onBack,
         child: Row(

@@ -3,15 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wma_app/Utils/Color.dart';
+import 'package:wma_app/view/notification/notificationlist.dart';
+import 'package:wma_app/widget/text_widget.dart';
 
 import '../api/Authentication.dart';
 
 class MyAppBar extends StatelessWidget {
   final String title;
+  final int noti;
+  final onPress;
 
   static const double kToolbarHeight = 110.0;
 
-  MyAppBar({this.title = ""});
+  MyAppBar({super.key, this.title = "", required this.noti, required this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +49,7 @@ class MyAppBar extends StatelessWidget {
             child: Text(
               this.title,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 12,
                 fontWeight: FontWeight.w800,
                 color: Colors.black,
               ),
@@ -55,20 +60,16 @@ class MyAppBar extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Theme(
-                    data: Theme.of(context).copyWith(
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
+                  Container(
+                    width: 30,
+                    height: 30,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.red,
                     ),
-                    child: IconButton(
-                        style: ElevatedButton.styleFrom(
-                          splashFactory: NoSplash.splashFactory,
-                        ),
-                        icon: Image.asset(
-                          'asset/images/bi_dpad.png',
-                        ),
-                        onPressed: () {}),
+                    alignment: Alignment.center,
+                    child: TextWidget.textTitleBoldWithColor(
+                        '$noti', Colors.white),
                   ),
                   Theme(
                     data: Theme.of(context).copyWith(
@@ -83,7 +84,7 @@ class MyAppBar extends StatelessWidget {
                         icon: Image.asset(
                           'asset/images/bi_bell.png',
                         ),
-                        onPressed: () {}),
+                        onPressed: this.onPress),
                   )
                 ],
               )),

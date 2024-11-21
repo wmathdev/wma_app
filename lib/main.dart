@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wma_app/Utils/Color.dart';
 import 'package:wma_app/notification_helper.dart';
 import 'package:wma_app/view/splashscreen.dart';
@@ -73,6 +74,7 @@ class _MyAppState extends State<MyApp> {
       print('User declined or has not accepted permission');
     }
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   }
 
   // This widget is the root of your application.

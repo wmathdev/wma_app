@@ -183,7 +183,7 @@ class _StatGraphState extends State<StatGraph> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: maxValue > 5000 ? 5000 : 1000,
+            interval: maxValue > 20000 ? 20000 : 10000,
             getTitlesWidget: leftTitleWidgets,
             reservedSize: 80,
           ),

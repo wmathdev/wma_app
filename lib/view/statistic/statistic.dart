@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:wma_app/Utils/Color.dart';
 import 'package:wma_app/api/OtherRequest.dart';
+import 'package:wma_app/view/graph/statgraphMonth_n.dart';
+import 'package:wma_app/view/graph/statgraphQuarter_n.dart';
+import 'package:wma_app/view/graph/statgraphYear_n.dart';
+import 'package:wma_app/view/graph/statgraph_n.dart';
 
 import '../../Utils/label.dart';
 import '../../widget/button_app.dart';
@@ -78,9 +82,9 @@ class _StatisticState extends State<Statistic> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Lottie.asset(
-                'asset/lottie/animation_lk0uamsc.json',
-                width: 200,
-                height: 200,
+                'asset/lottie/Loading1.json',
+                width: 150,
+                height: 150,
                 fit: BoxFit.fill,
               ),
               TextWidget.textGeneralWithColor('กรุณารอสักครู่...', blueSelected)
@@ -92,31 +96,39 @@ class _StatisticState extends State<Statistic> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 50,
+          child: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: ExactAssetImage('asset/images/waterbg.jpg'),
+                fit: BoxFit.fill,
               ),
-              headerBar(),
-              const SizedBox(
-                height: 10,
-              ),
-              valueCard(),
-              const SizedBox(
-                height: 20,
-              ),
-              graphFilter(),
-              const SizedBox(
-                height: 20,
-              ),
-              select == 0
-                  ? weekgraph()
-                  : select == 1
-                      ? monthgraph()
-                      : select == 2
-                          ? quartergraph()
-                          : yeargraph()
-            ],
+            ),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 50,
+                ),
+                headerBar(),
+                const SizedBox(
+                  height: 10,
+                ),
+                valueCard(),
+                const SizedBox(
+                  height: 20,
+                ),
+                graphFilter(),
+                const SizedBox(
+                  height: 20,
+                ),
+                select == 0
+                    ? weekgraph()
+                    : select == 1
+                        ? monthgraph()
+                        : select == 2
+                            ? quartergraph()
+                            : yeargraph()
+              ],
+            ),
           ),
         ),
       ),
@@ -128,14 +140,14 @@ class _StatisticState extends State<Statistic> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         // height: MediaQuery.of(context).size.height * 0.1,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: Colors.white),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Image.asset('asset/images/wave.png'),
+              Image.asset(
+                'asset/images/bigdrop.png',
+              ),
               const SizedBox(
                 width: 10,
               ),
@@ -145,14 +157,14 @@ class _StatisticState extends State<Statistic> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.6,
                     child: TextWidget.textTitleWithColorSize(
-                        'ปริมาณน้ำเสียที่ผ่านการบำบัด', Colors.black, 13),
+                        'ปริมาณน้ำเสียที่ผ่านการบำบัด', Colors.black, 18),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.6,
                     child: TextWidget.textTitleWithColorSize(
                         'จากศูนย์บำบัดทั่วไทยทั้งหมด ${data['data']['stations']} แห่ง',
-                        Colors.grey,
-                        13),
+                        const Color.fromARGB(255, 111, 111, 111),
+                        14),
                   )
                 ],
               )
@@ -167,32 +179,10 @@ class _StatisticState extends State<Statistic> {
     return Container(
         margin: const EdgeInsets.all(10),
         child: Card(
+          color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(children: [
-              Row(
-                children: [
-                  select == 0
-                      ? TextWidget.textSubTitleWithSizeColor(
-                          Label.nemerricFormat(data['data']['total']), 20, blueSelected)
-                      : select == 1
-                          ? TextWidget.textSubTitleWithSizeColor(
-                              Label.nemerricFormat(dataMonth['data']['total']), 20, blueSelected)
-                          : select == 2
-                              ? TextWidget.textSubTitleWithSizeColor(
-                                  Label.nemerricFormat(dataQUARTER['data']['total']),
-                                  20,
-                                  blueSelected)
-                              : TextWidget.textSubTitleWithSizeColor(
-                                  Label.nemerricFormat(dataYear['data']['total']),
-                                  20,
-                                  blueSelected),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  TextWidget.textTitle('ลบ.ม.')
-                ],
-              ),
               Row(
                 children: [
                   Expanded(
@@ -208,6 +198,36 @@ class _StatisticState extends State<Statistic> {
                                 : TextWidget.textTitle(
                                     'ปริมาณสะสมตั้งแต่ ${dataYear['data']['period']}'),
                   )
+                ],
+              ),
+              Row(
+                children: [
+                  select == 0
+                      ? TextWidget.textSubTitleWithSizeGradient(
+                          Label.nemerricFormat(data['data']['total'] * 1.00),
+                          25,
+                          blueSelected)
+                      : select == 1
+                          ? TextWidget.textSubTitleWithSizeGradient(
+                              Label.nemerricFormat(
+                                  dataMonth['data']['total'] * 1.00),
+                              25,
+                              blueSelected)
+                          : select == 2
+                              ? TextWidget.textSubTitleWithSizeGradient(
+                                  Label.nemerricFormat(
+                                      dataQUARTER['data']['total'] * 1.00),
+                                  25,
+                                  blueSelected)
+                              : TextWidget.textSubTitleWithSizeGradient(
+                                  Label.nemerricFormat(
+                                      dataYear['data']['total'] * 1.00),
+                                  25,
+                                  blueSelected),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  TextWidget.textTitle('ลบ.ม.')
                 ],
               ),
             ]),
@@ -255,246 +275,359 @@ class _StatisticState extends State<Statistic> {
   }
 
   Widget weekgraph() {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.5,
-      child: Stack(
-        children: [
-          Stack(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: ListView(
-                    shrinkWrap: true,
-                    primary: false,
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      StatGraph(
-                        data: graph,
-                        rule: '',
-                      ),
-                    ]),
-              ),
-              Row(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.15,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    color: Colors.white,
-                  )
-                ],
-              ),
-            ],
-          ),
-          Stack(
-            children: [
-              Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    color: Colors.white,
-                  )),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.2,
-                child: ListView(
-                    shrinkWrap: true,
-                    primary: false,
-                    physics: const NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      StatGraph(
-                        data: graph,
-                        rule: '',
-                      ),
-                    ]),
-              ),
-            ],
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.6,
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 255, 255, 255),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
           ),
         ],
       ),
+      margin: const EdgeInsetsDirectional.all(20),
+      child: Statgraph_n(
+        data: graph,
+        rule: '',
+      ),
     );
+    // return SizedBox(
+    //   height: MediaQuery.of(context).size.height * 0.5,
+    //   child: Stack(
+    //     children: [
+    //       Stack(
+    //         children: [
+    //           SizedBox(
+    //             width: MediaQuery.of(context).size.width,
+    //             child: ListView(
+    //                 shrinkWrap: true,
+    //                 primary: false,
+    //                 scrollDirection: Axis.horizontal,
+    //                 children: [
+    //                   StatGraph(
+    //                     data: graph,
+    //                     rule: '',
+    //                   ),
+    //                 ]),
+    //           ),
+    //           Row(
+    //             children: [
+    //               Container(
+    //                 width: MediaQuery.of(context).size.width * 0.15,
+    //                 height: MediaQuery.of(context).size.height * 0.5,
+    //                 color: Colors.white,
+    //               )
+    //             ],
+    //           ),
+    //         ],
+    //       ),
+    //       Stack(
+    //         children: [
+    //           Positioned(
+    //               bottom: 0,
+    //               child: Container(
+    //                 width: MediaQuery.of(context).size.width * 0.2,
+    //                 height: MediaQuery.of(context).size.height * 0.5,
+    //                 color: Colors.white,
+    //               )),
+    //           Container(
+    //             width: MediaQuery.of(context).size.width * 0.2,
+    //             child: ListView(
+    //                 shrinkWrap: true,
+    //                 primary: false,
+    //                 physics: const NeverScrollableScrollPhysics(),
+    //                 scrollDirection: Axis.horizontal,
+    //                 children: [
+    //                   StatGraph(
+    //                     data: graph,
+    //                     rule: '',
+    //                   ),
+    //                 ]),
+    //           ),
+    //         ],
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
   Widget monthgraph() {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.5,
-      child: Stack(
-        children: [
-          Stack(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: ListView(
-                    shrinkWrap: true,
-                    primary: false,
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      StatGraphMonth(
-                        data: graphMonth,
-                        rule: '',
-                      ),
-                    ]),
-              ),
-              Row(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.15,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    color: Colors.white,
-                  )
-                ],
-              ),
-            ],
-          ),
-          Stack(
-            children: [
-              Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    color: Colors.white,
-                  )),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.2,
-                child: ListView(
-                    shrinkWrap: true,
-                    primary: false,
-                    physics: const NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      StatGraphMonth(
-                        data: graphMonth,
-                        rule: '',
-                      ),
-                    ]),
-              ),
-            ],
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.6,
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 255, 255, 255),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
           ),
         ],
       ),
+      margin: const EdgeInsetsDirectional.all(20),
+      child: StatgraphMonthN(
+        data: graphMonth,
+        rule: '',
+      ),
     );
+    // return SizedBox(
+    //   height: MediaQuery.of(context).size.height * 0.5,
+    //   child: Stack(
+    //     children: [
+    //       Stack(
+    //         children: [
+    //           SizedBox(
+    //             width: MediaQuery.of(context).size.width,
+    //             child: ListView(
+    //                 shrinkWrap: true,
+    //                 primary: false,
+    //                 scrollDirection: Axis.horizontal,
+    //                 children: [
+    //                   StatGraphMonth(
+    //                     data: graphMonth,
+    //                     rule: '',
+    //                   ),
+    //                 ]),
+    //           ),
+    //           Row(
+    //             children: [
+    //               Container(
+    //                 width: MediaQuery.of(context).size.width * 0.15,
+    //                 height: MediaQuery.of(context).size.height * 0.5,
+    //                 color: Colors.white,
+    //               )
+    //             ],
+    //           ),
+    //         ],
+    //       ),
+    //       Stack(
+    //         children: [
+    //           Positioned(
+    //               bottom: 0,
+    //               child: Container(
+    //                 width: MediaQuery.of(context).size.width * 0.2,
+    //                 height: MediaQuery.of(context).size.height * 0.5,
+    //                 color: Colors.white,
+    //               )),
+    //           Container(
+    //             width: MediaQuery.of(context).size.width * 0.2,
+    //             child: ListView(
+    //                 shrinkWrap: true,
+    //                 primary: false,
+    //                 physics: const NeverScrollableScrollPhysics(),
+    //                 scrollDirection: Axis.horizontal,
+    //                 children: [
+    //                   StatGraphMonth(
+    //                     data: graphMonth,
+    //                     rule: '',
+    //                   ),
+    //                 ]),
+    //           ),
+    //         ],
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
   Widget quartergraph() {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.5,
-      child: Stack(
-        children: [
-          Stack(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: ListView(
-                    shrinkWrap: true,
-                    primary: false,
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      StatGraphQuater(
-                        data: graphQUARTER,
-                        rule: '',
-                      ),
-                    ]),
-              ),
-              Row(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.15,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    color: Colors.white,
-                  )
-                ],
-              ),
-            ],
-          ),
-          Stack(
-            children: [
-              Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    color: Colors.white,
-                  )),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.2,
-                child: ListView(
-                    shrinkWrap: true,
-                    primary: false,
-                    physics: const NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      StatGraphQuater(
-                        data: graphQUARTER,
-                        rule: '',
-                      ),
-                    ]),
-              ),
-            ],
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.6,
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 255, 255, 255),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
           ),
         ],
+      ),
+      margin: const EdgeInsetsDirectional.all(20),
+      child: StatgraphquarterN(
+        data: graphQUARTER,
+        rule: '',
       ),
     );
   }
 
+  // Widget quartergraph() {
+  //   return SizedBox(
+  //     height: MediaQuery.of(context).size.height * 0.5,
+  //     child: Stack(
+  //       children: [
+  //         Stack(
+  //           children: [
+  //             SizedBox(
+  //               width: MediaQuery.of(context).size.width,
+  //               child: ListView(
+  //                   shrinkWrap: true,
+  //                   primary: false,
+  //                   scrollDirection: Axis.horizontal,
+  //                   children: [
+  //                     StatGraphQuater(
+  //                       data: graphQUARTER,
+  //                       rule: '',
+  //                     ),
+  //                   ]),
+  //             ),
+  //             Row(
+  //               children: [
+  //                 Container(
+  //                   width: MediaQuery.of(context).size.width * 0.15,
+  //                   height: MediaQuery.of(context).size.height * 0.5,
+  //                   color: Colors.white,
+  //                 )
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //         Stack(
+  //           children: [
+  //             Positioned(
+  //                 bottom: 0,
+  //                 child: Container(
+  //                   width: MediaQuery.of(context).size.width * 0.2,
+  //                   height: MediaQuery.of(context).size.height * 0.5,
+  //                   color: Colors.white,
+  //                 )),
+  //             Container(
+  //               width: MediaQuery.of(context).size.width * 0.2,
+  //               child: ListView(
+  //                   shrinkWrap: true,
+  //                   primary: false,
+  //                   physics: const NeverScrollableScrollPhysics(),
+  //                   scrollDirection: Axis.horizontal,
+  //                   children: [
+  //                     StatgraphquarterN(
+  //                       data: graphQUARTER,
+  //                       rule: '',
+  //                     ),
+  //                   ]),
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+
+
   Widget yeargraph() {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.5,
-      child: Stack(
-        children: [
-          Stack(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: ListView(
-                    shrinkWrap: true,
-                    primary: false,
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      StatGraphYear(
-                        data: graphYear,
-                        rule: '',
-                      ),
-                    ]),
-              ),
-              Row(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.15,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    color: Colors.white,
-                  )
-                ],
-              ),
-            ],
-          ),
-          Stack(
-            children: [
-              Positioned(
-                  bottom: 0,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    color: Colors.white,
-                  )),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.2,
-                child: ListView(
-                    shrinkWrap: true,
-                    primary: false,
-                    physics: const NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      StatGraphYear(
-                        data: graphYear,
-                        rule: '',
-                      ),
-                    ]),
-              ),
-            ],
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.6,
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 255, 255, 255),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
           ),
         ],
       ),
+      margin: const EdgeInsetsDirectional.all(20),
+      child: StatgraphyearN(
+        data: graphYear,
+        rule: '',
+      ),
     );
   }
+
+  // Widget yeargraph() {
+  //   return Container(
+  //     height: MediaQuery.of(context).size.height * 0.6,
+  //     decoration: BoxDecoration(
+  //       color: Color.fromARGB(255, 255, 255, 255),
+  //       borderRadius: BorderRadius.all(Radius.circular(20)),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.grey.withOpacity(0.5),
+  //           spreadRadius: 5,
+  //           blurRadius: 7,
+  //           offset: Offset(0, 3), // changes position of shadow
+  //         ),
+  //       ],
+  //     ),
+  //     margin: const EdgeInsetsDirectional.all(20),
+  //     child: Stack(
+  //       children: [
+  //         Stack(
+  //           children: [
+  //             Container(
+  //               width: MediaQuery.of(context).size.width,
+  //               decoration: BoxDecoration(
+  //                 color: Color.fromARGB(255, 255, 255, 255),
+  //                 borderRadius: BorderRadius.all(Radius.circular(20)),
+  //                 boxShadow: [
+  //                   BoxShadow(
+  //                     color: Colors.grey.withOpacity(0.5),
+  //                     spreadRadius: 5,
+  //                     blurRadius: 7,
+  //                     offset: Offset(0, 3), // changes position of shadow
+  //                   ),
+  //                 ],
+  //               ),
+  //               child: ListView(
+  //                   shrinkWrap: true,
+  //                   primary: false,
+  //                   scrollDirection: Axis.horizontal,
+  //                   children: [
+  //                     StatgraphyearN(
+  //                       data: graphYear,
+  //                       rule: '',
+  //                     ),
+  //                   ]),
+  //             ),
+  //             Row(
+  //               children: [
+  //                 Container(
+  //                   width: MediaQuery.of(context).size.width * 0.15,
+  //                   height: MediaQuery.of(context).size.height * 0.5,
+  //                   color: Colors.white,
+  //                 )
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //         Stack(
+  //           children: [
+  //             Positioned(
+  //                 bottom: 0,
+  //                 child: Container(
+  //                   width: MediaQuery.of(context).size.width * 0.2,
+  //                   height: MediaQuery.of(context).size.height * 0.5,
+  //                   color: Colors.white,
+  //                 )),
+  //             Container(
+  //               width: MediaQuery.of(context).size.width * 0.2,
+  //               child: ListView(
+  //                   shrinkWrap: true,
+  //                   primary: false,
+  //                   physics: const NeverScrollableScrollPhysics(),
+  //                   scrollDirection: Axis.horizontal,
+  //                   children: [
+  //                     StatgraphyearN(
+  //                       data: graphYear,
+  //                       rule: '',
+  //                     ),
+  //                   ]),
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

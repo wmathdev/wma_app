@@ -94,141 +94,238 @@ class _ReportFormMonthState extends State<ReportFormMonth> {
     outputYesterdayDate = outputFormat.format(yesterday);
     return Stack(
       children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 80,
-              ),
-              widget.role == 'ADMIN'
-                  ? const SizedBox(
-                      height: 30,
-                    )
-                  : notice(),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneralWithColor(
-                    'ข้อมูลคุณภาพน้ำประจำเดือน วันที่ ${Month.getMonthTitleReverse(outputDate)}',
-                    greyBorder),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral('สถานะปัจจุบัน'),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child:
-                    TextWidget.textGeneral('--.-- น. | รอเจ้าหน้าที่ดำเนินการ'),
-              ),
-              // ButtonApp.buttonSecondary(
-              //     context, 'ดูประวัติการส่งรายงานทั้งหมด', () {}),
-              Container(height: 5, color: greyBG),
-              uploadPhotoCard(),
-              before(),
-              Edittext.edittextForm(
-                  'BOD', 'mg/I', bodBeforeController, bodBeforeValidate),
-              Edittext.edittextForm(
-                  'COD', 'mg/I', codBeforeController, codBeforeValidate),
-              Edittext.edittextForm(
-                  'SS', 'mg/I', ssBeforeController, ssBeforeValidate),
-              Edittext.edittextForm('Fat, Oil and Grease', 'mg/I',
-                  fogBeforeController, fogBeforeValidate),
-              Edittext.edittextForm('Total Nitrogen', 'mg/I',
-                  totalNitrogenBeforeController, totalNitrogenBeforeValidate),
-              Edittext.edittextForm(
-                  'Total Phosphorus',
-                  'mg/I',
-                  totalPhosphorusBeforeController,
-                  totalPhosphorusBeforeValidate),
-              Edittext.edittextForm(
-                  'ความเค็ม', 'ppt.', saltBeforeController, saltBeforeValidate),
-              after(),
-              Edittext.edittextForm(
-                  'BOD', 'mg/I', bodAfterController, bodAfterValidate),
-              Edittext.edittextForm(
-                  'COD', 'mg/I', codAfterController, codAfterValidate),
-              Edittext.edittextForm(
-                  'SS', 'mg/I', ssAfterController, ssAfterValidate),
-              Edittext.edittextForm('Fat, Oil and Grease', 'mg/I',
-                  fogAfterController, fogAfterValidate),
-              Edittext.edittextForm('Total Nitrogen', 'mg/I',
-                  totalNitrogenAfterController, totalNitrogenAfterValidate),
-              Edittext.edittextForm('Total Phosphorus', 'mg/I',
-                  totalPhosphorusAfterController, totalPhosphorusAfterValidate),
-              Edittext.edittextForm(
-                  'ความเค็ม', 'ppt.', saltAfterController, saltAfterValidate),
-              Container(
-                height: 10,
-                color: greyBG,
-              ),
-              checkBox(),
-              Container(
-                height: 10,
-                color: greyBG,
-              ),
-              ButtonApp.buttonMain(context, 'ส่งรายงาน', () async {
-                final SharedPreferences prefs = await _prefs;
-                String? authorization = prefs.getString('access_token');
-
-                // if (validate()) {
-                // List<String> dataImg = [];
-                // for (var i = 0; i < img.length; i++) {
-                //   String temp = convertIntoBase64(img[i]);
-                //   dataImg.add(temp);
-                // }
-                // if (!dataImg.isNotEmpty) {
-                //   MyDialog.showAlertDialogOk(
-                //       context, 'กรุณาแนบภาพอย่างน้อย 1 ภาพ', () {
-                //     Get.back();
-                //   });
-                // } else {
-                  Get.to(RecheckPopupMonth(
-                    station: widget.station,
-                    role: widget.role,
-                    dateLabel: Month.getMonthTitleReverse(outputDate),
-                    authorization: authorization!,
-                    file: [],
-                    type: 'MONTHLY',
-                    bod: bodBeforeController.text,
-                    cod: codBeforeController.text,
-                    electric_unit: powerElectricController.text,
-                    fog: fogBeforeController.text,
-                    salt: saltBeforeController.text,
-                    ss: ssBeforeController.text,
-                    totalNitrogen: totalNitrogenBeforeController.text,
-                    totalPhosphorous: totalPhosphorusBeforeController.text,
-                    treated_total_phosphorous:
-                        totalPhosphorusAfterController.text,
-                    treated_bod: bodAfterController.text,
-                    treated_cod: codAfterController.text,
-                    treated_fog: fogAfterController.text,
-                    treated_salt: saltAfterController.text,
-                    treated_ss: ssAfterController.text,
-                    treated_total_nitrogen: totalNitrogenAfterController.text,
-                    date: outputDate,
-                  ));
-                // }
-              }, isCheckBox),
-              ButtonApp.buttonSecondary(
-                context,
-                'ยกเลิก',
-                () {
-                  Get.back();
-                },
-              )
-            ],
-          ),
-        ),
         Container(
-          height: 80,
-          alignment: Alignment.topCenter,
-          child: NavigateBar.NavBarWithNotebook(
-              context, 'รายงานคุณภาพน้ำประจำเดือน', () {
-            Get.back();
-          }),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: ExactAssetImage('asset/images/waterbg.jpg'),
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  height: 80,
+                  alignment: Alignment.topCenter,
+                  child: NavigateBar.NavBarWithNotebook(
+                      context, 'รายงานคุณภาพน้ำประจำเดือน', () {
+                    // Get.back();
+                    showAlertDialog(context);
+                  }),
+                ),
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset('asset/images/iconintro.png')),
+                    Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
+                  TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
+                ],
+              )
+                  ],
+                ),
+                widget.role == 'ADMIN'
+                    ? const SizedBox(
+                        height: 30,
+                      )
+                    : notice(),
+                Container(
+                  margin: const EdgeInsets.all(8),
+                  child: Card(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                            width: MediaQuery.of(context).size.width,
+                            child: TextWidget.textTitleBold('ข้อมูลคุณภาพน้ำ'),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                            width: MediaQuery.of(context).size.width,
+                            child: TextWidget.textTitle(
+                              'ประจำวันที่ ${Month.getMonthTitleReverse(outputDate)}',
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: red_n,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                child: TextWidget.textTitle(
+                                    '--:-- น. | รอเจ้าหน้าที่ดำเนินการ'),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 7,
+                          ),
+                          Container(height: 1, color: Colors.black),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          uploadPhotoCard(),
+                          const SizedBox(
+                            height: 7,
+                          ),
+                          Container(height: 1, color: Colors.black),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          before(),
+                          Edittext.edittextForm('BOD', 'mg/I',
+                              bodBeforeController, bodBeforeValidate),
+                          Edittext.edittextForm('COD', 'mg/I',
+                              codBeforeController, codBeforeValidate),
+                          Edittext.edittextForm('SS', 'mg/I',
+                              ssBeforeController, ssBeforeValidate),
+                          Edittext.edittextForm('Fat, Oil and Grease', 'mg/I',
+                              fogBeforeController, fogBeforeValidate),
+                          Edittext.edittextForm(
+                              'Total Nitrogen',
+                              'mg/I',
+                              totalNitrogenBeforeController,
+                              totalNitrogenBeforeValidate),
+                          Edittext.edittextForm(
+                              'Total Phosphorus',
+                              'mg/I',
+                              totalPhosphorusBeforeController,
+                              totalPhosphorusBeforeValidate),
+                          Edittext.edittextForm('ความเค็ม', 'ppt.',
+                              saltBeforeController, saltBeforeValidate),
+                          const SizedBox(
+                            height: 7,
+                          ),
+                          Container(height: 1, color: Colors.black),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          after(),
+                          Edittext.edittextForm('BOD', 'mg/I',
+                              bodAfterController, bodAfterValidate),
+                          Edittext.edittextForm('COD', 'mg/I',
+                              codAfterController, codAfterValidate),
+                          Edittext.edittextForm(
+                              'SS', 'mg/I', ssAfterController, ssAfterValidate),
+                          Edittext.edittextForm('Fat, Oil and Grease', 'mg/I',
+                              fogAfterController, fogAfterValidate),
+                          Edittext.edittextForm(
+                              'Total Nitrogen',
+                              'mg/I',
+                              totalNitrogenAfterController,
+                              totalNitrogenAfterValidate),
+                          Edittext.edittextForm(
+                              'Total Phosphorus',
+                              'mg/I',
+                              totalPhosphorusAfterController,
+                              totalPhosphorusAfterValidate),
+                          Edittext.edittextForm('ความเค็ม', 'ppt.',
+                              saltAfterController, saltAfterValidate),
+                          const SizedBox(
+                            height: 7,
+                          ),
+                          Container(height: 1, color: Colors.black),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          checkBox(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ButtonApp.buttonSecondaryHalf(
+                                context,
+                                'ยกเลิก',
+                                () {
+                                  Get.back();
+                                },
+                              ),
+                              ButtonApp.buttonMainhalf(context, 'ส่งรายงาน',
+                                  () async {
+                                final SharedPreferences prefs = await _prefs;
+                                String? authorization =
+                                    prefs.getString('access_token');
+
+                                // if (validate()) {
+                                // List<String> dataImg = [];
+                                // for (var i = 0; i < img.length; i++) {
+                                //   String temp = convertIntoBase64(img[i]);
+                                //   dataImg.add(temp);
+                                // }
+                                // if (!dataImg.isNotEmpty) {
+                                //   MyDialog.showAlertDialogOk(
+                                //       context, 'กรุณาแนบภาพอย่างน้อย 1 ภาพ', () {
+                                //     Get.back();
+                                //   });
+                                // } else {
+                                Get.to(RecheckPopupMonth(
+                                  station: widget.station,
+                                  role: widget.role,
+                                  dateLabel:
+                                      Month.getMonthTitleReverse(outputDate),
+                                  authorization: authorization!,
+                                  file: [],
+                                  type: 'MONTHLY',
+                                  bod: bodBeforeController.text,
+                                  cod: codBeforeController.text,
+                                  electric_unit: powerElectricController.text,
+                                  fog: fogBeforeController.text,
+                                  salt: saltBeforeController.text,
+                                  ss: ssBeforeController.text,
+                                  totalNitrogen:
+                                      totalNitrogenBeforeController.text,
+                                  totalPhosphorous:
+                                      totalPhosphorusBeforeController.text,
+                                  treated_total_phosphorous:
+                                      totalPhosphorusAfterController.text,
+                                  treated_bod: bodAfterController.text,
+                                  treated_cod: codAfterController.text,
+                                  treated_fog: fogAfterController.text,
+                                  treated_salt: saltAfterController.text,
+                                  treated_ss: ssAfterController.text,
+                                  treated_total_nitrogen:
+                                      totalNitrogenAfterController.text,
+                                  date: outputDate,
+                                ));
+                                // }
+                              }, isCheckBox),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                // ButtonApp.buttonSecondary(
+                //     context, 'ดูประวัติการส่งรายงานทั้งหมด', () {}),
+              ],
+            ),
+          ),
         ),
       ],
     );
@@ -236,7 +333,6 @@ class _ReportFormMonthState extends State<ReportFormMonth> {
 
   Widget before() {
     return Container(
-      color: greyBG,
       child: Column(
         children: [
           const SizedBox(
@@ -263,8 +359,8 @@ class _ReportFormMonthState extends State<ReportFormMonth> {
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: yellow_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Center(
                 child: TextWidget.textGeneralWithColor('1', Colors.white),
               ),
@@ -278,8 +374,8 @@ class _ReportFormMonthState extends State<ReportFormMonth> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextWidget.textBig('ก่อน'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำก่อนบำบัด', Colors.grey),
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('ก่อนการบำบัด'),
           ],
         )
       ],
@@ -397,7 +493,6 @@ class _ReportFormMonthState extends State<ReportFormMonth> {
 
   Widget after() {
     return Container(
-      color: blueButtonBorder,
       child: Column(
         children: [
           const SizedBox(
@@ -424,8 +519,8 @@ class _ReportFormMonthState extends State<ReportFormMonth> {
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: blue_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Center(
                 child: TextWidget.textGeneralWithColor('2', Colors.white),
               ),
@@ -439,8 +534,8 @@ class _ReportFormMonthState extends State<ReportFormMonth> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextWidget.textBig('หลัง'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำหลังบำบัด', Colors.grey),
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('หลังการบำบัด'),
           ],
         )
       ],
@@ -461,10 +556,9 @@ class _ReportFormMonthState extends State<ReportFormMonth> {
           width: 20,
         ),
         Expanded(
-          child: TextWidget.textGeneralWithColor(
-              'กรุณาตรวจสอบความถูกต้องหลังจากกด “ยืนยัน”\nจะเข้าสู่สถานะ “รอผู้จัดการตรวจสอบ”',
-              Colors.grey),
-        ),
+            child: TextWidget.textSubTitleWithSize(
+                'กรุณาตรวจสอบความถูกต้องก่อนกด “ยืนยัน” เมื่อกด “ยืนยัน” \nแล้วสถานะจะเปลี่ยนเป็น “รอผู้จัดการตรวจสอบ”',
+                10)),
       ],
     );
   }
@@ -528,5 +622,40 @@ class _ReportFormMonthState extends State<ReportFormMonth> {
     List<int> imageBytes = file.readAsBytesSync();
     String base64File = base64Encode(imageBytes);
     return base64File;
+  }
+
+  showAlertDialog(BuildContext context) async {
+    // final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    // final SharedPreferences prefs = await _prefs;
+    // // set up the button
+    Widget okButton = TextButton(
+      child: Text("ยืนยัน"),
+      onPressed: () async {
+        Get.back();
+        Get.back();
+      },
+    );
+
+    Widget calcelButton = TextButton(
+      child: Text("ยกเลิก"),
+      onPressed: () {
+        Get.back();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("คุณต้องการออกจากรายงานใช่หรือไม่"),
+      content: Text("หากกด ยืนยัน ข้อมูลจะถูกล้าง"),
+      actions: [okButton, calcelButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

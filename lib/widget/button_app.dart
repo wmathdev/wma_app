@@ -14,11 +14,68 @@ class ButtonApp {
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-                  color: isDisable ? blueSelected : greyBorder,
-                  border: Border.all(
-                    color: isDisable ? blueSelected : greyBorder,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(10))),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: isDisable
+                        ? [
+                            bottomNav_blue,
+                            blue_n_txt1,
+                          ]
+                        : [
+                            greyBorder,
+                            greyBorder,
+                          ],
+                  )),
+
+              // decoration: BoxDecoration(
+              //     color: isDisable ? blueSelected : greyBorder,
+              //     border: Border.all(
+              //       color: isDisable ? blueSelected : greyBorder,
+              //     ),
+              //     borderRadius: const BorderRadius.all(Radius.circular(10))),
+
+              child: Center(
+                  child: TextWidget.textGeneralWithColor(title, Colors.white)),
+            ),
+            // isRequired ? Text('data'):Container()
+          ],
+        ));
+  }
+
+  static Widget buttonMainhalf(BuildContext context, String title,
+      GestureTapCallback onPressed, bool isDisable) {
+    return TextButton(
+        onPressed: isDisable ? onPressed : () {},
+        child: Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: isDisable
+                        ? [
+                            bottomNav_blue,
+                            blue_n_txt1,
+                          ]
+                        : [
+                            greyBorder,
+                            greyBorder,
+                          ],
+                  )),
+
+              // decoration: BoxDecoration(
+              //     color: isDisable ? blueSelected : greyBorder,
+              //     border: Border.all(
+              //       color: isDisable ? blueSelected : greyBorder,
+              //     ),
+              //     borderRadius: const BorderRadius.all(Radius.circular(10))),
+
               child: Center(
                   child: TextWidget.textGeneralWithColor(title, Colors.white)),
             ),
@@ -82,16 +139,48 @@ class ButtonApp {
     );
   }
 
+  static Widget buttonMainFixGradient(BuildContext context, String title,
+      GestureTapCallback onPressed, bool isDisable) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.05,
+      child: TextButton(
+          onPressed: isDisable ? onPressed : () {},
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.3,
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: isDisable
+                      ? [
+                          bottomNav_blue,
+                          blue_n_txt1,
+                        ]
+                      : [
+                          greyBorder,
+                          greyBorder,
+                        ],
+                )),
+            child: Center(
+                child: TextWidget.textTitleBoldWithColor(
+              title,
+              Colors.white,
+            )),
+          )),
+    );
+  }
+
   static Widget buttonTab(BuildContext context, String title,
       GestureTapCallback onPressed, bool isDisable) {
     return SizedBox(
       height: 50,
       child: TextButton(
           style: OutlinedButton.styleFrom(
-            backgroundColor: isDisable ? blueSelected : Colors.transparent,
+            backgroundColor: isDisable ? blue_n : Colors.white,
             side: BorderSide(
               width: 1.0,
-              color: isDisable ? blueSelected : greyBorder,
+              color: isDisable ? blue_n : Colors.white,
               style: BorderStyle.solid,
             ),
           ),
@@ -121,10 +210,10 @@ class ButtonApp {
       width: MediaQuery.of(context).size.width * 0.2,
       child: TextButton(
           style: OutlinedButton.styleFrom(
-            backgroundColor: isDisable ? blueSelected : Colors.transparent,
+            backgroundColor: isDisable ? blue_n : Colors.white,
             side: BorderSide(
               width: 1.0,
-              color: isDisable ? blueSelected : greyBorder,
+              color: isDisable ? blue_n : Colors.white,
               style: BorderStyle.solid,
             ),
           ),
@@ -162,6 +251,85 @@ class ButtonApp {
               borderRadius: const BorderRadius.all(Radius.circular(10))),
           child: Center(
               child: TextWidget.textGeneralWithColor(title, blueSelected)),
+        ));
+  }
+
+  static Widget buttonSecondaryGradient(
+      BuildContext context, String title, GestureTapCallback onPressed) {
+    return TextButton(
+        onPressed: onPressed,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                bottomNav_blue,
+                blue_n_txt1,
+              ],
+            ),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 1,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Center(
+              child: TextWidget.textGeneralWithColor(title, Colors.white)),
+        ));
+  }
+
+  static Widget buttonSecondaryGradient2(
+      BuildContext context, String title, GestureTapCallback onPressed) {
+    return TextButton(
+        onPressed: onPressed,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                bottomNav_blue,
+                blue_n_txt1,
+              ],
+            ),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 1,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Center(
+              child: TextWidget.textSubTitleWithSizeColor(title,13, Colors.white)),
+        ));
+  }
+
+
+  static Widget buttonSecondaryHalf(
+      BuildContext context, String title, GestureTapCallback onPressed) {
+    return TextButton(
+        onPressed: onPressed,
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.35,
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+              color: red_n,
+              border: Border.all(
+                color: red_n,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(15))),
+          child: Center(
+              child: TextWidget.textGeneralWithColor(title, Colors.white)),
         ));
   }
 
@@ -248,14 +416,14 @@ class ButtonApp {
               width: MediaQuery.of(context).size.width * 0.35,
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-                  color: isDisable ? Colors.transparent : Colors.transparent,
+                  color: isDisable ? red_n : red_n,
                   border: Border.all(
                     color: isDisable ? Colors.transparent : Colors.transparent,
                   ),
-                  borderRadius: const BorderRadius.all(Radius.circular(10))),
+                  borderRadius: const BorderRadius.all(Radius.circular(20))),
               child: Center(
                   child:
-                      TextWidget.textTitleBoldWithColor(title, blueSelected)),
+                      TextWidget.textTitleBoldWithColor(title, Colors.white)),
             ),
             // isRequired ? Text('data'):Container()
           ],
@@ -306,6 +474,38 @@ class ButtonApp {
         ));
   }
 
+  static Widget buttonOutlineFixGradient(
+      BuildContext context, String title, GestureTapCallback onPressed) {
+    return TextButton(
+        onPressed: onPressed,
+        child: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Color.fromARGB(255, 1, 118, 214),
+                  Color.fromARGB(255, 126, 182, 228),
+                ],
+              ),
+              // color: isDisable ? blueSelected : greyBorder,
+              // border: Border.all(
+              //   color: isDisable ? blueSelected : greyBorder,
+              // ),
+              borderRadius: BorderRadius.all(Radius.circular(20))),
+          width: MediaQuery.of(context).size.width * 0.35,
+          padding: const EdgeInsets.all(8.0),
+          // decoration: BoxDecoration(
+          //     // color: blueSelected,
+          //     border: Border.all(
+          //       color: blueSelected,
+          //     ),
+          //     borderRadius: const BorderRadius.all(Radius.circular(10))),
+          child: Center(
+              child: TextWidget.textTitleBoldWithColor(title, Colors.white)),
+        ));
+  }
+
   static Widget buttonOutlineFixRed(
       BuildContext context, String title, GestureTapCallback onPressed) {
     return SizedBox(
@@ -352,6 +552,79 @@ class ButtonApp {
               child: Center(
                   child:
                       TextWidget.textTitleBoldWithColor(title, blueSelected)),
+            ),
+            // isRequired ? Text('data'):Container()
+          ],
+        ));
+  }
+
+  static Widget buttonMainGradient(BuildContext context, String title,
+      GestureTapCallback onPressed, bool isDisable) {
+    return TextButton(
+        onPressed: isDisable ? onPressed : () {},
+        child: Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color.fromARGB(255, 1, 118, 214),
+                      Color.fromARGB(255, 126, 182, 228),
+                    ],
+                  ),
+                  // color: isDisable ? blueSelected : greyBorder,
+                  // border: Border.all(
+                  //   color: isDisable ? blueSelected : greyBorder,
+                  // ),
+                  borderRadius: const BorderRadius.all(Radius.circular(20))),
+              child: Center(
+                  child: TextWidget.textGeneralWithColor(title, Colors.white)),
+            ),
+            // isRequired ? Text('data'):Container()
+          ],
+        ));
+  }
+
+  static Widget buttonMainGradientWithIcon(BuildContext context, String title,
+      GestureTapCallback onPressed, bool isDisable) {
+    return TextButton(
+        onPressed: isDisable ? onPressed : () {},
+        child: Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color.fromARGB(255, 1, 118, 214),
+                      Color.fromARGB(255, 126, 182, 228),
+                    ],
+                  ),
+                  // color: isDisable ? blueSelected : greyBorder,
+                  // border: Border.all(
+                  //   color: isDisable ? blueSelected : greyBorder,
+                  // ),
+                  borderRadius: const BorderRadius.all(Radius.circular(20))),
+              child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(width: 100,),
+                  TextWidget.textGeneralWithColor(title, Colors.white),
+                  const SizedBox(width: 5,),
+                  Image.asset(
+                    'asset/images/arrow_n.png',
+                  ),
+                  const SizedBox(width: 5,),
+                ],
+              )),
             ),
             // isRequired ? Text('data'):Container()
           ],

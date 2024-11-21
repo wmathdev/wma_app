@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:carousel_slider_plus/carousel_slider_plus.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +15,17 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:ua_client_hints/ua_client_hints.dart';
+import 'package:wma_app/api/MapRequest.dart';
 
 import 'package:wma_app/api/OtherRequest.dart';
 import 'package:wma_app/api/dashboardRequest.dart';
+import 'package:wma_app/test.dart';
+import 'package:wma_app/view/login/list_quality_station.dart';
+import 'package:wma_app/view/news/news_list.dart';
 import 'package:wma_app/view/station_select/stationSelect.dart';
+import 'package:wma_app/widget/gradient_text.dart';
 
 import '../../Utils/Color.dart';
 import '../../api/Authentication.dart';
@@ -59,7 +67,17 @@ class _LoginState extends State<Login> {
   late var resultTreatedWater;
   late var resultStatistic;
 
+  late dynamic treatedWater;
+  var summary = '0';
+  String total = '0';
+  dynamic qualityOverview;
+  var passed = '0';
+  var failed = '0';
+  var pending = '0';
+
   var userjson;
+  int _current = 0;
+  final CarouselSliderController _controller = CarouselSliderController();
 
   late User user;
   List<FlSpot> dummyData1 = [];
@@ -90,9 +108,16 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> _getDashboard() async {
+    treatedWater = await MapRequest.getTreatedWater();
+    qualityOverview = await MapRequest.getQualityOverview();
     var res1 = await DashboardRequest.getTreatedWater();
     var res2 = await DashboardRequest.getStatistic();
     setState(() {
+      summary = treatedWater['data']['summary'];
+      total = '${treatedWater['data']['total']}';
+      passed = '${qualityOverview['data']['passed']}';
+      failed = '${qualityOverview['data']['failed']}';
+      pending = '${qualityOverview['data']['pending']}';
       resultTreatedWater = res1;
       resultStatistic = res2;
     });
@@ -157,9 +182,9 @@ class _LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Lottie.asset(
-                'asset/lottie/animation_lk0uamsc.json',
-                width: 200,
-                height: 200,
+                'asset/lottie/Loading1.json',
+                width: 150,
+                height: 150,
                 fit: BoxFit.fill,
               ),
               TextWidget.textGeneralWithColor('กรุณารอสักครู่...', blueSelected)
@@ -174,7 +199,12 @@ class _LoginState extends State<Login> {
       child: Scaffold(
         body: SafeArea(
           child: Container(
-            color: Colors.grey[60],
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: ExactAssetImage('asset/images/waterbg.jpg'),
+                fit: BoxFit.fill,
+              ),
+            ),
             child: loading
                 ? Container(
                     color: Colors.white,
@@ -185,9 +215,9 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Lottie.asset(
-                            'asset/lottie/animation_lk0uamsc.json',
-                            width: 200,
-                            height: 200,
+                            'asset/lottie/Loading1.json',
+                            width: 150,
+                            height: 150,
                             fit: BoxFit.fill,
                           ),
                           TextWidget.textGeneralWithColor(
@@ -207,44 +237,59 @@ class _LoginState extends State<Login> {
                             : contentView(),
           ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          selectedItemColor: blueSelected,
-          unselectedItemColor: Colors.black,
-          currentIndex: _selectedIndex,
-          onTap: (int index) {
-            print(index);
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-          selectedLabelStyle: const TextStyle(
-            fontSize: 16,
-            color: Colors.black,
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+            boxShadow: [
+              BoxShadow(color: Colors.black38, spreadRadius: 0, blurRadius: 10),
+            ],
           ),
-          unselectedLabelStyle: const TextStyle(
-            fontSize: 16,
-            color: Colors.black,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(24),
+              topLeft: Radius.circular(24),
+            ),
+            child: BottomNavigationBar(
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              selectedItemColor: bottomNav_blue,
+              unselectedItemColor: Colors.black45,
+              currentIndex: _selectedIndex,
+              onTap: (int index) {
+                print(index);
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              selectedLabelStyle: const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+              unselectedLabelStyle: const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: ImageIcon(AssetImage('asset/images/ic_n_news.png')),
+                  label: 'ข่าวสาร',
+                ),
+                BottomNavigationBarItem(
+                  icon: ImageIcon(AssetImage('asset/images/ic_n_overview.png')),
+                  label: 'ภาพรวม',
+                ),
+                BottomNavigationBarItem(
+                  icon: ImageIcon(AssetImage('asset/images/ic_n_stat.png')),
+                  label: 'สถิติ',
+                ),
+                BottomNavigationBarItem(
+                  icon: ImageIcon(AssetImage('asset/images/ic_n_report.png')),
+                  label: 'รายงาน',
+                ),
+              ],
+            ),
           ),
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('asset/images/bi_newspaper.png')),
-              label: 'ข่าวสาร',
-            ),
-            BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('asset/images/bi_map.png')),
-              label: 'ภาพรวม',
-            ),
-            BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('asset/images/bi_bar-chart-line.png')),
-              label: 'สถิติ',
-            ),
-            BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('asset/images/bi_clipboard2.png')),
-              label: 'รายงาน',
-            ),
-          ],
         ),
       ),
     );
@@ -252,167 +297,185 @@ class _LoginState extends State<Login> {
 
   Widget statisticTab() {
     List<dynamic> graph = resultStatistic['data'];
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-        begin: Alignment.topRight,
-        end: Alignment.bottomLeft,
-        colors: [
-          blueGradientTop,
-          blueGradientBottom,
-        ],
-      )),
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 80,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [TextWidget.textBigWithColor('สถิติ', Colors.black)],
+    return Stack(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: ExactAssetImage('asset/images/waterbg.jpg'),
+              fit: BoxFit.fill,
             ),
           ),
-          Container(
-            margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextWidget.textTitle('ปริมาณน้ำเสียที่ผ่านการบำบัด'),
-                  ],
-                ),
-                Row(
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              blueGradientTop,
+              blueGradientBottom,
+            ],
+          )),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 80,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Expanded(
-                      flex: 1,
-                      child: Card(
-                        color: blueButton,
-                        child: Column(children: [
-                          TextWidget.textGeneral('รายสัปดาห์'),
-                          TextWidget.textSubTitleBold('-'),
-                          TextWidget.textGeneral('ลบ.ม.'),
-                        ]),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Card(
-                        color: blueButton,
-                        child: Column(children: [
-                          TextWidget.textGeneral('รายเดือน'),
-                          TextWidget.textSubTitleBold('-'),
-                          TextWidget.textGeneral('ลบ.ม.'),
-                        ]),
-                      ),
-                    )
+                    TextWidget.textBigWithColor('สถิติ', Colors.black)
                   ],
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Card(
-                        color: blueButton,
-                        child: Column(children: [
-                          TextWidget.textGeneral('รายปี'),
-                          TextWidget.textSubTitleBold('-'),
-                          TextWidget.textGeneral('ลบ.ม.'),
-                        ]),
-                      ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3), // changes position of shadow
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 10,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextWidget.textTitle('ปริมาณน้ำเสียที่ผ่านการบำบัด'),
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Card(
+                            color: blueButton,
+                            child: Column(children: [
+                              TextWidget.textGeneral('รายสัปดาห์'),
+                              TextWidget.textSubTitleBold('-'),
+                              TextWidget.textGeneral('ลบ.ม.'),
+                            ]),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Card(
+                            color: blueButton,
+                            child: Column(children: [
+                              TextWidget.textGeneral('รายเดือน'),
+                              TextWidget.textSubTitleBold('-'),
+                              TextWidget.textGeneral('ลบ.ม.'),
+                            ]),
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Card(
+                            color: blueButton,
+                            child: Column(children: [
+                              TextWidget.textGeneral('รายปี'),
+                              TextWidget.textSubTitleBold('-'),
+                              TextWidget.textGeneral('ลบ.ม.'),
+                            ]),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  TextWidget.textBigWithColor('STATISTIC', Colors.blue)
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              // Container(
+              //   margin: const EdgeInsets.all(20),
+              //   width:
+              //       MediaQuery.of(context).size.width * (0.1 * dummyData1.length),
+              //   height: MediaQuery.of(context).size.height * 0.3,
+              //   child: LineChart(LineChartData(
+              //     titlesData: FlTitlesData(
+              //       leftTitles: AxisTitles(
+              //           sideTitles: SideTitles(
+              //               showTitles: true, getTitlesWidget: leftTitleWidgets)),
+              //       bottomTitles: AxisTitles(
+              //           sideTitles: SideTitles(
+              //               showTitles: true, getTitlesWidget: bottomTitleWidgets)),
+              //       rightTitles:
+              //           const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              //       topTitles:
+              //           const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              //     ),
+              //     borderData: FlBorderData(
+              //       show: false,
+              //       border: Border.all(color: const Color(0xff37434d)),
+              //     ),
+              //     lineBarsData: [
+              //       // The red line
+              //       LineChartBarData(
+              //         spots: dummyData1,
+              //         isCurved: true,
+              //         barWidth: 3,
+              //         color: Colors.indigo,
+              //         gradient: LinearGradient(
+              //           colors: gradientColors,
+              //         ),
+              //         isStrokeCapRound: true,
+              //         dotData: const FlDotData(
+              //           show: false,
+              //         ),
+              //         belowBarData: BarAreaData(
+              //           show: true,
+              //           gradient: LinearGradient(
+              //             colors: gradientColors
+              //                 .map((color) => color.withOpacity(0.3))
+              //                 .toList(),
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   )),
+              // ),
+            ],
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [TextWidget.textBigWithColor('STATISTIC', Colors.blue)],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          // Container(
-          //   margin: const EdgeInsets.all(20),
-          //   width:
-          //       MediaQuery.of(context).size.width * (0.1 * dummyData1.length),
-          //   height: MediaQuery.of(context).size.height * 0.3,
-          //   child: LineChart(LineChartData(
-          //     titlesData: FlTitlesData(
-          //       leftTitles: AxisTitles(
-          //           sideTitles: SideTitles(
-          //               showTitles: true, getTitlesWidget: leftTitleWidgets)),
-          //       bottomTitles: AxisTitles(
-          //           sideTitles: SideTitles(
-          //               showTitles: true, getTitlesWidget: bottomTitleWidgets)),
-          //       rightTitles:
-          //           const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          //       topTitles:
-          //           const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          //     ),
-          //     borderData: FlBorderData(
-          //       show: false,
-          //       border: Border.all(color: const Color(0xff37434d)),
-          //     ),
-          //     lineBarsData: [
-          //       // The red line
-          //       LineChartBarData(
-          //         spots: dummyData1,
-          //         isCurved: true,
-          //         barWidth: 3,
-          //         color: Colors.indigo,
-          //         gradient: LinearGradient(
-          //           colors: gradientColors,
-          //         ),
-          //         isStrokeCapRound: true,
-          //         dotData: const FlDotData(
-          //           show: false,
-          //         ),
-          //         belowBarData: BarAreaData(
-          //           show: true,
-          //           gradient: LinearGradient(
-          //             colors: gradientColors
-          //                 .map((color) => color.withOpacity(0.3))
-          //                 .toList(),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   )),
-          // ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -482,67 +545,461 @@ class _LoginState extends State<Login> {
     return Stack(
       children: [
         SingleChildScrollView(
-          child: Container(
-            color: blueButton,
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                // TextWidget.textSubTitleBold('ข่าวสาร'),
-                // Card(child: ,)
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: news.length +
-                      1, // Replace with your actual number of news articles
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              // TextWidget.textSubTitleBold('ข่าวสาร'),
+              // Card(child: ,)
+              ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: news.length +
+                    1, // Replace with your actual number of news articles
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.07,
+                              width: MediaQuery.of(context).size.width,
+                              child: Image.asset(
+                                'asset/images/wma_header.png',
+                              )),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.07,
+                                  child: Image.asset(
+                                    'asset/images/wma_n.png',
+                                  )),
+                              SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.07,
+                                  child: Image.asset(
+                                    'asset/images/welcome.png',
+                                  )),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  if (index == 1) {
+                    return Column(
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.height / 6,
+                          margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(25)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(
+                                    0, 3), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisSize: MainAxisSize.max,
                               children: [
                                 SizedBox(
-                                    child: TextWidget.textTitleWithColor(
-                                        'WMA', blueSelected)),
-                                SizedBox(
-                                    child:
-                                        TextWidget.textSubTitleBold('ข่าวสาร')),
+                                    height: MediaQuery.of(context).size.height *
+                                        0.3,
+                                    child: Image.asset(
+                                      'asset/images/cloud.png',
+                                    )),
+                                Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'ปริมาณน้ำเสียที่ผ่านการบำบัดสะสม',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.normal,
+                                        color: blue_navy_n,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        GradientText(
+                                          summary,
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold,
+                                            color: blue_navy_n,
+                                          ),
+                                          gradient:
+                                              const LinearGradient(colors: [
+                                            Color.fromARGB(255, 12, 53, 113),
+                                            Color.fromARGB(255, 130, 191, 240),
+                                          ]),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          'ลบ.ม.',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: blue_navy_n,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
                               ],
                             ),
                           ),
-                          Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              child: Image.asset(
-                                'asset/images/nak.png',
-                              )),
-                        ],
-                      );
-                    }
+                        ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              'สรุปภาพรวมคุณภาพน้ำ',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: blue_navy_n,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              'จากศูนย์บำบัด $total แห่งทั่วประเทศ',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.normal,
+                                color: blue_navy_n,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(ListQuality(
+                                  title: '',
+                                  status: 'PASSED',
+                                ));
+                              },
+                              child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 6,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.28,
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  decoration: BoxDecoration(
+                                    color: blue_n,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(25)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: const Offset(
+                                            0, 3), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'ผ่านเกณฑ์',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        passed,
+                                        style: const TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const Text(
+                                        'พื้นที่',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(ListQuality(
+                                  title: '',
+                                  status: 'FAILED',
+                                ));
+                              },
+                              child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 6,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.28,
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  decoration: BoxDecoration(
+                                    color: yellow_n,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(25)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: const Offset(
+                                            0, 3), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'เฝ้าระวัง',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        failed,
+                                        style: const TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const Text(
+                                        'พื้นที่',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(ListQuality(
+                                  title: '',
+                                  status: 'PENDING',
+                                ));
+                              },
+                              child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 6,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.28,
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  decoration: BoxDecoration(
+                                    color: red_n,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(25)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: const Offset(
+                                            0, 3), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'ต้องตรวจสอบ',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        pending,
+                                        style: const TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const Text(
+                                        'พื้นที่',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(NewsList(
+                              news: news,
+                            ));
+                          },
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'ข่าวประชาสัมพันธ์ (เพิ่มเติม)',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: blue_navy_n,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                    // return ListItemWidget.newsFirstCard(
+                    //     context,
+                    //     news[index - 1]['title']['rendered'],
+                    //     news[index - 1]['jetpack_featured_media_url'],
+                    //     news[index - 1],
+                    //     showDate(news[index - 1]['date']));
+                  }
 
-                    if (index == 1) {
-                      return ListItemWidget.newsFirstCard(
-                          context,
-                          news[index - 1]['title']['rendered'],
-                          news[index - 1]['jetpack_featured_media_url'],
-                          news[index - 1],
-                          showDate(news[index - 1]['date']));
-                    }
+                  if (index == 2) {
+                    // return Expanded(
+                    //   child: CarouselSlider(
+                    //     items: imageSliders,
+                    //     controller: _controller,
+                    //     options: CarouselOptions(
+                    //         autoPlay: true,
+                    //         enlargeCenterPage: true,
+                    //         aspectRatio: 2.0,
+                    //         onPageChanged: (index, reason) {
+                    //           setState(() {
+                    //             _current = index;
+                    //           });
+                    //         }),
+                    //   ),
+                    // );
 
-                    return ListItemWidget.newsCard(
-                        context,
-                        news[index - 1]['title']['rendered'],
-                        news[index - 1]['jetpack_featured_media_url'],
-                        news[index - 1],
-                        showDate(news[index - 1]['date']));
-                  },
-                ),
-              ],
-            ),
+                    return Column(
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        CarouselSlider.builder(
+                            itemCount: 5,
+                            options: CarouselOptions(
+                              autoPlay: true,
+                              enlargeCenterPage: true,
+                              aspectRatio: 3.0,
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  _current = index;
+                                });
+                              },
+                            ),
+                            itemBuilder: (BuildContext context, int itemIndex,
+                                int pageViewIndex) {
+                              return ListItemWidget.newsCard_n(
+                                  context,
+                                  news[itemIndex]['title']['rendered'],
+                                  news[itemIndex]['jetpack_featured_media_url'],
+                                  news[itemIndex],
+                                  showDate(news[itemIndex]['date']));
+                            }),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        AnimatedSmoothIndicator(
+                          activeIndex: _current,
+                          count: news.length,
+                          effect: const ScrollingDotsEffect(
+                              spacing: 8.0,
+                              // radius: 4.0,
+                              dotWidth: 12.0,
+                              dotHeight: 12.0,
+                              paintStyle: PaintingStyle.fill,
+                              strokeWidth: 1.5,
+                              dotColor: Colors.black12,
+                              activeDotColor: Colors.white),
+                        ),
+                        const SizedBox(
+                          height: 100,
+                        ),
+                      ],
+                    );
+                  }
+
+                  return Container();
+                  // return ListItemWidget.newsCard(
+                  //     context,
+                  //     news[index]['title']['rendered'],
+                  //     news[index]['jetpack_featured_media_url'],
+                  //     news[index],
+                  //     showDate(news[index]['date']));
+                },
+              ),
+            ],
           ),
         ),
       ],
@@ -577,7 +1034,7 @@ class _LoginState extends State<Login> {
               const SizedBox(
                 height: 150,
               ),
-              TextWidget.textGeneral('ศูนย์บริหารจัดการคุณภาพน้ำ'),
+              TextWidget.textGeneral('ลงชื่อเข้าใช้งานระบบการรายงาน'),
               Edittext.edittextGeneral('บัญชีผู้ใช้', '', username),
               const SizedBox(
                 height: 30,
@@ -621,8 +1078,14 @@ class _LoginState extends State<Login> {
                     //print(result['data']['user']);
 
                     User user = User.fromMap(result['data']['user'], false);
+
+                    String passphrase =
+                        json.encode(result['data']['passphrase']);
+
                     String encodedMap = user.toJson();
+
                     prefs.setString('user', encodedMap);
+                    prefs.setString('passphrase', passphrase);
 
                     setState(() {
                       //   username.text = '';
@@ -663,11 +1126,19 @@ class _LoginState extends State<Login> {
                   });
                 }
               }, true),
+              const SizedBox(
+                height: 400,
+              ),
             ],
           ),
         ),
       ],
     );
+  }
+
+  void printWrapped(String text) {
+    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
   bool validate() {
@@ -681,5 +1152,20 @@ class _LoginState extends State<Login> {
     }
 
     return validate;
+  }
+
+  User setPassphase(User user, dynamic passphase) {
+    User newuser = User(
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      roleId: user.roleId,
+      status: user.status,
+      role: user.role,
+      stations: user.stations,
+      passphrases: Passphrases.fromMap(passphase),
+    );
+    return newuser;
   }
 }
