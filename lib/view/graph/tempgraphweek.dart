@@ -279,10 +279,10 @@ class _TempGraphWeekState extends State<TempGraphWeek> {
     const style = TextStyle(
       color: Color(0xff7589a2),
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 10,
     );
     String text = '';
-    if (value % 10 == 0) {
+    if (value % 5 == 0) {
       text = '${value}';
     }
     //   text = '1K';

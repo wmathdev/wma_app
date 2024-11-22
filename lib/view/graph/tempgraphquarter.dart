@@ -285,10 +285,10 @@ class _TempGraphQuarterState extends State<TempGraphQuarter> {
     const style = TextStyle(
       color: Color(0xff7589a2),
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 8,
     );
     String text = '';
-    if (value % 10 == 0) {
+    if (value % 50 == 0) {
       text = '${value}';
     }
     //   text = '1K';

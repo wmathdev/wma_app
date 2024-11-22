@@ -7,7 +7,6 @@ import 'package:wma_app/widget/text_widget.dart';
 
 import '../../Utils/month.dart';
 
-
 class PhGraphYear extends StatefulWidget {
   dynamic data;
   String rule;
@@ -107,13 +106,13 @@ class _PhGraphYearState extends State<PhGraphYear> {
         listtreatedPlot.add(FlSpot(i.toDouble(), 0));
       }
       lebelactive.add(false);
-      label.add(Month.getGraphDayMonth(temp[i]['report_at']));
+      label.add(temp[i]['report_at']);
       rawBarGroups.add(makeGroupData(i, a, b));
     }
-    if (widget.rule != '') {
-      listRule.add(HorizontalLine(
-          y: double.parse(widget.rule), color: Colors.blue, dashArray: [4, 4]));
-    }
+    // if (widget.rule != '') {
+    //   listRule.add(HorizontalLine(
+    //       y: double.parse(widget.rule), color: Colors.blue, dashArray: [4, 4]));
+    // }
 
     // final barGroup1 = makeGroupData(0, 5, 12);
     // final barGroup2 = makeGroupData(1, 16, 12);
@@ -213,7 +212,8 @@ class _PhGraphYearState extends State<PhGraphYear> {
                       child: BarChart(
                         BarChartData(
                           extraLinesData: ExtraLinesData(
-                              horizontalLines: listRule, verticalLines: listSelect),
+                              horizontalLines: listRule,
+                              verticalLines: listSelect),
                           maxY: maxValue,
                           barTouchData: BarTouchData(
                             touchTooltipData:
@@ -284,10 +284,10 @@ class _PhGraphYearState extends State<PhGraphYear> {
     const style = TextStyle(
       color: Color(0xff7589a2),
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 8,
     );
     String text = '';
-    if (value % 10 == 0) {
+    if (value % 50 == 0) {
       text = '${value}';
     }
     //   text = '1K';
@@ -329,7 +329,7 @@ class _PhGraphYearState extends State<PhGraphYear> {
           color: lebelactive[i] ? Colors.blue : Colors.white,
         ),
         child: Center(
-          child: Text(Month.getGraphDayMonth(widget.data[i]['label']),
+          child: Text(widget.data[i]['label'],
               style: style2),
         ));
 

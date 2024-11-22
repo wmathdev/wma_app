@@ -139,7 +139,7 @@ class _MaintainanceState extends State<Maintainance> {
                       TextWidget.textTitle(
                           '${widget.data['instrument']['name']} มีชั่วโมงการทำงาน'),
                       TextWidget.textTitleBold(
-                          '${widget.data['cycles']}  ชั่วโมง'),
+                          '${widget.data['cycles_hr']} ชั่วโมง'),
                     ],
                   ),
                   Row(

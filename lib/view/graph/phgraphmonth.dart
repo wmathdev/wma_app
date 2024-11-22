@@ -214,7 +214,7 @@ class _PhGraphMonthState extends State<PhGraphMonth> {
                           extraLinesData: ExtraLinesData(
                               horizontalLines: listRule,
                               verticalLines: listSelect),
-                          maxY: 20,
+                          maxY: 10,
                           barTouchData: BarTouchData(
                             touchTooltipData:
                                 BarTouchTooltipData(getTooltipColor: ((group) {
@@ -284,10 +284,10 @@ class _PhGraphMonthState extends State<PhGraphMonth> {
     const style = TextStyle(
       color: Color(0xff7589a2),
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 10,
     );
     String text = '';
-    if (value % 10 == 0) {
+    if (value % 2 == 0) {
       text = '${value}';
     }
     //   text = '1K';

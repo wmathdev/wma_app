@@ -285,10 +285,10 @@ class _DooYearGraphState extends State<DooYearGraph> {
     const style = TextStyle(
       color: Color(0xff7589a2),
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 10,
     );
     String text = '';
-    if (value % 10 == 0) {
+    if (value % 20 == 0) {
       text = '${value}';
     }
     //   text = '1K';
@@ -330,7 +330,7 @@ class _DooYearGraphState extends State<DooYearGraph> {
           color: lebelactive[i] ? Colors.blue : Colors.white,
         ),
         child: Center(
-          child: Text(Month.getGraphDayMonth(widget.data[i]['label']),
+          child: Text(widget.data[i]['label'],
               style: style2),
         ));
 

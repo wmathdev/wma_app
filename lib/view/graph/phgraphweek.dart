@@ -209,7 +209,7 @@ static const Color primary = contentColorCyan;
                     BarChartData(
                       extraLinesData: ExtraLinesData(
                           horizontalLines: listRule, verticalLines: listSelect),
-                      maxY: 20,
+                      maxY: 10,
                       barTouchData: BarTouchData(
                         touchTooltipData:
                             BarTouchTooltipData(getTooltipColor: ((group) {
@@ -280,7 +280,7 @@ static const Color primary = contentColorCyan;
       fontSize: 14,
     );
     String text = '';
-    if (value % 10 == 0) {
+    if (value % 2 == 0) {
       text = '${value}';
     }
     //   text = '1K';

@@ -285,10 +285,10 @@ class _TempGraphYearState extends State<TempGraphYear> {
     const style = TextStyle(
       color: Color(0xff7589a2),
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 7,
     );
     String text = '';
-    if (value % 10 == 0) {
+    if (value % 100 == 0) {
       text = '${value}';
     }
     //   text = '1K';
@@ -330,7 +330,7 @@ class _TempGraphYearState extends State<TempGraphYear> {
           color: lebelactive[i] ? Colors.blue : Colors.white,
         ),
         child: Center(
-          child: Text(Month.getGraphDayMonth(widget.data[i]['label']),
+          child: Text(widget.data[i]['label'],
               style: style2),
         ));
 

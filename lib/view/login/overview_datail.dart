@@ -940,7 +940,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
                       ),
                       SizedBox(
                           width: 35,
-                          child: data2[index]['document'] != null
+                          child: data2[defaultposition.toInt()]['document'] != null
                               ? TextWidget.textTitleWithColorSize(
                                   '${data2[defaultposition.toInt()]['document']['treated_doo']} mg/l',
                                   Colors.black,
@@ -1005,7 +1005,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
                       ),
                       SizedBox(
                           width: 35,
-                          child: data2[index]['document'] != null
+                          child: data2[defaultposition.toInt()]['document'] != null
                               ? TextWidget.textTitleWithColorSize(
                                   '${data2[defaultposition.toInt()]['document']['treated_ph']} pH',
                                   Colors.black,
@@ -1070,7 +1070,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
                       ),
                       SizedBox(
                           width: 35,
-                          child: data2[index]['document'] != null
+                          child: data2[defaultposition.toInt()]['document'] != null
                               ? TextWidget.textTitleWithColorSize(
                                   '${data2[defaultposition.toInt()]['document']['treated_temp']} °C',
                                   Colors.black,

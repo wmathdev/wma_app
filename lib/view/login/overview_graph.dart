@@ -197,28 +197,26 @@ class _OverviewGraphState extends State<OverviewGraph> {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   child: SingleChildScrollView(
-                      child: Stack(children: [
-                    Column(children: [
-                      appbar(),
-                      header(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      // widget.isSubmited ? waterDetail() : Container(),
-                      const SizedBox(
-                        height: 3,
-                      ),
-                      // widget.isSubmited
-                      //     ? Center(
-                      //         child: TextWidget.textSubTitleWithSize(
-                      //             'อัพเดทล่าสุด ${data['data']['document']['published_at']  ?? ''}',
-                      //             13),
-                      //       )
-                      //     : Container(),
-                      menu(),
-                      graphFilter(),
-                      graph()
-                    ])
+                      child: Column(children: [
+                    appbar(),
+                    header(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    waterDetail(),
+                    const SizedBox(
+                      height: 3,
+                    ),
+                    // widget.isSubmited
+                    //     ? Center(
+                    //         child: TextWidget.textSubTitleWithSize(
+                    //             'อัพเดทล่าสุด ${data['data']['document']['published_at']  ?? ''}',
+                    //             13),
+                    //       )
+                    //     : Container(),
+                    menu(),
+                    graphFilter(),
+                    graph()
                   ])))),
     );
   }

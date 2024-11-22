@@ -284,7 +284,7 @@ class _TempGraphMonthState extends State<TempGraphMonth> {
     const style = TextStyle(
       color: Color(0xff7589a2),
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 8,
     );
     String text = '';
     if (value % 10 == 0) {
