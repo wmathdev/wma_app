@@ -392,7 +392,7 @@ class _StationSelectState extends State<StationSelect> {
               // ),
               SizedBox(
                 // width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.75,
+                height: MediaQuery.of(context).size.height * 0.65,
                 child: ListView.builder(
                     padding: const EdgeInsets.all(8),
                     itemCount: stations.length,

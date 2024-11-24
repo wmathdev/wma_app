@@ -88,7 +88,7 @@ class _TypeEqListState extends State<TypeEqList> {
                     eQType
                     .length > 0 ? contentView() :
                     SizedBox(
-                        height: MediaQuery.of(context).size.height* 0.7,
+                        height: MediaQuery.of(context).size.height* 0.6,
                         child: Center(
                           child: TextWidget.textSubTitleWithSizeGradient('ไม่มีการแจ้งเตือน',25,Colors.white),
                         ))
@@ -122,7 +122,7 @@ class _TypeEqListState extends State<TypeEqList> {
             ],
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.7,
+            height: MediaQuery.of(context).size.height * 0.6,
             child: ListView.builder(
                 // physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,

@@ -175,7 +175,7 @@ class _ReportListState extends State<ReportList> {
             }),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height - 110,
+            height: MediaQuery.of(context).size.height - 173,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(18.0),
@@ -308,138 +308,181 @@ class _ReportListState extends State<ReportList> {
   }
 
   Widget listView() {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: data.length,
-      itemBuilder: (context, index) {
-        if (formattedDate == '${data[index]['date']}' ||
-            widget.role == 'ADMIN') {
-          if (data[index]['document'] == null) {
-            if (widget.role == 'MANAGER' || widget.role == 'OFFICER') {
-              return ListItemWidget.reportListHeaderManager(
-                  context,
-                  '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
-                  Month.getMonthTitleReverse(data[index]['date']),
-                  '10.00',
-                  widget.role, () async {
-                await Get.to(ContactView(station: widget.station));
-
-                setState(() {
-                  loading = true;
-                  _getDocumentList(
-                    '',
-                  );
-                });
-              });
-            }
-
-            return ListItemWidget.reportListHeader(
-                context,
-                '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
-                Month.getMonthTitleReverse(data[index]['date']),
-                '10.00',
-                widget.role, () async {
-              if (( //Time.checkTimeStatus('00:00AM', '10:00AM') &&
-                      widget.role == 'OPERATOR') ||
-                  widget.role == 'ADMIN') {
-                await Get.to(ReportForm(
-                    role: widget.role,
-                    station: widget.station,
-                    date: DateFormat("yyyy-MM-dd").parse(data[index]['date'])));
-                setState(() {
-                  loading = true;
-                  _getDocumentList(
-                    '',
-                  );
-                });
-              } else {
-                await Get.to(ContactView(station: widget.station));
-              }
-            });
-          } else {
-            if (widget.role == 'MANAGER') {
-              return ListItemWidget.reportListItemTodayManager(
-                  context,
-                  '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
-                  '10.00', () async {
-                if (data[index]['document']['workflow']['state'] == 'REVIEW' ||
-                    data[index]['document']['workflow']['state'] == 'Review' ||
-                    data[index]['document']['workflow']['state'] ==
-                        'REVISION' ||
-                    data[index]['document']['workflow']['state'] ==
-                        'COMPLETED') {
-                  Get.to(ReportDetail(
-                      documentId: '${data[index]['document']['id']}',
-                      station: widget.station,
-                      role: widget.role));
-                } else {
-                  await Get.to(ReportFormManager(
-                    document: data[index]['document'],
-                    datelabel: data[index]['date'],
-                    role: widget.role,
-                    station: widget.station,
-                  ));
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.6,
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          if (formattedDate == '${data[index]['date']}' ||
+              widget.role == 'ADMIN') {
+            if (data[index]['document'] == null) {
+              if (widget.role == 'MANAGER' || widget.role == 'OFFICER') {
+                return ListItemWidget.reportListHeaderManager(
+                    context,
+                    '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
+                    Month.getMonthTitleReverse(data[index]['date']),
+                    '10.00',
+                    widget.role, () async {
+                  await Get.to(ContactView(station: widget.station));
+      
                   setState(() {
                     loading = true;
                     _getDocumentList(
                       '',
                     );
                   });
-                }
-              }, data[index]['document'], () {});
-            }
-
-            if (widget.role == 'OFFICER') {
-              return ListItemWidget.reportListItemTodayOfficer(
+                });
+              }
+      
+              return ListItemWidget.reportListHeader(
                   context,
                   '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
+                  Month.getMonthTitleReverse(data[index]['date']),
                   '10.00',
-                  () async {
-                    if (data[index]['document']['workflow']
-                                ['state'] ==
-                            'REVIEW' ||
-                        data[index]['document']['workflow']['state'] ==
-                            'Review' ||
-                        data[index]['document']['workflow']['state'] ==
-                            'REVIEWING') {
-                      await Get.to(ReportFormOfficer(
-                        document: data[index]['document'],
-                        datelabel: data[index]['date'],
-                        role: widget.role,
+                  widget.role, () async {
+                if (( Time.checkTimeStatus('00:00AM', '10:00AM') &&
+                        widget.role == 'OPERATOR') ||
+                    widget.role == 'ADMIN') {
+                  await Get.to(ReportForm(
+                      role: widget.role,
+                      station: widget.station,
+                      date: DateFormat("yyyy-MM-dd").parse(data[index]['date'])));
+                  setState(() {
+                    loading = true;
+                    _getDocumentList(
+                      '',
+                    );
+                  });
+                } else {
+                  await Get.to(ContactView(station: widget.station));
+                }
+              });
+            } else {
+              if (widget.role == 'MANAGER') {
+                return ListItemWidget.reportListItemTodayManager(
+                    context,
+                    '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
+                    '10.00', () async {
+                  if (data[index]['document']['workflow']['state'] == 'REVIEW' ||
+                      data[index]['document']['workflow']['state'] == 'Review' ||
+                      data[index]['document']['workflow']['state'] ==
+                          'REVISION' ||
+                      data[index]['document']['workflow']['state'] ==
+                          'COMPLETED') {
+                    Get.to(ReportDetail(
+                        documentId: '${data[index]['document']['id']}',
                         station: widget.station,
-                      ));
-                      setState(() {
-                        loading = true;
-                        _getDocumentList(
-                          '',
-                        );
-                      });
-                    } else {
-                      Get.to(ReportDetail(
-                          documentId: '${data[index]['document']['id']}',
-                          station: widget.station,
-                          role: widget.role));
-                    }
-                  },
-                  data[index]['document'],
-                  () {},
-                  (value) {
+                        role: widget.role));
+                  } else {
+                    await Get.to(ReportFormManager(
+                      document: data[index]['document'],
+                      datelabel: data[index]['date'],
+                      role: widget.role,
+                      station: widget.station,
+                    ));
                     setState(() {
-                      publicList[index] = value;
+                      loading = true;
+                      _getDocumentList(
+                        '',
+                      );
                     });
-                  },
-                  publicList[index]);
-            }
-
-            if (widget.role == 'ADMIN') {
-              print('role ; ${widget.role}');
-              return ListItemWidget.reportListItemTodayAdmin(
+                  }
+                }, data[index]['document'], () {});
+              }
+      
+              if (widget.role == 'OFFICER') {
+                return ListItemWidget.reportListItemTodayOfficer(
+                    context,
+                    '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
+                    '10.00',
+                    () async {
+                      if (data[index]['document']['workflow']
+                                  ['state'] ==
+                              'REVIEW' ||
+                          data[index]['document']['workflow']['state'] ==
+                              'Review' ||
+                          data[index]['document']['workflow']['state'] ==
+                              'REVIEWING') {
+                        await Get.to(ReportFormOfficer(
+                          document: data[index]['document'],
+                          datelabel: data[index]['date'],
+                          role: widget.role,
+                          station: widget.station,
+                        ));
+                        setState(() {
+                          loading = true;
+                          _getDocumentList(
+                            '',
+                          );
+                        });
+                      } else {
+                        Get.to(ReportDetail(
+                            documentId: '${data[index]['document']['id']}',
+                            station: widget.station,
+                            role: widget.role));
+                      }
+                    },
+                    data[index]['document'],
+                    () {},
+                    (value) {
+                      setState(() {
+                        publicList[index] = value;
+                      });
+                    },
+                    publicList[index]);
+              }
+      
+              if (widget.role == 'ADMIN') {
+                print('role ; ${widget.role}');
+                return ListItemWidget.reportListItemTodayAdmin(
+                    context,
+                    '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
+                    '10.00', () async {
+                  if (data[index]['document']['workflow']['state'] ==
+                      'COMPLETED') {
+                    Get.to(ReportDetail(
+                        documentId: '${data[index]['document']['id']}',
+                        role: widget.role, station: widget.station,));
+                  } else {
+                    final SharedPreferences prefs = await _prefs;
+                    accessToken = (prefs.getString('access_token') ?? '');
+                    await Get.to(ReportFormViewEdit(
+                      station: widget.station,
+                      data: data[index],
+                      role: widget.role,
+                    ));
+                    setState(() {
+                      loading = true;
+                      _getDocumentList(
+                        '',
+                      );
+                    });
+                  }
+                }, data[index]['document']);
+              }
+      
+              return ListItemWidget.reportListItemToday(
                   context,
                   '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
                   '10.00', () async {
-                if (data[index]['document']['workflow']['state'] ==
-                    'COMPLETED') {
+                await Get.to(CancelPopup(
+                    dateLabel: Month.getMonthTitleReverse(data[index]['date']),
+                    documentId: '${data[index]['document']['id']}'));
+                setState(() {
+                  loading = true;
+                  _getDocumentList(
+                    '',
+                  );
+                });
+                // Get.to(ReportDetail(
+                //     documentId: '${data[index]['document']['id']}',
+                //     role: widget.role));
+              }, () async {
+                if (data[index]['document']['workflow']['state'] == 'COMPLETED' ||
+                    data[index]['document']['workflow']['state'] == 'REVIEW' ||
+                    data[index]['document']['workflow']['state'] == 'REVIEWING') {
                   Get.to(ReportDetail(
                       documentId: '${data[index]['document']['id']}',
                       role: widget.role, station: widget.station,));
@@ -460,72 +503,32 @@ class _ReportListState extends State<ReportList> {
                 }
               }, data[index]['document']);
             }
-
-            return ListItemWidget.reportListItemToday(
-                context,
-                '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
-                '10.00', () async {
-              await Get.to(CancelPopup(
-                  dateLabel: Month.getMonthTitleReverse(data[index]['date']),
-                  documentId: '${data[index]['document']['id']}'));
-              setState(() {
-                loading = true;
-                _getDocumentList(
-                  '',
-                );
-              });
-              // Get.to(ReportDetail(
-              //     documentId: '${data[index]['document']['id']}',
-              //     role: widget.role));
-            }, () async {
-              if (data[index]['document']['workflow']['state'] == 'COMPLETED' ||
-                  data[index]['document']['workflow']['state'] == 'REVIEW' ||
-                  data[index]['document']['workflow']['state'] == 'REVIEWING') {
-                Get.to(ReportDetail(
-                    documentId: '${data[index]['document']['id']}',
-                    role: widget.role, station: widget.station,));
-              } else {
-                final SharedPreferences prefs = await _prefs;
-                accessToken = (prefs.getString('access_token') ?? '');
-                await Get.to(ReportFormViewEdit(
-                  station: widget.station,
-                  data: data[index],
-                  role: widget.role,
-                ));
-                setState(() {
-                  loading = true;
-                  _getDocumentList(
-                    '',
-                  );
-                });
-              }
-            }, data[index]['document']);
           }
-        }
-
-        // if (index == 5) {
-        //   return Container(
-        //     margin: const EdgeInsets.all(10),
-        //     child: Center(
-        //         child: TextWidget.textGeneralWithColor(
-        //             'ดูรายงานทั้งหมด', blueSelected)),
-        //   );
-        // }
-
-        if (data[index]['document'] == null ||
-            data[index]['document']['workflow'] == null) {
-          return Container();
-        }
-
-        return ListItemWidget.reportListItem(
-            context,
-            '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
-            '10.00', () {
-          Get.to(ReportDetail(
-              documentId: '${data[index]['document']['id']}',
-              role: widget.role, station: widget.station,));
-        }, data[index]['document']);
-      },
+      
+          // if (index == 5) {
+          //   return Container(
+          //     margin: const EdgeInsets.all(10),
+          //     child: Center(
+          //         child: TextWidget.textGeneralWithColor(
+          //             'ดูรายงานทั้งหมด', blueSelected)),
+          //   );
+          // }
+      
+          if (data[index]['document'] == null ||
+              data[index]['document']['workflow'] == null) {
+            return Container();
+          }
+      
+          return ListItemWidget.reportListItem(
+              context,
+              '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
+              '10.00', () {
+            Get.to(ReportDetail(
+                documentId: '${data[index]['document']['id']}',
+                role: widget.role, station: widget.station,));
+          }, data[index]['document']);
+        },
+      ),
     );
   }
 }

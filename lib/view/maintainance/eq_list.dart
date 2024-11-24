@@ -72,7 +72,7 @@ class _EQListState extends State<EQList> {
             ],
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.8,
+            height: MediaQuery.of(context).size.height * 0.75,
             child: ListView.builder(
                 // physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,

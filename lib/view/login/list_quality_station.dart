@@ -136,7 +136,7 @@ class _ListQualityState extends State<ListQuality> {
             height: 10,
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.7,
+            height: MediaQuery.of(context).size.height * 0.6,
             child: ListView.builder(
                 // physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,

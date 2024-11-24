@@ -140,7 +140,7 @@ class TextWidget {
     return Text(
       title,
       style: TextStyle(
-        fontSize: 15,
+        fontSize: 10,
         fontWeight: FontWeight.bold,
         color: color,
       ),

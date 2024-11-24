@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:wma_app/Utils/Color.dart';
 import 'package:wma_app/Utils/label.dart';
 import 'package:wma_app/Utils/month.dart';
 
@@ -184,7 +185,7 @@ class _StatgraphquarterNState extends State<StatgraphquarterN> {
       maxY: maxValue * 1.2,
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
-          getTooltipColor: (_) => Colors.white,
+          getTooltipColor: (_) => red_n,
           tooltipHorizontalAlignment: FLHorizontalAlignment.right,
           tooltipMargin: -10,
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
