@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wma_app/Utils/label.dart';
+import 'package:wma_app/view/report_form/preview_img.dart';
 import 'package:wma_app/view/report_list/report_list_month_view.dart';
 
 import '../../Utils/Color.dart';
@@ -42,30 +44,33 @@ class RejectPopupMonth extends StatefulWidget {
   Station station;
   String documentId;
 
-  RejectPopupMonth({
-    Key? key,
-    required this.dateLabel,
-    required this.authorization,
-    required this.bod,
-    required this.cod,
-    required this.ss,
-    required this.fog,
-    required this.totalNitrogen,
-    required this.totalPhosphorous,
-    required this.salt,
-    required this.treated_bod,
-    required this.treated_cod,
-    required this.treated_ss,
-    required this.treated_fog,
-    required this.treated_total_nitrogen,
-    required this.treated_total_phosphorous,
-    required this.treated_salt,
-    required this.electric_unit,
-    required this.type,
-    required this.role,
-    required this.station,
-    required this.documentId,
-  }) : super(key: key);
+  List<dynamic> img = [];
+
+  RejectPopupMonth(
+      {Key? key,
+      required this.dateLabel,
+      required this.authorization,
+      required this.bod,
+      required this.cod,
+      required this.ss,
+      required this.fog,
+      required this.totalNitrogen,
+      required this.totalPhosphorous,
+      required this.salt,
+      required this.treated_bod,
+      required this.treated_cod,
+      required this.treated_ss,
+      required this.treated_fog,
+      required this.treated_total_nitrogen,
+      required this.treated_total_phosphorous,
+      required this.treated_salt,
+      required this.electric_unit,
+      required this.type,
+      required this.role,
+      required this.station,
+      required this.documentId,
+      required this.img})
+      : super(key: key);
 
   @override
   State<RejectPopupMonth> createState() => _RejectPopupMonthState();
@@ -92,9 +97,9 @@ class _RejectPopupMonthState extends State<RejectPopupMonth> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Lottie.asset(
-                        'asset/lottie/animation_lk0uamsc.json',
-                        width: 200,
-                        height: 200,
+                        'asset/lottie/Loading1.json',
+                        width: 150,
+                        height: 150,
                         fit: BoxFit.fill,
                       ),
                       TextWidget.textGeneralWithColor(
@@ -110,10 +115,21 @@ class _RejectPopupMonthState extends State<RejectPopupMonth> {
 
   Widget contentView() {
     return Stack(children: [
-      SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
+      Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: ExactAssetImage('asset/images/waterbg.jpg'),
+            fit: BoxFit.fill,
+          ),
+        ),
+      ),
+      Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.1,
+            child: Row(
               children: [
                 const SizedBox(
                   width: 10,
@@ -123,75 +139,199 @@ class _RejectPopupMonthState extends State<RejectPopupMonth> {
                       Get.back();
                     },
                     child: const ImageIcon(
-                        AssetImage('asset/images/bi_chevron-right.png')))
+                        AssetImage('asset/images/arrow_left_n.png'))),
+                Row(
+                  children: [TextWidget.textTitle('รายงานคุณภาพน้ำประจำวัน')],
+                )
               ],
             ),
-            Center(
-                child: Container(
-              width: 200,
-              height: 200,
-              child: const Image(
-                image: AssetImage('asset/images/rejectedicon.png'),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.87,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: Image.asset('asset/images/iconintro.png')),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
+                          TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
+                        ],
+                      )
+                    ],
+                  ),
+                  Column(children: [
+                    Container(
+                        margin: const EdgeInsets.all(8),
+                        child: Card(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(children: [
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        TextWidget.textBigWithColor(
+                                            'คุณยืนยันการ', Colors.black),
+                                        TextWidget.textBigWithColor(
+                                            'ตีกลับ', Colors.red),
+                                        TextWidget.textBigWithColor(
+                                            'รายงานประจำเดือน', Colors.black),
+                                      ]),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      TextWidget.textBigWithColor(
+                                          'วันที่ ', Colors.black),
+                                      TextWidget.textBigWithColor(
+                                          Month.getMonthTitleReverse(
+                                              widget.dateLabel),
+                                          blueSelected),
+                                      TextWidget.textBigWithColor(
+                                          ' ใช่หรือไม่', Colors.black),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: TextWidget.textTitleBold(
+                                        'ข้อมูลคุณภาพน้ำ'),
+                                  ),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(height: 1, color: Colors.black),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  //uploadPhotoCard(),
+                                  reportSummary(),
+                                  const SizedBox(
+                                    height: 50,
+                                  ),
+                                  footer(),
+                                ]))))
+                  ]),
+                ],
               ),
-            )),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              TextWidget.textBigWithColor('คุณยืนยันการ', Colors.black),
-              TextWidget.textBigWithColor('ตีกลับ', Colors.red),
-              TextWidget.textBigWithColor('รายงานประจำเดือน', Colors.black),
-            ]),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextWidget.textBigWithColor('วันที่ ', Colors.black),
-                TextWidget.textBigWithColor(
-                    Month.getMonthTitleReverse(widget.dateLabel), blueSelected),
-                TextWidget.textBigWithColor(' ใช่หรือไม่', Colors.black),
-              ],
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            // TextWidget.textTitle('สถานะต่อไป: รอผู้จัดการตรวจสอบ'),
-            // const SizedBox(
-            //   height: 25,
-            // ),
-            reportSummary(),
-            const SizedBox(
-              height: 50,
-            ),
-            footer()
-          ],
-        ),
+          ),
+        ],
       )
     ]);
+  }
+
+  Widget uploadPhotoCard() {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        Container(
+          padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
+          width: MediaQuery.of(context).size.width,
+          child: TextWidget.textTitleBold('รูปภาพประกอบ'),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+            height: 150,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.img.length,
+              itemBuilder: (context, index) {
+                return Stack(
+                  children: [
+                    Card(
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.to(PreviewImage(
+                            img: widget.img[index],
+                          ));
+                        },
+                        child: widget.img[index]['type'] == 'url'
+                            ? Image.network(
+                                widget.img[index],
+                                height: 170,
+                                width: 100,
+                              )
+                            : Image.file(
+                                widget.img[index]['value'],
+                                height: 170,
+                                width: 100,
+                              ),
+                      ),
+                    ),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     widget.img.removeAt(index);
+                    //     setState(() {});
+                    //   },
+                    //   child: Image.asset(
+                    //     'asset/images/close.png',
+                    //   ),
+                    // ),
+                  ],
+                );
+              },
+            )),
+        const SizedBox(
+          height: 5,
+        ),
+        // ButtonApp.buttonMainGradient(
+        //     context, 'เปิดกล้องถ่ายภาพ (${img.length}/4)', () async {
+        //   if (img.length >= 4) {
+        //     _showSnackBar();
+        //   } else {
+        //     final ImagePicker _picker = ImagePicker();
+        //     final XFile? photo = await _picker.pickImage(
+        //         source: ImageSource.camera, imageQuality: 80);
+        //     File photofile = File(photo!.path);
+        //     img.add(photofile);
+        //     setState(() {});
+        //   }
+        // }, true),
+        // const SizedBox(
+        //   height: 5,
+        // ),
+        // Container(
+        //     alignment: Alignment.centerLeft,
+        //     width: MediaQuery.of(context).size.width,
+        //     child: Edittext.edittextForm(
+        //         'ปริมาณน้ำเสียที่ผ่านการบำบัด (วันที่ ${Month.getMonthTitleReverse(outputYesterdayDate)})',
+        //         'ลบ.ม.',
+        //         totalController,
+        //         totalValidate)),
+      ],
+    );
   }
 
   Widget reportSummary() {
     return Column(
       children: [
-        Row(
-          children: [
-            const SizedBox(
-              width: 20,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  color: greyBG,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: const ImageIcon(
-                  AssetImage('asset/images/bi_clipboard-check.png')),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            TextWidget.textSubTitleWithSize('รายงานปัจจุบัน', 18),
-          ],
-        ),
         Container(
           margin: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: const BorderRadius.all(Radius.circular(10))),
+          // decoration: BoxDecoration(
+          //     border: Border.all(color: Colors.grey),
+          //     borderRadius: const BorderRadius.all(Radius.circular(10))),
           child: Column(
             children: [
               Padding(
@@ -200,7 +340,7 @@ class _RejectPopupMonthState extends State<RejectPopupMonth> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TextWidget.textTitle('ปริมาณพลังงานไฟฟ้าที่ใช้'),
+                    TextWidget.textTitleBold('ปริมาณพลังงานไฟฟ้าที่ใช้'),
                   ],
                 ),
               ),
@@ -210,696 +350,272 @@ class _RejectPopupMonthState extends State<RejectPopupMonth> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TextWidget.textSubTitleBold('${widget.electric_unit} kW-hr')
+                    TextWidget.textTitle('${Label.commaFormat(widget.electric_unit)}  kW-hr')
                   ],
                 ),
               ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      padding: EdgeInsets.all(15),
-                      color: greyBG,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextWidget.textTitle('คุณภาพน้ำ'),
-                          TextWidget.textTitleBold('ก่อน'),
-                          TextWidget.textTitle('การบำบัด')
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      padding: EdgeInsets.all(15),
-                      color: blueButtonBorder,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextWidget.textTitle('คุณภาพน้ำ'),
-                          TextWidget.textTitleBold('หลัง'),
-                          TextWidget.textTitle('การบำบัด')
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
-                        ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('BOD'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
-                        ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('BOD'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
-                        ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('${widget.bod} mg/I'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
-                        ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitleBoldWithColor(
-                              '${widget.treated_bod} mg/I', greenValue),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
               const SizedBox(
-                height: 10,
+                height: 7,
               ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
-                        ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('COD'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
-                        ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('COD'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
-                        ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('${widget.cod} mg/I'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
-                        ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitleBoldWithColor(
-                              '${widget.treated_cod} mg/I', greenValue),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              Container(height: 1, color: Colors.black),
               const SizedBox(
-                height: 10,
+                height: 5,
               ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+              before(),
+              Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่า BOD     '),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('SS'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                        TextWidget.textTitle(widget.bod),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('SS'),
-                        ],
-                      ),
+                        TextWidget.textTitle('mg/l')
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่า COD     '),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('${widget.ss} mg/I'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                        TextWidget.textTitle(widget.cod),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitleBoldWithColor(
-                              '${widget.treated_ss} mg/I', greenValue),
-                        ],
-                      ),
+                        TextWidget.textTitle('mg/l')
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่า SS      '),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('Fat, Oil and Grease'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                        TextWidget.textTitle(widget.ss),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('Fat, Oil and Grease'),
-                        ],
-                      ),
+                        TextWidget.textTitle('mg/l')
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่า Fat, Oil and Grease'),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('${widget.fog} mg/I'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                        TextWidget.textTitle(widget.fog),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitleBoldWithColor(
-                              '${widget.treated_fog} mg/I', greenValue),
-                        ],
-                      ),
+                        TextWidget.textTitle('mg/l')
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่า Total Nitrogen'),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('Total Nitrogen'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                        TextWidget.textTitle(widget.totalNitrogen),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('Total Nitrogen'),
-                        ],
-                      ),
+                        TextWidget.textTitle('mg/l')
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่า Total Phosphorus'),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('${widget.totalNitrogen} mg/I'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                        TextWidget.textTitle(widget.totalPhosphorous),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitleBoldWithColor(
-                              '${widget.treated_total_nitrogen} mg/I',
-                              greenValue),
-                        ],
-                      ),
+                        TextWidget.textTitle('mg/l')
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่าความเค็ม'),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('Total Phosphorus'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                        TextWidget.textTitle(widget.salt),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('Total Phosphorus'),
-                        ],
-                      ),
+                        TextWidget.textTitle('.ppt')
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                  ]),
+              Container(height: 1, color: Colors.black),
+              after(),
+              Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่า BOD     '),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle(
-                              '${widget.totalPhosphorous} mg/I'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                        TextWidget.textTitle(widget.treated_bod),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitleBoldWithColor(
-                              '${widget.treated_total_phosphorous} mg/I',
-                              greenValue),
-                        ],
-                      ),
+                        TextWidget.textTitle('mg/l')
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่า COD     '),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('ความเค็ม'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                        TextWidget.textTitle(widget.treated_cod),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('ความเค็ม'),
-                        ],
-                      ),
+                        TextWidget.textTitle('mg/l')
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่า SS      '),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitle('${widget.salt} ppt.'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                              width: 1.0,
-                              color: Color.fromARGB(255, 210, 210, 210)),
+                        TextWidget.textTitle(widget.treated_ss),
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextWidget.textTitleBoldWithColor(
-                              '${widget.treated_salt} ppt.', greenValue),
-                        ],
-                      ),
+                        TextWidget.textTitle('mg/l')
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่า Fat, Oil and Grease'),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        TextWidget.textTitle(widget.treated_fog),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        TextWidget.textTitle('mg/l')
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่า Total Nitrogen'),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        TextWidget.textTitle(widget.treated_total_nitrogen),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        TextWidget.textTitle('mg/l')
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่า Total Phosphorus'),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        TextWidget.textTitle(widget.treated_total_phosphorous),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        TextWidget.textTitle('mg/l')
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitleBold('ค่าความเค็ม'),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        TextWidget.textTitle(widget.treated_salt),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        TextWidget.textTitle('.ppt')
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                  ]),
             ],
           ),
         ),
+
         Row(
           children: [
             const SizedBox(
@@ -922,9 +638,7 @@ class _RejectPopupMonthState extends State<RejectPopupMonth> {
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: widget.role == 'OFFICER'
-                  ? Colors.red[50]
-                  : Colors.yellow[100],
+              color: blue_n_2,
               borderRadius: const BorderRadius.all(Radius.circular(5))),
           child: Column(children: [
             Row(
@@ -975,71 +689,151 @@ class _RejectPopupMonthState extends State<RejectPopupMonth> {
   }
 
   Widget footer() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ButtonApp.buttonSecondaryHalf(
+          context,
+          'ยกเลิก',
+          () {
+            Get.back();
+          },
+        ),
+        ButtonApp.buttonMainhalf(context, 'ตีกลับ', () async {
+          setState(() {
+            loading = true;
+          });
+
+          final SharedPreferences prefs = await _prefs;
+          String? authorization = prefs.getString('access_token');
+
+          var today = DateTime.now();
+          final outputFormat = DateFormat('yyyy-MM-dd');
+
+          var outputDate = outputFormat.format(today);
+
+          var result;
+          if (widget.role == 'OFFICER') {
+            result = await OfficerRequest.approval(authorization!,
+                widget.documentId, 'REJECT', commentController.text);
+          } else {
+            result = await ManagerRequest.approval(authorization!,
+                widget.documentId, 'REJECT', commentController.text);
+          }
+
+          if (result['code'] != '200') {
+            // ignore: use_build_context_synchronously
+            MyDialog.showAlertDialogOk(context, '${result['message']}', () {
+              setState(() {
+                loading = false;
+              });
+              Get.back();
+            });
+          } else {
+            Get.back();
+            Get.back();
+            Get.back();
+            Get.to(ReportListMonthView(
+              station: widget.station,
+              role: widget.role,
+            ));
+          }
+        }, true),
+      ],
+    );
+  }
+
+  Widget before() {
     return Container(
-      height: 100,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            blurRadius: 25.0,
-            spreadRadius: 5,
-            offset: Offset(-5, 0), // changes position of shadow
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          beforeHeader(),
+          const SizedBox(
+            height: 20,
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+    );
+  }
+
+  Widget beforeHeader() {
+    return Row(
+      children: [
+        Stack(
           children: [
-            ButtonApp.buttonSecondaryFix(context, 'ยกเลิก', () {
-              Get.back();
-            }, true),
-            ButtonApp.buttonOutlineFixRed(context, 'ตีกลับ', () async {
-              setState(() {
-                loading = true;
-              });
-
-              final SharedPreferences prefs = await _prefs;
-              String? authorization = prefs.getString('access_token');
-
-              var today = DateTime.now();
-              final outputFormat = DateFormat('yyyy-MM-dd');
-
-              var outputDate = outputFormat.format(today);
-
-              var result;
-              if (widget.role == 'OFFICER') {
-                result = await OfficerRequest.approval(authorization!,
-                    widget.documentId, 'REJECT', commentController.text);
-              } else {
-                result = await ManagerRequest.approval(authorization!,
-                    widget.documentId, 'REJECT', commentController.text);
-              }
-
-              if (result['code'] != '200') {
-                // ignore: use_build_context_synchronously
-                MyDialog.showAlertDialogOk(context, '${result['message']}', () {
-                  setState(() {
-                    loading = false;
-                  });
-                  Get.back();
-                });
-              } else {
-                Get.back();
-                Get.back();
-                Get.back();
-                Get.to(ReportListMonthView(
-                  station: widget.station,
-                  role: widget.role,
-                ));
-              }
-            }),
+            Container(
+              height: 45,
+              width: 45,
+              decoration: BoxDecoration(
+                  color: yellow_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
+              child: Center(
+                child: TextWidget.textGeneralWithColor('1', Colors.white),
+              ),
+            ),
           ],
         ),
-      ),
+        const SizedBox(
+          width: 20,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('ก่อนการบำบัด'),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget after() {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        afterHeader(),
+        const SizedBox(
+          height: 20,
+        ),
+      ],
+    );
+  }
+
+  Widget afterHeader() {
+    return Row(
+      children: [
+        Stack(
+          children: [
+            Container(
+              height: 45,
+              width: 45,
+              decoration: BoxDecoration(
+                  color: blue_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
+              child: Center(
+                child: TextWidget.textGeneralWithColor('2', Colors.white),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('หลังการบำบัด'),
+          ],
+        )
+      ],
     );
   }
 }

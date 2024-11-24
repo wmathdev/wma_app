@@ -21,30 +21,40 @@ class _DropDownSelectState extends State<DropDownSelect> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(title: const Text('เลือกศูนย์บริหารจัดการคุณภาพ')),
+        appBar: AppBar(title: const Text('เลือกศูนย์บริหารจัดการคุณภาพ')),
         body: SafeArea(
-      child: Center(
-        child: Container(
-          // width: MediaQuery.of(context).size.width * 0.9,
-          // height: MediaQuery.of(context).size.height * 0.7,
-          child: ListView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: widget.contactStation.length,
-              itemBuilder: (BuildContext context, int index) {
-                // if (index == 0) {
-                //   return Padding(
-                //     padding: const EdgeInsets.all(8.0),
-                //     child: Center(child: TextWidget.textSubTitle('เลือกศูนย์บริหารจัดการคุณภาพ')),
-                //   );
-                // }
-
-                return ListItemWidget.cardList(
-                    context, widget.contactStation[index].name, () {
-                          Navigator.pop(context, widget.contactStation[index]);
-                    });
-              }),
-        ),
-      ),
-    ));
+          child: Center(
+            child: Stack(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: ExactAssetImage('asset/images/waterbg.jpg'),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                ListView.builder(
+                    padding: const EdgeInsets.all(8),
+                    itemCount: widget.contactStation.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      // if (index == 0) {
+                      //   return Padding(
+                      //     padding: const EdgeInsets.all(8.0),
+                      //     child: Center(child: TextWidget.textSubTitle('เลือกศูนย์บริหารจัดการคุณภาพ')),
+                      //   );
+                      // }
+                
+                      return ListItemWidget.cardList(
+                          context, widget.contactStation[index].name, () {
+                        Navigator.pop(context, widget.contactStation[index]);
+                      });
+                    }),
+              ],
+            ),
+          ),
+        ));
   }
 }

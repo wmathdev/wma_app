@@ -67,7 +67,7 @@ class _StatGraphYearState extends State<StatGraphYear> {
     List<dynamic> temp = widget.data;
     for (var i = 0; i < temp.length; i++) {
       if (temp[i]['total'] != null) {
-        listPlot.add(FlSpot(i.toDouble(), temp[i]['total'] * 1.0));
+        listPlot.add(FlSpot(i.toDouble(), ((temp[i]['total'] * 1.0) / 100000)));
         lebelactive.add(false);
         if (maxValue < temp[i]['total'].toDouble()) {
           maxValue = temp[i]['total'].toDouble();
@@ -183,7 +183,7 @@ class _StatGraphYearState extends State<StatGraphYear> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: maxValue > 50000 ? 50000 : 10000,
+            interval: maxValue > 200000 ? 200000 : 100000,
             getTitlesWidget: leftTitleWidgets,
             reservedSize: 80,
           ),

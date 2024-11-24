@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wma_app/model/user.dart';
 import 'package:wma_app/view/report_home/progress_detail.dart';
 
 import '../../Utils/Color.dart';
@@ -22,11 +23,13 @@ import '../../widget/text_widget.dart';
 class ReportDetailMonth extends StatefulWidget {
   String documentId;
   String role;
+  Station station;
 
   ReportDetailMonth({
     Key? key,
     required this.documentId,
     required this.role,
+    required this.station
   }) : super(key: key);
 
   @override
@@ -95,24 +98,24 @@ class _ReportDetailMonthState extends State<ReportDetailMonth> {
     setState(() {
       powerElectricController.text = '${result['data']['electric_unit'] ?? ''}';
       bodBeforeController.text = '${result['data']['bod'] ?? ''}';
-      codBeforeController.text = '${result['data']['cod']?? ''}';
-      ssBeforeController.text = '${result['data']['ss']?? ''}';
-      fogBeforeController.text = '${result['data']['fog']?? ''}';
+      codBeforeController.text = '${result['data']['cod'] ?? ''}';
+      ssBeforeController.text = '${result['data']['ss'] ?? ''}';
+      fogBeforeController.text = '${result['data']['fog'] ?? ''}';
       totalNitrogenBeforeController.text =
-          '${result['data']['total_nitrogen']?? ''}';
+          '${result['data']['total_nitrogen'] ?? ''}';
       totalPhosphorusBeforeController.text =
-          '${result['data']['total_phosphorous']?? ''}';
-      saltBeforeController.text = '${result['data']['salt']?? ''}';
+          '${result['data']['total_phosphorous'] ?? ''}';
+      saltBeforeController.text = '${result['data']['salt'] ?? ''}';
 
-      bodAfterController.text = '${result['data']['treated_bod']?? ''}';
-      codAfterController.text = '${result['data']['treated_cod']?? ''}';
-      ssAfterController.text = '${result['data']['treated_ss']?? ''}';
-      fogAfterController.text = '${result['data']['treated_fog']?? ''}';
+      bodAfterController.text = '${result['data']['treated_bod'] ?? ''}';
+      codAfterController.text = '${result['data']['treated_cod'] ?? ''}';
+      ssAfterController.text = '${result['data']['treated_ss'] ?? ''}';
+      fogAfterController.text = '${result['data']['treated_fog'] ?? ''}';
       totalNitrogenAfterController.text =
-          '${result['data']['treated_total_nitrogen']?? ''}';
+          '${result['data']['treated_total_nitrogen'] ?? ''}';
       totalPhosphorusAfterController.text =
-          '${result['data']['treated_total_phosphorous']?? ''}';
-      saltAfterController.text = '${result['data']['treated_salt']?? ''}';
+          '${result['data']['treated_total_phosphorous'] ?? ''}';
+      saltAfterController.text = '${result['data']['treated_salt'] ?? ''}';
 
       List<dynamic> files = result['data']['files'];
 
@@ -138,121 +141,239 @@ class _ReportDetailMonthState extends State<ReportDetailMonth> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
-      child: loading
-          ? Container(
-              color: Colors.white,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Lottie.asset(
-                      'asset/lottie/animation_lk0uamsc.json',
-                      width: 200,
-                      height: 200,
+          child: loading
+              ? Container(
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset(
+                          'asset/lottie/Loading1.json',
+                          width: 150,
+                          height: 150,
+                          fit: BoxFit.fill,
+                        ),
+                        TextWidget.textGeneralWithColor(
+                            'กรุณารอสักครู่...', blueSelected)
+                      ],
+                    ),
+                  ),
+                )
+              : Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: ExactAssetImage('asset/images/waterbg.jpg'),
                       fit: BoxFit.fill,
                     ),
-                    TextWidget.textGeneralWithColor(
-                        'กรุณารอสักครู่...', blueSelected)
-                  ],
+                  ),
+                  child: contentView(),
                 ),
-              ),
-            )
-          : Container(
-              color: Colors.grey[60],
-              child: contentView(),
-            ),
-    ));
+        ));
   }
 
   Widget contentView() {
-    return Stack(
+    return Column(
       children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 110,
-              ),
-              // notice(),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneralWithColor(
-                    'ข้อมูลคุณภาพน้ำประจำเดือน วันที่ ${Month.getMonthTitleReverse(result['data']['report_at'])}',
-                    greyBorder),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral('สถานะปัจจุบัน'),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral(
-                    '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
-              ),
-              ButtonApp.buttonSecondary(context, 'ดูประวัติการส่งรายงานทั้งหมด',
-                  () {
-                Get.to(ProgressDetail(
-                  result: result,
-                  dateLebal:
-                      Month.getMonthTitleReverse(result['data']['report_at']),
-                ));
-              }),
-              Container(height: 5, color: greyBG),
-              uploadPhotoCard(),
-              before(),
-              Edittext.edittextFormDisable(
-                  'BOD', 'mg/I', bodBeforeController, bodBeforeValidate),
-              Edittext.edittextFormDisable(
-                  'COD', 'mg/I', codBeforeController, codBeforeValidate),
-              Edittext.edittextFormDisable(
-                  'SS', 'mg/I', ssBeforeController, ssBeforeValidate),
-              Edittext.edittextFormDisable('Fat, Oil and Grease', 'mg/I',
-                  fogBeforeController, fogBeforeValidate),
-              Edittext.edittextFormDisable('Total Nitrogen', 'mg/I',
-                  totalNitrogenBeforeController, totalNitrogenBeforeValidate),
-              Edittext.edittextFormDisable(
-                  'Total Phosphorus',
-                  'mg/I',
-                  totalPhosphorusBeforeController,
-                  totalPhosphorusBeforeValidate),
-              Edittext.edittextFormDisable(
-                  'ความเค็ม', 'ppt.', saltBeforeController, saltBeforeValidate),
-              after(),
-              Edittext.edittextFormDisable(
-                  'BOD', 'mg/I', bodAfterController, bodAfterValidate),
-              Edittext.edittextFormDisable(
-                  'COD', 'mg/I', codAfterController, codAfterValidate),
-              Edittext.edittextFormDisable(
-                  'SS', 'mg/I', ssAfterController, ssAfterValidate),
-              Edittext.edittextFormDisable('Fat, Oil and Grease', 'mg/I',
-                  fogAfterController, fogAfterValidate),
-              Edittext.edittextFormDisable('Total Nitrogen', 'mg/I',
-                  totalNitrogenAfterController, totalNitrogenAfterValidate),
-              Edittext.edittextFormDisable('Total Phosphorus', 'mg/I',
-                  totalPhosphorusAfterController, totalPhosphorusAfterValidate),
-              Edittext.edittextFormDisable(
-                  'ความเค็ม', 'ppt.', saltAfterController, saltAfterValidate),
-              Container(
-                height: 10,
-                color: greyBG,
-              ),
-              listViewComment()
-            ],
-          ),
-        ),
         Container(
-          height: 80,
+          height: 70,
           alignment: Alignment.topCenter,
           child: NavigateBar.NavBarWithNotebook(
               context, 'รายงานคุณภาพน้ำประจำเดือน', () {
             Get.back();
           }),
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height - 100,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Card(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(children: [
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(18, 10, 18, 0),
+                            width: MediaQuery.of(context).size.width,
+                            child: TextWidget.textTitleBold(
+                                'ข้อมูลคุณภาพน้ำประจำเดือน'),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                            width: MediaQuery.of(context).size.width,
+                            child: TextWidget.textTitle(
+                              'ประจำวันที่ ${Month.getMonthTitleReverse(result['data']['report_at'])}',
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: green_n,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Expanded(
+                                child: TextWidget.textTitle(
+                                    '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
+                              ),
+                            ],
+                          ),
+                          ButtonApp.buttonSecondaryGradient(
+                              context, 'ดูประวัติการส่งรายงานทั้งหมด', () {
+                            Get.to(ProgressDetail(
+                              result: result,
+                              station: widget.station,
+                              dateLebal: Month.getMonthTitleReverse(
+                                  result['data']['report_at']),
+                            ));
+                          }),
+                          const SizedBox(
+                            height: 7,
+                          ),
+                          Container(
+                              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: Container(height: 1, color: Colors.black)),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          uploadPhotoCard(),
+                          const SizedBox(
+                            height: 7,
+                          ),
+                          Container(
+                              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: Container(height: 1, color: Colors.black)),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          before(),
+                          Edittext.alignEdittextFormDisable(
+                              'BOD',
+                              'mg/I',
+                              bodBeforeController,
+                              bodBeforeValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          Edittext.alignEdittextFormDisable(
+                              'COD',
+                              'mg/I',
+                              codBeforeController,
+                              codBeforeValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          Edittext.alignEdittextFormDisable(
+                              'SS',
+                              'mg/I',
+                              ssBeforeController,
+                              ssBeforeValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          Edittext.alignEdittextFormDisable(
+                              'Fat, Oil and Grease',
+                              'mg/I',
+                              fogBeforeController,
+                              fogBeforeValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          Edittext.alignEdittextFormDisable(
+                              'Total Nitrogen',
+                              'mg/I',
+                              totalNitrogenBeforeController,
+                              totalNitrogenBeforeValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          Edittext.alignEdittextFormDisable(
+                              'Total Phosphorus',
+                              'mg/I',
+                              totalPhosphorusBeforeController,
+                              totalPhosphorusBeforeValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          Edittext.alignEdittextFormDisable(
+                              'ความเค็ม',
+                              'ppt.',
+                              saltBeforeController,
+                              saltBeforeValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          const SizedBox(
+                            height: 7,
+                          ),
+                          Container(
+                              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: Container(height: 1, color: Colors.black)),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          after(),
+                          Edittext.alignEdittextFormDisable(
+                              'BOD',
+                              'mg/I',
+                              bodAfterController,
+                              bodAfterValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          Edittext.alignEdittextFormDisable(
+                              'COD',
+                              'mg/I',
+                              codAfterController,
+                              codAfterValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          Edittext.alignEdittextFormDisable(
+                              'SS',
+                              'mg/I',
+                              ssAfterController,
+                              ssAfterValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          Edittext.alignEdittextFormDisable(
+                              'Fat, Oil and Grease',
+                              'mg/I',
+                              fogAfterController,
+                              fogAfterValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          Edittext.alignEdittextFormDisable(
+                              'Total Nitrogen',
+                              'mg/I',
+                              totalNitrogenAfterController,
+                              totalNitrogenAfterValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          Edittext.alignEdittextFormDisable(
+                              'Total Phosphorus',
+                              'mg/I',
+                              totalPhosphorusAfterController,
+                              totalPhosphorusAfterValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          Edittext.alignEdittextFormDisable(
+                              'ความเค็ม',
+                              'ppt.',
+                              saltAfterController,
+                              saltAfterValidate,
+                              MediaQuery.of(context).size.width * 0.63),
+                          const SizedBox(
+                            height: 7,
+                          ),
+                          Container(
+                              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: Container(height: 1, color: Colors.black)),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          listViewComment()
+                        ]))),
+              ],
+            ),
+          ),
         ),
       ],
     );
@@ -333,7 +454,7 @@ class _ReportDetailMonthState extends State<ReportDetailMonth> {
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: color,
+              color: blue_n_2,
               borderRadius: const BorderRadius.all(Radius.circular(5))),
           child: Column(children: [
             Row(
@@ -362,58 +483,6 @@ class _ReportDetailMonthState extends State<ReportDetailMonth> {
               TextWidget.textTitle(Month.getNoteTime(datetime))
             ],
           ),
-        )
-      ],
-    );
-  }
-
-  Widget before() {
-    return Container(
-      color: greyBG,
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          beforeHeader(),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget beforeHeader() {
-    return Row(
-      children: [
-        const SizedBox(
-          width: 20,
-        ),
-        Stack(
-          children: [
-            Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: Center(
-                child: TextWidget.textGeneralWithColor('1', Colors.white),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          width: 20,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            TextWidget.textBig('ก่อน'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำก่อนบำบัด', Colors.grey),
-          ],
         )
       ],
     );
@@ -514,58 +583,6 @@ class _ReportDetailMonthState extends State<ReportDetailMonth> {
     );
   }
 
-  Widget after() {
-    return Container(
-      color: blueButtonBorder,
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          afterHeader(),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget afterHeader() {
-    return Row(
-      children: [
-        const SizedBox(
-          width: 20,
-        ),
-        Stack(
-          children: [
-            Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
-              child: Center(
-                child: TextWidget.textGeneralWithColor('2', Colors.white),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          width: 20,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            TextWidget.textBig('หลัง'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำหลังบำบัด', Colors.grey),
-          ],
-        )
-      ],
-    );
-  }
-
   // Widget checkBox() {
   //   return Row(
   //     children: [
@@ -645,5 +662,105 @@ class _ReportDetailMonthState extends State<ReportDetailMonth> {
     List<int> imageBytes = file.readAsBytesSync();
     String base64File = base64Encode(imageBytes);
     return base64File;
+  }
+
+  Widget before() {
+    return Container(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          beforeHeader(),
+          const SizedBox(
+            height: 20,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget beforeHeader() {
+    return Row(
+      children: [
+        const SizedBox(
+          width: 20,
+        ),
+        Stack(
+          children: [
+            Container(
+              height: 45,
+              width: 45,
+              decoration: BoxDecoration(
+                  color: yellow_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
+              child: Center(
+                child: TextWidget.textGeneralWithColor('1', Colors.white),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('ก่อนการบำบัด'),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget after() {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        afterHeader(),
+        const SizedBox(
+          height: 20,
+        ),
+      ],
+    );
+  }
+
+  Widget afterHeader() {
+    return Row(
+      children: [
+        const SizedBox(
+          width: 20,
+        ),
+        Stack(
+          children: [
+            Container(
+              height: 45,
+              width: 45,
+              decoration: BoxDecoration(
+                  color: blue_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
+              child: Center(
+                child: TextWidget.textGeneralWithColor('2', Colors.white),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('หลังการบำบัด'),
+          ],
+        )
+      ],
+    );
   }
 }

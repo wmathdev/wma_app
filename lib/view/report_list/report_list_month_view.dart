@@ -133,7 +133,14 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
     return Scaffold(
         body: SafeArea(
       child: Container(
-        color: Colors.white,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: ExactAssetImage('asset/images/waterbg.jpg'),
+            fit: BoxFit.fill,
+          ),
+        ),
         child: loading
             ? Container(
                 color: Colors.white,
@@ -144,9 +151,9 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Lottie.asset(
-                        'asset/lottie/animation_lk0uamsc.json',
-                        width: 200,
-                        height: 200,
+                        'asset/lottie/Loading1.json',
+                        width: 150,
+                        height: 150,
                         fit: BoxFit.fill,
                       ),
                       TextWidget.textGeneralWithColor(
@@ -172,8 +179,13 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
               padding: const EdgeInsets.all(18.0),
               child: Column(
                 children: [
-                  const SizedBox(
+                  Container(
                     height: 80,
+                    alignment: Alignment.topCenter,
+                    child: NavigateBar.NavBarWithNotebook(
+                        context, 'รายงานคุณภาพน้ำประจำเดือน', () {
+                      Get.back();
+                    }),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
@@ -185,14 +197,14 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
               ),
             ),
           ),
-          Container(
-            height: 80,
-            alignment: Alignment.topCenter,
-            child: NavigateBar.NavBarWithNotification(
-                context, 'รายงานประจำเดือนทั้งหมด', () {
-              Get.back();
-            }),
-          ),
+          // Container(
+          //   height: 80,
+          //   alignment: Alignment.topCenter,
+          //   child: NavigateBar.NavBarWithNotification(
+          //       context, 'รายงานประจำเดือนทั้งหมด', () {
+          //     Get.back();
+          //   }),
+          // ),
         ],
       ),
     );
@@ -202,7 +214,7 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
     return Row(
       children: [
         Expanded(
-            flex: 1,
+            flex: 3,
             child: TextButton(
                 onPressed: null,
                 child: Container(
@@ -215,13 +227,13 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
                         color: blueButtonBorder,
                       ),
                       borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
+                          const BorderRadius.all(Radius.circular(15))),
                   child: Center(
-                      child: TextWidget.textGeneralWithColor(
-                          month, blueButtonText)),
+                      child:
+                          TextWidget.textGeneralWithColor(month, Colors.black)),
                 ))),
         Expanded(
-            flex: 1,
+            flex: 3,
             child: TextButton(
                 onPressed: null,
                 child: Container(
@@ -237,7 +249,7 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
                           const BorderRadius.all(Radius.circular(10))),
                   child: Center(
                       child: TextWidget.textGeneralWithColor(
-                          '${int.parse(year) + 543}', blueButtonText)),
+                          '${int.parse(year) + 543}', Colors.black)),
                 ))),
         Expanded(
             flex: 1,
@@ -262,16 +274,23 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
                   loading = false;
                 });
               },
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Image.asset(
-                      'asset/images/bi_funnel.png',
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: Colors.white,
                     ),
-                    onPressed: () {},
-                  ),
-                  TextWidget.textGeneralWithColor('ตัวกรอง', blueButtonText)
-                ],
+                    borderRadius: const BorderRadius.all(Radius.circular(15))),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Image.asset(
+                        'asset/images/setting.png',
+                      ),
+                      onPressed: null,
+                    ),
+                  ],
+                ),
               ),
             ))
       ],
@@ -309,7 +328,7 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
               Month.getMonthTitleReverse(data[index]['date']),
               '10.00',
               widget.role, () async {
-            if ((Time.checkTimeStatus('00:00AM', '10:00AM') && 
+            if (( Time.checkTimeStatus('00:00AM', '10:00AM') &&
                     widget.role == 'OPERATOR') ||
                 widget.role == 'ADMIN') {
               await Get.to(ReportFormMonth(
@@ -339,6 +358,7 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
                   data[index]['document']['workflow']['state'] == 'REVISION') {
                 Get.to(ReportDetailMonth(
                     documentId: '${data[index]['document']['id']}',
+                                station: widget.station,
                     role: widget.role));
               } else {
                 await Get.to(ReportFormManagerMonth(
@@ -354,7 +374,8 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
                   );
                 });
               }
-            }, data[index]['document'], () {});
+            }, data[index]['document'], widget.role, data[index]['date'],
+                () {});
           }
 
           if (widget.role == 'OFFICER') {
@@ -381,9 +402,11 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
               } else {
                 Get.to(ReportDetailMonth(
                     documentId: '${data[index]['document']['id']}',
+                                station: widget.station,
                     role: widget.role));
               }
-            }, data[index]['document'], () {});
+            }, data[index]['document'], widget.role,
+                Month.getMonthTitleReverse(data[index]['date']), () {});
           }
 
           if (widget.role == 'ADMIN') {
@@ -395,6 +418,7 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
               if (data[index]['document']['workflow']['state'] == 'COMPLETED') {
                 Get.to(ReportDetailMonth(
                     documentId: '${data[index]['document']['id']}',
+                                station: widget.station,
                     role: widget.role));
               } else {
                 final SharedPreferences prefs = await _prefs;
@@ -437,6 +461,7 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
                 data[index]['document']['workflow']['state'] == 'REVIEWING') {
               Get.to(ReportDetail(
                   documentId: '${data[index]['document']['id']}',
+                  station: widget.station,
                   role: widget.role));
             } else {
               final SharedPreferences prefs = await _prefs;
@@ -453,7 +478,8 @@ class _ReportListMonthViewState extends State<ReportListMonthView> {
                 );
               });
             }
-          }, data[index]['document']);
+          }, Month.getMonthTitleReverse(data[index]['date']), widget.role,
+              data[index]['document']);
         }
 
         // if (index == 5) {

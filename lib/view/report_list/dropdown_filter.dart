@@ -30,9 +30,14 @@ class _DropDownSelectState extends State<DropDownSelect> {
         body: SafeArea(
           child: Center(
             child: Container(
-              color: blueButtonBorder,
-              // width: MediaQuery.of(context).size.width * 0.9,
-              // height: MediaQuery.of(context).size.height * 0.7,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: ExactAssetImage('asset/images/waterbg.jpg'),
+                  fit: BoxFit.fill,
+                ),
+              ),
               child: ListView.builder(
                   padding: const EdgeInsets.all(8),
                   itemCount: widget.data.length,

@@ -56,6 +56,7 @@ class Authentication {
   static dynamic forceUpdate() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
+    print('my version : $version');
     final response = await ApiConstants.dioNoLog
         .get('${ApiConstants.baseUrl}/api/application/force-update',
             queryParameters: {'app_version': version},

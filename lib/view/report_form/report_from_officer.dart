@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wma_app/api/OfficerRequest.dart';
+import 'package:wma_app/view/report_form/preview_img.dart';
 import 'package:wma_app/view/report_form/reject_popup.dart';
 
 import '../../Utils/Color.dart';
@@ -41,6 +42,7 @@ class ReportFormOfficer extends StatefulWidget {
 class _ReportFormOfficerState extends State<ReportFormOfficer> {
   var totalController = TextEditingController();
   var totalValidate = false;
+  var totalValidateCb = false;
   var doBeforeController = TextEditingController();
   var doBeforeValidate = false;
   var phBeforeController = TextEditingController();
@@ -76,14 +78,15 @@ class _ReportFormOfficerState extends State<ReportFormOfficer> {
         accessToken, '${widget.document['id']}');
 
     setState(() {
-      totalController.text = '${result['data']['treated_water']?? ''}';
-      doBeforeController.text = '${result['data']['doo']?? ''}';
-      phBeforeController.text = '${result['data']['ph']?? ''}';
-      temperatureBeforeController.text = '${result['data']['temp']?? ''}';
+      totalController.text = '${result['data']['treated_water'] ?? ''}';
+      doBeforeController.text = '${result['data']['doo'] ?? ''}';
+      phBeforeController.text = '${result['data']['ph'] ?? ''}';
+      temperatureBeforeController.text = '${result['data']['temp'] ?? ''}';
 
-      doAfterController.text = '${result['data']['treated_doo']?? ''}';
-      phAfterController.text = '${result['data']['treated_ph']?? ''}';
-      temperatureAfterController.text = '${result['data']['treated_temp']?? ''}';
+      doAfterController.text = '${result['data']['treated_doo'] ?? ''}';
+      phAfterController.text = '${result['data']['treated_ph'] ?? ''}';
+      temperatureAfterController.text =
+          '${result['data']['treated_temp'] ?? ''}';
 
       if (result['data']['files'] != null) {
         List<dynamic> files = result['data']['files'];
@@ -123,9 +126,9 @@ class _ReportFormOfficerState extends State<ReportFormOfficer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Lottie.asset(
-                      'asset/lottie/animation_lk0uamsc.json',
-                      width: 200,
-                      height: 200,
+                      'asset/lottie/Loading1.json',
+                      width: 150,
+                      height: 150,
                       fit: BoxFit.fill,
                     ),
                     TextWidget.textGeneralWithColor(
@@ -144,119 +147,249 @@ class _ReportFormOfficerState extends State<ReportFormOfficer> {
   Widget contentView() {
     return Stack(
       children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 80,
-              ),
-              // notice(),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneralWithColor(
-                    'ข้อมูลคุณภาพน้ำประจำวันที่ ${Month.getMonthTitleReverse(result['data']['report_at'])}',
-                    greyBorder),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral('สถานะปัจจุบัน'),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-                width: MediaQuery.of(context).size.width,
-                child: TextWidget.textGeneral(
-                     '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
-              ),
-              ButtonApp.buttonSecondary(context, 'ดูประวัติการส่งรายงานทั้งหมด',
-                  () {
-                Get.to(ProgressDetail(
-                  result: result,
-                  dateLebal:
-                      Month.getMonthTitleReverse(result['data']['report_at']),
-                ));
-              }),
-              Container(height: 5, color: greyBG),
-              uploadPhotoCard(),
-              before(),
-              Edittext.edittextFormDisable(
-                  'DO', 'mg/I', doBeforeController, doBeforeValidate),
-              Edittext.edittextFormDisable(
-                  'pH', '', phBeforeController, phBeforeValidate),
-              Edittext.edittextFormDisable('Temperature', 'ํC',
-                  temperatureBeforeController, temperatureBeforeValidate),
-              after(),
-              Edittext.edittextFormDisable(
-                  'DO', 'mg/I', doAfterController, doAfterValidate),
-              Edittext.edittextFormDisable(
-                  'pH', '', phAfterController, phAfterValidate),
-              Edittext.edittextFormDisable('Temperature', 'ํC',
-                  temperatureAfterController, temperatureAfterValidate),
-              Container(
-                height: 10,
-                color: greyBG,
-              ),
-              listViewComment(),
-              checkBox(),
-              Container(
-                height: 10,
-                color: greyBG,
-              ),
-              ButtonApp.buttonMain(context, 'ยืนยัน', () async {
-                final SharedPreferences prefs = await _prefs;
-                String? authorization = prefs.getString('access_token');
-
-                Get.to(ApprovePopup(
-                  role: widget.role,
-                  station: widget.station,
-                  dateLabel: Month.getMonthTitleReverse(widget.datelabel),
-                  authorization: authorization!,
-                  doo: doBeforeController.text,
-                  files: img,
-                  ph: phBeforeController.text,
-                  temp: temperatureBeforeController.text,
-                  treatedDoo: doAfterController.text,
-                  treatedPh: phAfterController.text,
-                  treatedTemp: temperatureAfterController.text,
-                  treatedWater: totalController.text,
-                  type: 'DAILY',
-                  documentId: '${widget.document['id']}',
-                  mediaDelete: [],
-                ));
-              }, isCheckBox),
-              ButtonApp.buttonSecondaryWithColor(context, 'ตีกลับ', () async {
-                final SharedPreferences prefs = await _prefs;
-                String? authorization = prefs.getString('access_token');
-
-                Get.to(RejectPopup(
-                  role: widget.role,
-                  station: widget.station,
-                  dateLabel: widget.datelabel,
-                  authorization: authorization!,
-                  doo: doBeforeController.text,
-                  // file: img,
-                  ph: phBeforeController.text,
-                  temp: temperatureBeforeController.text,
-                  treatedDoo: doAfterController.text,
-                  treatedPh: phAfterController.text,
-                  treatedTemp: temperatureAfterController.text,
-                  treatedWater: totalController.text,
-                  type: 'DAILY',
-                  documentId: '${widget.document['id']}',
-                ));
-                // }
-              }, Colors.red)
-            ],
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: ExactAssetImage('asset/images/waterbg.jpg'),
+              fit: BoxFit.fill,
+            ),
           ),
         ),
-        Container(
-          height: 80,
-          alignment: Alignment.topCenter,
-          child: NavigateBar.NavBarWithNotebook(
-              context, 'รายงานคุณภาพน้ำประจำวัน', () {
-            Get.back();
-          }),
+        Column(
+          children: [
+            Container(
+              height: 70,
+              alignment: Alignment.topCenter,
+              child: NavigateBar.NavBarWithNotebook(
+                  context, 'รายงานคุณภาพน้ำประจำวัน', () {
+                Get.back();
+              }),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height - 100,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: Image.asset('asset/images/iconintro.png')),
+                  Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
+                  TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
+                ],
+              )
+                      ],
+                    ),
+                    Container(
+                        margin: const EdgeInsets.all(8),
+                        child: Card(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(children: [
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: TextWidget.textTitleBold(
+                                        'ข้อมูลคุณภาพน้ำประจำเดือน'),
+                                  ),
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: TextWidget.textTitle(
+                                      'ประจำวันที่ ${Month.getMonthTitleReverse(result['data']['report_at'])}',
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Container(
+                                        width: 10,
+                                        height: 10,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: yellow_n,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Expanded(
+                                        child: TextWidget.textTitle(
+                                            '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
+                                      ),
+                                    ],
+                                  ),
+                                  ButtonApp.buttonSecondaryGradient(
+                                      context, 'ดูประวัติการส่งรายงานทั้งหมด',
+                                      () {
+                                    Get.to(ProgressDetail(
+                                      result: result,
+                                      station: widget.station,
+                                      dateLebal: Month.getMonthTitleReverse(
+                                          result['data']['report_at']),
+                                    ));
+                                  }),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(height: 1, color: Colors.black),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  uploadPhotoCard(),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(height: 1, color: Colors.black),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  before(),
+                                  Edittext.alignEdittextFormDisable(
+                                      'ค่า DO  ',
+                                      'mg/I',
+                                      doBeforeController,
+                                      doBeforeValidate,
+                                      MediaQuery.of(context).size.width * 0.63),
+                                  Edittext.alignEdittextFormDisable(
+                                      'ค่า pH  ',
+                                      '',
+                                      phBeforeController,
+                                      phBeforeValidate,
+                                      MediaQuery.of(context).size.width * 0.63),
+                                  Edittext.alignEdittextFormDisable(
+                                      'ค่าอุณหภูมิ',
+                                      'ํC',
+                                      temperatureBeforeController,
+                                      temperatureBeforeValidate,
+                                      MediaQuery.of(context).size.width * 0.63),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(height: 1, color: Colors.black),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  after(),
+                                  Edittext.alignEdittextFormDisable(
+                                      'ค่า DO',
+                                      'mg/I',
+                                      doAfterController,
+                                      doAfterValidate,
+                                      MediaQuery.of(context).size.width * 0.63),
+                                  Edittext.alignEdittextFormDisable(
+                                      'ค่า pH',
+                                      '',
+                                      phAfterController,
+                                      phAfterValidate,
+                                      MediaQuery.of(context).size.width * 0.63),
+                                  Edittext.alignEdittextFormDisable(
+                                      'ค่าอุณหภูมิ',
+                                      'ํC',
+                                      temperatureAfterController,
+                                      temperatureAfterValidate,
+                                      MediaQuery.of(context).size.width * 0.63),
+                                  const SizedBox(
+                                    height: 7,
+                                  ),
+                                  Container(height: 1, color: Colors.black),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  listViewComment(),
+                                  checkBox(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ButtonApp.buttonSecondaryHalf(
+                                        context,
+                                        'ตีกลับ',
+                                        () async {
+                                          final SharedPreferences prefs =
+                                              await _prefs;
+                                          String? authorization =
+                                              prefs.getString('access_token');
+
+                                          Get.to(RejectPopup(
+                                            role: widget.role,
+                                            station: widget.station,
+                                            dateLabel: widget.datelabel,
+                                            authorization: authorization!,
+                                            doo: doBeforeController.text,
+                                            // file: img,
+                                            ph: phBeforeController.text,
+                                            temp: temperatureBeforeController
+                                                .text,
+                                            treatedDoo: doAfterController.text,
+                                            treatedPh: phAfterController.text,
+                                            treatedTemp:
+                                                temperatureAfterController.text,
+                                            treatedWater: totalController.text,
+                                            type: 'DAILY',
+                                            documentId:
+                                                '${widget.document['id']}',
+                                            img: img,
+                                          ));
+                                          // }
+                                        },
+                                      ),
+                                      ButtonApp.buttonMainhalf(
+                                          context, 'ส่งรายงาน', () async {
+                                        final SharedPreferences prefs =
+                                            await _prefs;
+                                        String? authorization =
+                                            prefs.getString('access_token');
+
+                                        Get.to(ApprovePopup(
+                                          role: widget.role,
+                                          station: widget.station,
+                                          dateLabel: Month.getMonthTitleReverse(
+                                              widget.datelabel),
+                                          authorization: authorization!,
+                                          doo: doBeforeController.text,
+                                          files: img,
+                                          ph: phBeforeController.text,
+                                          temp:
+                                              temperatureBeforeController.text,
+                                          treatedDoo: doAfterController.text,
+                                          treatedPh: phAfterController.text,
+                                          treatedTemp:
+                                              temperatureAfterController.text,
+                                          treatedWater: totalController.text,
+                                          type: 'DAILY',
+                                          documentId:
+                                              '${widget.document['id']}',
+                                          mediaDelete: [],
+                                          img: img,
+                                        ));
+                                      }, isCheckBox),
+                                    ],
+                                  )
+                                ])))),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -276,10 +409,9 @@ class _ReportFormOfficerState extends State<ReportFormOfficer> {
           width: 20,
         ),
         Expanded(
-          child: TextWidget.textGeneralWithColor(
-              'กรุณาตรวจสอบความถูกต้อง หลังจากกด “ยืนยัน”\nจะเข้าสู่สถานะ “เสร็จสิ้น”',
-              Colors.grey),
-        ),
+            child: TextWidget.textSubTitleWithSize(
+                'กรุณาตรวจสอบความถูกต้องก่อนกด “ยืนยัน” เมื่อกด “ยืนยัน” \nแล้วสถานะจะเปลี่ยนเป็น “เสร็จสิ้น”',
+                10)),
       ],
     );
   }
@@ -343,7 +475,7 @@ class _ReportFormOfficerState extends State<ReportFormOfficer> {
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: orange,
+              color: blue_n_2,
               borderRadius: const BorderRadius.all(Radius.circular(5))),
           child: Column(children: [
             Row(
@@ -379,7 +511,6 @@ class _ReportFormOfficerState extends State<ReportFormOfficer> {
 
   Widget before() {
     return Container(
-      color: greyBG,
       child: Column(
         children: [
           const SizedBox(
@@ -406,8 +537,8 @@ class _ReportFormOfficerState extends State<ReportFormOfficer> {
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: yellow_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Center(
                 child: TextWidget.textGeneralWithColor('1', Colors.white),
               ),
@@ -421,8 +552,8 @@ class _ReportFormOfficerState extends State<ReportFormOfficer> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextWidget.textBig('ก่อน'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำก่อนบำบัด', Colors.grey),
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('ก่อนการบำบัด'),
           ],
         )
       ],
@@ -493,10 +624,17 @@ class _ReportFormOfficerState extends State<ReportFormOfficer> {
               itemCount: img.length,
               itemBuilder: (context, index) {
                 return Card(
-                  child: Image.network(
-                    img[index],
-                    height: 170,
-                    width: 100,
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.to(PreviewImage(
+                        img: img[index],
+                      ));
+                    },
+                    child: Image.network(
+                      img[index],
+                      height: 170,
+                      width: 100,
+                    ),
                   ),
                 );
               },
@@ -515,29 +653,27 @@ class _ReportFormOfficerState extends State<ReportFormOfficer> {
         // const SizedBox(
         //   height: 5,
         // ),
-        Container(
-            alignment: Alignment.centerLeft,
-            width: MediaQuery.of(context).size.width,
-            child: Edittext.edittextFormDisable('ปริมาณน้ำเสียที่ผ่านการบำบัด',
-                'ลบ.ม.', totalController, totalValidate)),
+        Edittext.alignEdittextFormDisable(
+            'ปริมาณน้ำเสียที่ผ่านการบำบัด  ',
+            'ลบ.ม.',
+            totalController,
+            totalValidate,
+            MediaQuery.of(context).size.width * 0.63),
       ],
     );
   }
 
   Widget after() {
-    return Container(
-      color: blueButtonBorder,
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          afterHeader(),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        afterHeader(),
+        const SizedBox(
+          height: 20,
+        ),
+      ],
     );
   }
 
@@ -553,8 +689,8 @@ class _ReportFormOfficerState extends State<ReportFormOfficer> {
               height: 45,
               width: 45,
               decoration: BoxDecoration(
-                  color: blueSelected,
-                  borderRadius: const BorderRadius.all(Radius.circular(5))),
+                  color: blue_n,
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Center(
                 child: TextWidget.textGeneralWithColor('2', Colors.white),
               ),
@@ -568,8 +704,8 @@ class _ReportFormOfficerState extends State<ReportFormOfficer> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextWidget.textBig('หลัง'),
-            TextWidget.textGeneralWithColor('คุณภาพน้ำหลังบำบัด', Colors.grey),
+            TextWidget.textTitle('คุณภาพน้ำ'),
+            TextWidget.textTitleBold('หลังการบำบัด'),
           ],
         )
       ],

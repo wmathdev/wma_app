@@ -1,13 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:wma_app/api/MapRequest.dart';
+import 'package:wma_app/view/login/overview_graph.dart';
+import 'package:wma_app/widget/gradient_text.dart';
 
 import '../../Utils/Color.dart';
+import '../../Utils/MapUtils.dart';
 import '../../widget/button_app.dart';
 import '../../widget/text_widget.dart';
 import '../graph/TempGraphMonth.dart';
@@ -29,11 +33,13 @@ class OverviewDertail extends StatefulWidget {
   String stationId;
   bool isSubmited;
   bool isRule;
+  LatLng latlng;
   OverviewDertail({
     Key? key,
     required this.stationId,
     required this.isSubmited,
     required this.isRule,
+    required this.latlng,
   }) : super(key: key);
 
   @override
@@ -158,11 +164,118 @@ class _OverviewDertailState extends State<OverviewDertail> {
 
   @override
   Widget build(BuildContext context) {
+    try {
+      return Scaffold(
+        body: SafeArea(
+            child: loading
+                ? Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: ExactAssetImage('asset/images/waterbg.jpg'),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Lottie.asset(
+                            'asset/lottie/Loading1.json',
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.fill,
+                          ),
+                          TextWidget.textGeneralWithColor(
+                              'กรุณารอสักครู่...', blueSelected)
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: ExactAssetImage('asset/images/waterbg.jpg'),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: SingleChildScrollView(
+                      child: Stack(
+                        children: [
+                          Column(
+                            children: [
+                              appbar(),
+                              header(),
+                              stationdetail(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              widget.isSubmited ? waterDetail() : Container(),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              widget.isSubmited
+                                  ? Center(
+                                      child: TextWidget.textSubTitleWithSize(
+                                          'อัพเดทล่าสุด ${data['data']['document']['published_at'] ?? ''}',
+                                          13),
+                                    )
+                                  : Container(),
+                              widget.isSubmited ? monthScroll() : Container(),
+                              widget.isSubmited
+                                  ? monthValueScroll()
+                                  : Container(),
+                              widget.isSubmited ? compare() : Container(),
+                              // widget.isSubmited ? graphHeader() : Container(),
+                              // widget.isSubmited ? graphSlider() : Container(),
+                              // widget.isSubmited ? graphFilter() : Container(),
+                              // widget.isSubmited
+                              //     ? const SizedBox(
+                              //         height: 10,
+                              //       )
+                              //     : Container(),
+                              // widget.isSubmited ? colorInfo() : Container(),
+                              //widget.isSubmited ? graph() : Container(),
+                              Container(
+                                  height: 70,
+                                  child: ButtonApp.buttonSecondaryGradient2(
+                                      context,
+                                      'ดูข้อมูลสถิติ รายสัปดาห์ / รายเดือน / รายไตรมาส และรายปี',
+                                      () async {
+                                    Get.to(OverviewGraph(
+                                      stationId: widget.stationId,
+                                      isSubmited: widget.isSubmited,
+                                      isRule: widget.isRule,
+                                      latlng: widget.latlng,
+                                    ));
+                                  })),
+                              const SizedBox(
+                                height: 30,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+      );
+    } catch (e) {
+      print('error');
+    }
+
     return Scaffold(
       body: SafeArea(
           child: loading
               ? Container(
-                  color: Colors.white,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: ExactAssetImage('asset/images/waterbg.jpg'),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   child: Center(
@@ -170,9 +283,9 @@ class _OverviewDertailState extends State<OverviewDertail> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Lottie.asset(
-                          'asset/lottie/animation_lk0uamsc.json',
-                          width: 200,
-                          height: 200,
+                          'asset/lottie/Loading1.json',
+                          width: 150,
+                          height: 150,
                           fit: BoxFit.fill,
                         ),
                         TextWidget.textGeneralWithColor(
@@ -181,30 +294,50 @@ class _OverviewDertailState extends State<OverviewDertail> {
                     ),
                   ),
                 )
-              : SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      appbar(),
-                      header(),
-                      stationdetail(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      widget.isSubmited ? waterDetail() : Container(),
-                      monthScroll(),
-                      monthValueScroll(),
-                      widget.isSubmited ? compare() : Container(),
-                      widget.isSubmited ? graphHeader() : Container(),
-                      widget.isSubmited ? graphSlider() : Container(),
-                      widget.isSubmited ? graphFilter() : Container(),
-                      widget.isSubmited
-                          ? const SizedBox(
+              : Container(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: ExactAssetImage('asset/images/waterbg.jpg'),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: SingleChildScrollView(
+                    child: Stack(
+                      children: [
+                        Column(
+                          children: [
+                            appbar(),
+                            header(),
+                            stationdetail(),
+                            const SizedBox(
                               height: 10,
-                            )
-                          : Container(),
-                      widget.isSubmited ? colorInfo() : Container(),
-                      widget.isSubmited ? graph() : Container(),
-                    ],
+                            ),
+                            widget.isSubmited ? waterDetail() : Container(),
+                            const SizedBox(
+                              height: 3,
+                            ),
+                            // Container(
+                            //     height: 70,
+                            //     child: ButtonApp.buttonSecondaryGradient2(
+                            //         context,
+                            //         'ดูข้อมูลสถิติ รายสัปดาห์ / รายเดือน / รายไตรมาส และรายปี',
+                            //         () async {
+                            //       Get.to(OverviewGraph(
+                            //         stationId: widget.stationId,
+                            //         isSubmited: widget.isSubmited,
+                            //         isRule: widget.isRule,
+                            //         latlng: widget.latlng,
+                            //       ));
+                            //     })),
+                            // const SizedBox(
+                            //   height: 30,
+                            // )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 )),
     );
@@ -213,7 +346,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
   Widget appbar() {
     return Container(
       height: 60,
-      color: Colors.white,
+      color: Colors.transparent,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -224,11 +357,11 @@ class _OverviewDertailState extends State<OverviewDertail> {
               onTap: () {
                 Get.back();
               },
-              child: Image.asset('asset/images/back.png')),
+              child: Image.asset('asset/images/arrow_left_n.png')),
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.25,
           ),
-          Image.asset('asset/images/baricon.png'),
+          Image.asset('asset/images/wma_header.png'),
         ],
       ),
     );
@@ -236,34 +369,14 @@ class _OverviewDertailState extends State<OverviewDertail> {
 
   Widget header() {
     bool _customTileExpanded = false;
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.17,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            child: Stack(
-              children: [
-                SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset('asset/images/detailbg.png',
-                        fit: BoxFit.fitWidth)),
-                Center(
-                  child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      child: Center(
-                        child: TextWidget.textTitleBoldCenter(
-                            data['data']['station']['name']),
-                      )),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
+    return Row(
+      children: [
+        const SizedBox(
+          width: 20,
+        ),
+        Expanded(
+            child: TextWidget.textTitleBold(data['data']['station']['name'])),
+      ],
     );
   }
 
@@ -272,29 +385,37 @@ class _OverviewDertailState extends State<OverviewDertail> {
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
-        controlAffinity: ListTileControlAffinity.trailing,
+        // controlAffinity: ListTileControlAffinity.trailing,
         iconColor: Colors.white,
-        title: Center(
-            child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-              TextWidget.textGeneralWithColor('ข้อมูลเพิ่มเติม', blueSelected),
-              const SizedBox(
-                width: 10,
-              ),
-              Image.asset('asset/images/bi_chevron-rightblue.png')
-            ])),
-        trailing: const Icon(
-          Icons.arrow_drop_down,
-          color: Colors.white,
+        title: Container(
+          transform: Matrix4.translationValues(40, 0, 0),
+          child: Row(
+              // mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: Row(children: [
+                      TextWidget.textSubTitleWithSizeGradient2(
+                          'ข้อมูลเพิ่มเติม', 10, blueSelected),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Image.asset('asset/images/arrowdown.png')
+                    ])),
+              ]),
         ),
+        trailing: const SizedBox(),
         children: <Widget>[
           Container(
             margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
             padding: EdgeInsets.all(3),
-            decoration: BoxDecoration(
-                border: Border.all(color: greyBorder),
+            decoration: const BoxDecoration(
+                color: Colors.white,
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10))),
@@ -302,27 +423,32 @@ class _OverviewDertailState extends State<OverviewDertail> {
               SizedBox(
                   width: 30,
                   height: 30,
-                  child: Image.asset('asset/images/carbon_location.png')),
+                  child: Image.asset('asset/images/overviewmarker.png')),
               const SizedBox(
                 width: 5,
               ),
               Expanded(
-                  child: TextWidget.textTitle(
-                      data['data']['station']['address'] ?? '-')),
+                  child: GestureDetector(
+                onTap: () async {
+                  await MapUtils.openMap(
+                      widget.latlng.latitude, widget.latlng.longitude);
+                },
+                child: TextWidget.textTitle(
+                    data['data']['station']['address'] ?? '-'),
+              )),
             ]),
           ),
           Container(
             margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
             padding: EdgeInsets.all(3),
-            decoration: BoxDecoration(
-                border: Border.all(color: greyBorder),
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(0), topRight: Radius.circular(0))),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
             child: Row(children: [
               SizedBox(
                   width: 30,
                   height: 30,
-                  child: Image.asset('asset/images/carbon_identification.png')),
+                  child: Image.asset('asset/images/overviewname.png')),
               const SizedBox(
                 width: 5,
               ),
@@ -333,15 +459,14 @@ class _OverviewDertailState extends State<OverviewDertail> {
           Container(
             margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
             padding: EdgeInsets.all(3),
-            decoration: BoxDecoration(
-                border: Border.all(color: greyBorder),
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(0), topRight: Radius.circular(0))),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
             child: Row(children: [
               SizedBox(
                   width: 30,
                   height: 30,
-                  child: Image.asset('asset/images/carbon_phone.png')),
+                  child: Image.asset('asset/images/overviewphone.png')),
               const SizedBox(
                 width: 5,
               ),
@@ -362,8 +487,8 @@ class _OverviewDertailState extends State<OverviewDertail> {
           Container(
             margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
             padding: EdgeInsets.all(3),
-            decoration: BoxDecoration(
-                border: Border.all(color: greyBorder),
+            decoration: const BoxDecoration(
+                color: Colors.white,
                 borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(10),
                     bottomRight: Radius.circular(10))),
@@ -371,7 +496,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
               SizedBox(
                   width: 30,
                   height: 30,
-                  child: Image.asset('asset/images/carbon_email.png')),
+                  child: Image.asset('asset/images/overviewemail.png')),
               const SizedBox(
                 width: 5,
               ),
@@ -403,173 +528,144 @@ class _OverviewDertailState extends State<OverviewDertail> {
   Widget waterDetail() {
     return Column(
       children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Image.asset('asset/images/wave2.png', fit: BoxFit.fitHeight),
-        ),
-        Center(
-          child: Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  blueGreen2,
-                  Colors.white,
-                ],
-              )),
-              child: Container(
-                margin: EdgeInsets.all(10),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.white70, width: 1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                              width: 80,
-                              height: 80,
-                              child: Image.asset(
-                                'asset/images/water2.png',
-                              )),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextWidget.textTitle(
-                                  'ปริมาณน้ำเสียที่ผ่านการบำบัดในวันนี้'),
-                              Container(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    TextWidget.textBigWithColor(
-                                        data['data']['document']
-                                                    ['treated_water'] !=
-                                                null
-                                            ? '${data['data']['document']['treated_water']}'
-                                            : '-',
-                                        blueSelected),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    TextWidget.textSubTitleWithSizeColor(
-                                        'ลบ.ม.', 20, Colors.grey),
-                                  ],
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(10),
-                        height: MediaQuery.of(context).size.height * 0.1,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: widget.isRule
-                                ? blueGreenlight
-                                : Color.fromARGB(255, 255, 246, 174)),
-                        child: Row(
+        Container(
+          // height: MediaQuery.of(context).size.height / 6,
+          margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.all(Radius.circular(25)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    SizedBox(
+                        height: MediaQuery.of(context).size.width * 0.25,
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        child: Image.asset(
+                          'asset/images/cloud.png',
+                        )),
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'ปริมาณน้ำเสียที่ผ่านการบำบัดในวันนี้',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                            color: blue_navy_n,
+                          ),
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Expanded(
-                                flex: 1,
-                                child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              bottomLeft: Radius.circular(10),
-                                            ),
-                                            color: widget.isRule
-                                                ? blueGreen
-                                                : Color.fromARGB(
-                                                    255, 255, 209, 102)),
-                                      ),
-                                      Container(
-                                          padding: const EdgeInsets.all(10),
-                                          child: widget.isRule
-                                              ? Image.asset(
-                                                  'asset/images/circlewater.png')
-                                              : Image.asset(
-                                                  'asset/images/circlewateryellow.png')),
-                                      TextWidget.textTitleBoldWithColor(
-                                          data['data']['document'] == null
-                                              ? '-'
-                                              : '${data['data']['document']['treated_doo']}',
-                                          Colors.white)
-                                    ])),
-                            Expanded(
-                                flex: 1,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      TextWidget.textBigWithColor(
-                                          data['data']['document'] == null
-                                              ? '- mg/l'
-                                              : '${data['data']['document']['treated_doo']} mg/l',
-                                          widget.isRule
-                                              ? blueGreen
-                                              : Color.fromARGB(
-                                                  255, 255, 209, 102)),
-                                      TextWidget.textSubTitleWithSizeColor(
-                                          'ค่ามาตรฐานออกซิเจนในน้ำ\nDissolved oxygen (Do)',
-                                          8,
-                                          widget.isRule
-                                              ? blueGreen
-                                              : Color.fromARGB(
-                                                  255, 255, 209, 102))
-                                    ],
-                                  ),
-                                )),
-                            Expanded(
-                                flex: 1,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      TextWidget.textBigWithColor(
-                                          data['data']['document'] == null
-                                              ? '-'
-                                              : data['data']['document']
-                                                      ['evaluate']['result']
-                                                  ? 'ผ่าน'
-                                                  : 'ไม่ผ่าน',
-                                          widget.isRule
-                                              ? blueGreen
-                                              : Color.fromARGB(
-                                                  255, 255, 209, 102)),
-                                      TextWidget.textSubTitleWithSizeColor(
-                                          'คุณภาพ',
-                                          8,
-                                          widget.isRule
-                                              ? blueGreen
-                                              : Color.fromARGB(
-                                                  255, 255, 209, 102))
-                                    ],
-                                  ),
-                                )),
+                            GradientText(
+                              data['data']['document'] == null
+                                  ? '-'
+                                  : '${data['data']['document']['treated_doo']}',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: blue_navy_n,
+                              ),
+                              gradient: const LinearGradient(colors: [
+                                Color.fromARGB(255, 12, 53, 113),
+                                Color.fromARGB(255, 130, 191, 240),
+                              ]),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              'ลบ.ม.',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: blue_navy_n,
+                              ),
+                            ),
                           ],
                         ),
+                      ],
+                    )
+                  ],
+                ),
+                Container(
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      TextWidget.textSubTitleBoldWithSizeGradient(
+                        data['data']['document'] == null
+                            ? '-'
+                            : '${data['data']['document']['treated_doo']}',
+                        55,
+                        blue_n,
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextWidget.textSubTitleWithSizeColor(
+                              'mg/I', 15, Colors.black),
+                          TextWidget.textSubTitleWithSizeColor(
+                              'ค่ามาตรฐานออกซิเจนในน้ำ\nDissolved Oxygen (Do)',
+                              10,
+                              Colors.black26)
+                        ],
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Container(
+                        width: 1,
+                        height: 50,
+                        color: blue_navy_n,
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextWidget.textSubTitleWithSizeColor(
+                              data['data']['document'] == null
+                                  ? '-'
+                                  : data['data']['document']['evaluate']
+                                          ['result']
+                                      ? 'ผ่าน'
+                                      : 'ไม่ผ่าน',
+                              15,
+                              Colors.black),
+                          TextWidget.textSubTitleWithSizeColor(
+                              'คุณภาพ\n', 10, Colors.black26)
+                        ],
                       ),
                     ],
                   ),
                 ),
-              )),
+              ],
+            ),
+          ),
         ),
       ],
     );
@@ -640,7 +736,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
         ScrollController(initialScrollOffset: defaultposition);
 
     return Container(
-        height: MediaQuery.of(context).size.height * 0.4,
+        height: MediaQuery.of(context).size.height * 0.25,
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20))),
         child: ListView.builder(
@@ -649,14 +745,18 @@ class _OverviewDertailState extends State<OverviewDertail> {
           itemCount: data2.length,
           itemBuilder: (context, index) {
             return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: daySelect[index] ? greyBG : Colors.white,
+              ),
+              margin: EdgeInsets.all(3),
               padding: EdgeInsets.all(5),
-              color: daySelect[index] ? greyBG : Colors.white,
               child: Column(
                 children: [
                   Card(
-                    color: daySelect[index] ? blueSelected : Colors.white,
+                    color: daySelect[index] ? blue_n : Colors.white,
                     child: SizedBox(
-                      width: 80,
+                      width: 100,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Center(
@@ -671,27 +771,36 @@ class _OverviewDertailState extends State<OverviewDertail> {
                     height: 5,
                   ),
                   Container(
-                      width: 80,
+                      width: 100,
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Color(0xffe2f8f9)),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       child: data2[index]['document'] != null
-                          ? Center(
-                              child: TextWidget.textTitleBoldWithColor(
-                                  'DO\n${data2[index]['document']['treated_doo']}\nmg/l',
-                                  blueGreen),
+                          ? Column(
+                              children: [
+                                TextWidget.textSubTitleBoldWithSizeGradient(
+                                    '${data2[index]['document']['treated_doo']}',
+                                    25,
+                                    blueGreen),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                TextWidget.textTitleBold(
+                                  'mg/l',
+                                ),
+                              ],
                             )
                           : Center(
                               child: TextWidget.textTitleBoldWithColor(
                                   '-', blueGreen))),
-                  SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: Image.asset('asset/images/ph.png'),
+                  Container(
+                    width: 80,
+                    height: 1,
+                    color: Colors.black,
                   ),
                   const SizedBox(
-                    height: 5,
+                    height: 10,
                   ),
                   Row(
                     children: [
@@ -702,16 +811,19 @@ class _OverviewDertailState extends State<OverviewDertail> {
                       const SizedBox(
                         width: 5,
                       ),
-                      TextWidget.textTitleWithColorSize('pH', Colors.grey, 13)
+                      TextWidget.textTitleWithColorSize('pH', Colors.black, 13)
                     ],
                   ),
                   const SizedBox(
                     height: 5,
                   ),
-                  SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: Image.asset('asset/images/temp.png'),
+                  Container(
+                    width: 80,
+                    height: 1,
+                    color: Colors.black,
+                  ),
+                  const SizedBox(
+                    height: 5,
                   ),
                   Row(
                     children: [
@@ -722,7 +834,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
                       const SizedBox(
                         width: 5,
                       ),
-                      TextWidget.textTitleWithColorSize('°C', Colors.grey, 13)
+                      TextWidget.textTitleWithColorSize('°C', Colors.black, 13)
                     ],
                   ),
                 ],
@@ -742,314 +854,276 @@ class _OverviewDertailState extends State<OverviewDertail> {
     List<dynamic> data2 = listdata[index]['documents'];
     return Column(
       children: [
-        Center(
-          child: Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.white,
-                  Colors.white,
-                  blueGreen2,
-                ],
-              )),
-              child: Container(
-                margin: const EdgeInsets.all(10),
-                child: Column(
+        Container(
+          margin: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextWidget.textSubTitleWithSizeColor(
-                              'เปรียบเทียบ', 20, Colors.black),
-                        ]),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      padding: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: greyBorder),
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10))),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            SizedBox(
-                                width: 100,
-                                child: TextWidget.textTitleWithColorSize(
-                                    'ค่ามาตรฐาน', Colors.black, 10)),
-                            SizedBox(
-                              width: 40,
-                              child: TextWidget.textSubTitleWithSizeColor(
-                                  'วันที่ ${data2[defaultposition.toInt()]['date'].toString().substring(8)}',
-                                  10,
-                                  blueSelected),
-                            ),
-                            SizedBox(
-                                width: 60,
-                                child: TextWidget.textTitleWithColorSize(
-                                    'เกณฑ์มาตรฐาน', Colors.black, 10)),
-                            SizedBox(
-                                width: 35,
-                                child: TextWidget.textTitleWithColorSize(
-                                    'สรุปผล', Colors.black, 10))
-                          ]),
+                    SizedBox(
+                      width: 10,
                     ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      padding: EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: greyBorder),
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(0),
-                              topRight: Radius.circular(0))),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            SizedBox(
-                              width: 100,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                        width: 30,
-                                        height: 30,
-                                        child: Image.asset(
-                                            'asset/images/docompare.png')),
-                                    TextWidget.textTitleBoldWithColor(
-                                        'ค่า DO', blueSelected)
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            SizedBox(
-                                width: 35,
-                                child: data2[index]['document'] != null
-                                    ? TextWidget.textTitleWithColorSize(
-                                        '${data2[defaultposition.toInt()]['document']['treated_doo']} mg/l',
-                                        Colors.black,
-                                        10)
-                                    : TextWidget.textTitleWithColorSize(
-                                        '-', Colors.black, 10)),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            SizedBox(
-                                width: 60,
-                                child: TextWidget.textTitleWithColorSize(
-                                    '${getRuleDOO(data['data']['measure'])} mg/l',
-                                    Colors.black,
-                                    10)),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Container(
-                                decoration: BoxDecoration(
-                                    color: getResultDOO(data['data']['measure'])
-                                        ? blueGreen3
-                                        : red_range,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                padding: EdgeInsets.all(5),
-                                width: 40,
-                                child: Center(
-                                    child: getResultDOO(data['data']['measure'])
-                                        ? TextWidget
-                                            .textTitleBoldWithColorCompare(
-                                                'ผ่าน', blueGreen2)
-                                        : TextWidget
-                                            .textTitleBoldWithColorCompare(
-                                                'ไม่ผ่าน',
-                                                const Color.fromARGB(
-                                                    255, 241, 188, 184)))),
-                          ]),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      padding: EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: greyBorder),
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(0),
-                              topRight: Radius.circular(0))),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            SizedBox(
-                              width: 100,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                        width: 30,
-                                        height: 30,
-                                        child: Image.asset(
-                                            'asset/images/phcompare.png')),
-                                    TextWidget.textTitleBoldWithColor(
-                                        'ค่า pH', blueSelected)
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            SizedBox(
-                                width: 35,
-                                child: data2[index]['document'] != null
-                                    ? TextWidget.textTitleWithColorSize(
-                                        '${data2[defaultposition.toInt()]['document']['treated_ph']} pH',
-                                        Colors.black,
-                                        10)
-                                    : TextWidget.textTitleWithColorSize(
-                                        '-', Colors.black, 10)),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            SizedBox(
-                                width: 60,
-                                child: TextWidget.textTitleWithColorSize(
-                                    '${getRulePH(data['data']['measure'])} pH',
-                                    Colors.black,
-                                    10)),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Container(
-                                decoration: BoxDecoration(
-                                    color: getResultPH(data['data']['measure'])
-                                        ? blueGreen3
-                                        : red_range,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                padding: EdgeInsets.all(5),
-                                width: 40,
-                                child: Center(
-                                    child: getResultPH(data['data']['measure'])
-                                        ? TextWidget
-                                            .textTitleBoldWithColorCompare(
-                                                'ผ่าน', blueGreen2)
-                                        : TextWidget
-                                            .textTitleBoldWithColorCompare(
-                                                'ไม่ผ่าน',
-                                                const Color.fromARGB(
-                                                    255, 241, 188, 184)))),
-                          ]),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      padding: EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: greyBorder),
-                          borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10))),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            SizedBox(
-                              width: 100,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                        width: 30,
-                                        height: 30,
-                                        child: Image.asset(
-                                            'asset/images/tempcompare.png')),
-                                    TextWidget.textTitleBoldWithColor(
-                                        'ค่า อุณหภูมิ', blueSelected)
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            SizedBox(
-                                width: 35,
-                                child: data2[index]['document'] != null
-                                    ? TextWidget.textTitleWithColorSize(
-                                        '${data2[defaultposition.toInt()]['document']['treated_temp']} °C',
-                                        Colors.black,
-                                        10)
-                                    : TextWidget.textTitleWithColorSize(
-                                        '-', Colors.black, 10)),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            SizedBox(
-                                width: 60,
-                                child: TextWidget.textTitleWithColorSize(
-                                    '${getRuleTEMP(data['data']['measure'])} °C',
-                                    Colors.black,
-                                    10)),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Container(
-                                decoration: BoxDecoration(
-                                    color: getResultTEMP(data['data']['measure'])
-                                        ? blueGreen3
-                                        : red_range,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                padding: EdgeInsets.all(5),
-                                width: 40,
-                                child: Center(
-                                    child:
-                                        getResultTEMP(data['data']['measure'])
-                                            ? TextWidget
-                                                .textTitleBoldWithColorCompare(
-                                                    'ผ่าน', blueGreen2)
-                                            : TextWidget
-                                                .textTitleBoldWithColorCompare(
-                                                    'ไม่ผ่าน',
-                                                    const Color.fromARGB(
-                                                        255, 241, 188, 184)))),
-                          ]),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(const VocabDetail());
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                        // padding: EdgeInsets.all(10),
-                        height: 50,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        child:
-                            Center(child: TextWidget.textTitle('อ่านเพิ่มเติม')),
+                    TextWidget.textSubTitleBold('เปรียบเทียบ'),
+                  ]),
+              Container(
+                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.white),
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10))),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                          width: 70,
+                          child: TextWidget.textTitleWithColorSize(
+                              'ค่ามาตรฐาน', Colors.black, 10)),
+                      Container(
+                        width: 70,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: blue_n,
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextWidget.textSubTitleWithSizeColor(
+                                'วันที่ ${data2[defaultposition.toInt()]['date'].toString().substring(8)}',
+                                10,
+                                Colors.white),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                          width: 60,
+                          child: TextWidget.textTitleWithColorSize(
+                              'เกณฑ์มาตรฐาน', Colors.black, 10)),
+                      SizedBox(
+                          width: 35,
+                          child: TextWidget.textTitleWithColorSize(
+                              'สรุปผล', Colors.black, 10))
+                    ]),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                padding: EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.white),
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(0),
+                        topRight: Radius.circular(0))),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        width: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: Column(
+                            children: [
+                              TextWidget.textTitleBoldWithColor(
+                                  'ค่า DO', blue_n)
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      SizedBox(
+                          width: 35,
+                          child: data2[defaultposition.toInt()]['document'] != null
+                              ? TextWidget.textTitleWithColorSize(
+                                  '${data2[defaultposition.toInt()]['document']['treated_doo']} mg/l',
+                                  Colors.black,
+                                  10)
+                              : TextWidget.textTitleWithColorSize(
+                                  '-', Colors.black, 10)),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      SizedBox(
+                          width: 60,
+                          child: TextWidget.textTitleWithColorSize(
+                              '${getRuleDOO(data['data']['measure'])} mg/l',
+                              Colors.black,
+                              10)),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                          decoration: BoxDecoration(
+                              color: getResultDOO(data['data']['measure'])
+                                  ? blue_n
+                                  : red_n,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          padding: EdgeInsets.all(5),
+                          width: 40,
+                          child: Center(
+                              child: getResultDOO(data['data']['measure'])
+                                  ? TextWidget.textTitleBoldWithColorCompare(
+                                      'ผ่าน', Colors.white)
+                                  : TextWidget.textTitleBoldWithColorCompare(
+                                      'ไม่ผ่าน', Colors.white))),
+                    ]),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                padding: EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.white),
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(0),
+                        topRight: Radius.circular(0))),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        width: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: Column(
+                            children: [
+                              TextWidget.textTitleBoldWithColor(
+                                  'ค่า pH', blue_n)
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      SizedBox(
+                          width: 35,
+                          child: data2[defaultposition.toInt()]['document'] != null
+                              ? TextWidget.textTitleWithColorSize(
+                                  '${data2[defaultposition.toInt()]['document']['treated_ph']} pH',
+                                  Colors.black,
+                                  10)
+                              : TextWidget.textTitleWithColorSize(
+                                  '-', Colors.black, 10)),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      SizedBox(
+                          width: 60,
+                          child: TextWidget.textTitleWithColorSize(
+                              '${getRulePH(data['data']['measure'])} pH',
+                              Colors.black,
+                              10)),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                          decoration: BoxDecoration(
+                              color: getResultPH(data['data']['measure'])
+                                  ? blue_n
+                                  : red_n,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          padding: EdgeInsets.all(5),
+                          width: 40,
+                          child: Center(
+                              child: getResultPH(data['data']['measure'])
+                                  ? TextWidget.textTitleBoldWithColorCompare(
+                                      'ผ่าน', Colors.white)
+                                  : TextWidget.textTitleBoldWithColorCompare(
+                                      'ไม่ผ่าน', Colors.white))),
+                    ]),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                padding: EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.white),
+                    borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10))),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        width: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: Column(
+                            children: [
+                              TextWidget.textTitleBoldWithColor(
+                                  'ค่า อุณหภูมิ', blue_n)
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      SizedBox(
+                          width: 35,
+                          child: data2[defaultposition.toInt()]['document'] != null
+                              ? TextWidget.textTitleWithColorSize(
+                                  '${data2[defaultposition.toInt()]['document']['treated_temp']} °C',
+                                  Colors.black,
+                                  10)
+                              : TextWidget.textTitleWithColorSize(
+                                  '-', Colors.black, 10)),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      SizedBox(
+                          width: 60,
+                          child: TextWidget.textTitleWithColorSize(
+                              '${getRuleTEMP(data['data']['measure'])} °C',
+                              Colors.black,
+                              10)),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                          decoration: BoxDecoration(
+                              color: getResultTEMP(data['data']['measure'])
+                                  ? blue_n
+                                  : red_n,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          padding: EdgeInsets.all(5),
+                          width: 40,
+                          child: Center(
+                              child: getResultTEMP(data['data']['measure'])
+                                  ? TextWidget.textTitleBoldWithColorCompare(
+                                      'ผ่าน', Colors.white)
+                                  : TextWidget.textTitleBoldWithColorCompare(
+                                      'ไม่ผ่าน', Colors.white))),
+                    ]),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Get.to(const VocabDetail());
+                },
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  // padding: EdgeInsets.all(10),
+                  height: 50,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: Center(child: TextWidget.textTitle('อ่านเพิ่มเติม')),
                 ),
-              )),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Image.asset('asset/images/wave3.png', fit: BoxFit.fitHeight),
-        ),
+              ),
+            ],
+          ),
+        )
       ],
     );
   }

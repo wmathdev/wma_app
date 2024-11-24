@@ -49,64 +49,69 @@ class _ReprotListFilterState extends State<ReprotListFilter> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      color: Colors.white,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: ExactAssetImage('asset/images/waterbg.jpg'),
+          fit: BoxFit.fill,
+        ),
+      ),
       child: Stack(children: [
         SingleChildScrollView(
             child: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Column(
                   children: [
-                const SizedBox(
-                  height: 80,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: TextWidget.textSubTitle(
-                      'ค้นหาปีและเดือน ที่คุณต้องการดูรายงานคุณภาพน้ำที่ผ่านมา'),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: TextWidget.textTitle('ปี พ.ศ.'),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                DropDown.dropdownButton(context, '$year', () async {
-                  int result = await Get.to(DropDownSelect(
-                    data: Month.year(),
-                    title: 'เลือก ปี พ.ศ.',
-                  ));
+                    const SizedBox(
+                      height: 80,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: TextWidget.textSubTitle(
+                          'ค้นหาปีและเดือน ที่คุณต้องการดูรายงานคุณภาพน้ำที่ผ่านมา'),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: TextWidget.textTitle('ปี พ.ศ.'),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    DropDown.dropdownButton(context, '$year', () async {
+                      int result = await Get.to(DropDownSelect(
+                        data: Month.year(),
+                        title: 'เลือก ปี พ.ศ.',
+                      ));
 
-                  setState(() {
-                    year = Month.year()[result - 1];
-                  });
-                }),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: TextWidget.textTitle('เดือน'),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                DropDown.dropdownButton(context, '$month', () async {
-                  int result = await Get.to(DropDownSelect(
-                    data: Month.month(),
-                    title: 'เลือกเดือน',
-                  ));
+                      setState(() {
+                        year = Month.year()[result];
+                      });
+                    }),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: TextWidget.textTitle('เดือน'),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    DropDown.dropdownButton(context, '$month', () async {
+                      int result = await Get.to(DropDownSelect(
+                        data: Month.month(),
+                        title: 'เลือกเดือน',
+                      ));
 
-                  print('$result');
-                  print(Month.month()[result]);
-                  setState(() {
-                    month = Month.month()[result];
-                    indexMonth = result;
-                  });
-                }),
+                      print('$result');
+                      print(Month.month()[result]);
+                      setState(() {
+                        month = Month.month()[result];
+                        indexMonth = result;
+                      });
+                    }),
                   ],
                 ))),
         Container(
@@ -127,10 +132,9 @@ class _ReprotListFilterState extends State<ReprotListFilter> {
 
   Widget footer() {
     return Container(
-      height: 100,
+      height: 74,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
@@ -145,10 +149,10 @@ class _ReprotListFilterState extends State<ReprotListFilter> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ButtonApp.buttonSecondaryFix(context, 'ยกเลิก', () {
+            ButtonApp.buttonSecondaryHalf(context, 'ยกเลิก', () {
               Get.back();
-            }, true),
-            ButtonApp.buttonMainFix(context, 'นำไปใช้', () async {
+            }),
+            ButtonApp.buttonMainhalf(context, 'นำไปใช้', () async {
               Navigator.pop(context,
                   '${Month.converseYear(year)}-${Month.monthList()[indexMonth]['code']}-01');
             }, true),

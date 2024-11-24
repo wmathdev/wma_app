@@ -11,17 +11,18 @@ class User {
   int status;
   Role role;
   Stations stations;
-  User({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.phoneNumber,
-    required this.roleId,
-    this.stationId,
-    required this.status,
-    required this.role,
-    required this.stations,
-  });
+  Passphrases passphrases;
+  User(
+      {required this.id,
+      required this.name,
+      required this.email,
+      required this.phoneNumber,
+      required this.roleId,
+      this.stationId,
+      required this.status,
+      required this.role,
+      required this.stations,
+      required this.passphrases});
 
   User copyWith({
     int? id,
@@ -33,18 +34,19 @@ class User {
     int? status,
     Role? role,
     Stations? stations,
+    Passphrases? passphrases,
   }) {
     return User(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      roleId: roleId ?? this.roleId,
-      stationId: stationId ?? this.stationId,
-      status: status ?? this.status,
-      role: role ?? this.role,
-      stations: stations ?? this.stations,
-    );
+        id: id ?? this.id,
+        name: name ?? this.name,
+        email: email ?? this.email,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        roleId: roleId ?? this.roleId,
+        stationId: stationId ?? this.stationId,
+        status: status ?? this.status,
+        role: role ?? this.role,
+        stations: stations ?? this.stations,
+        passphrases: passphrases ?? this.passphrases);
   }
 
   Map<String, dynamic> toMap() {
@@ -74,6 +76,7 @@ class User {
         status: map['status'] as int,
         role: Role.fromMap(map['role'] as Map<String, dynamic>),
         stations: Stations.fromMap(map['stations']),
+        passphrases: Passphrases(passphrase: []),
       );
     }
     return User(
@@ -86,13 +89,14 @@ class User {
       status: map['status'] as int,
       role: Role.fromMap(map['role'] as Map<String, dynamic>),
       stations: Stations.fromList(map['stations']),
+      passphrases: Passphrases(passphrase: []),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory User.fromJson(String source,bool mode) =>
-      User.fromMap(json.decode(source) as Map<String, dynamic>,mode);
+  factory User.fromJson(String source, bool mode) =>
+      User.fromMap(json.decode(source) as Map<String, dynamic>, mode);
 
   @override
   String toString() {
@@ -177,8 +181,6 @@ class Stations {
     return Stations(stations: mystations);
   }
 
-
-
   String toJson() => json.encode(toMap());
 
   // factory Stations.fromJson(String source) =>
@@ -197,21 +199,28 @@ class Stations {
 
   factory Stations.fromMap(Map<String, dynamic> map) {
     return Stations(
-      stations: List<Station>.from((map['stations'] as List<dynamic>).map<Station>((x) => Station.fromMap(x as Map<String,dynamic>),),),
+      stations: List<Station>.from(
+        (map['stations'] as List<dynamic>).map<Station>(
+          (x) => Station.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
     );
   }
 
-  factory Stations.fromJson(String source) => Stations.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Stations.fromJson(String source) =>
+      Stations.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class Station {
   int id;
   String name;
+  String lite_name;
   Pivot pivot;
 
   Station({
     required this.id,
     required this.name,
+    required this.lite_name,
     required this.pivot,
   });
 
@@ -219,6 +228,7 @@ class Station {
     return <String, dynamic>{
       'id': id,
       'name': name,
+      'lite_name': lite_name,
       'pivot': pivot.toMap(),
     };
   }
@@ -227,6 +237,7 @@ class Station {
     return Station(
       id: map['id'] as int,
       name: map['name'] as String,
+      lite_name:map['lite_name'] != null ? map['lite_name'] as String : '',
       pivot: Pivot.fromMap(map['pivot'] as Map<String, dynamic>),
     );
   }
@@ -240,11 +251,13 @@ class Station {
     int? id,
     int? value,
     String? name,
+    String? lite_name,
     Pivot? pivot,
   }) {
     return Station(
       id: id ?? this.id,
       name: name ?? this.name,
+      lite_name: lite_name ?? this.lite_name,
       pivot: pivot ?? this.pivot,
     );
   }
@@ -295,4 +308,178 @@ class Pivot {
 
   @override
   String toString() => 'Pivot(userId: $userId, stationId: $stationId)';
+}
+
+class Settings {
+  Scada scada;
+
+  Settings({
+    required this.scada,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'scada': scada,
+    };
+  }
+
+  factory Settings.fromMap(Map<String, dynamic> map) {
+    return Settings(
+      scada: map['scada'] as Scada,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Settings.fromJson(String source) =>
+      Settings.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  Settings copyWith({
+    Scada? scada,
+  }) {
+    return Settings(
+      scada: scada ?? this.scada,
+    );
+  }
+
+  @override
+  String toString() => 'Pivot(userId: $scada, )';
+}
+
+class Scada {
+  String siteId;
+
+  Scada({
+    required this.siteId,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'site_id': siteId,
+    };
+  }
+
+  factory Scada.fromMap(Map<String, dynamic> map) {
+    return Scada(
+      siteId: map['site_id'] as String,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Scada.fromJson(String source) =>
+      Scada.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  Scada copyWith({
+    String? siteId,
+  }) {
+    return Scada(
+      siteId: siteId ?? this.siteId,
+    );
+  }
+
+  @override
+  String toString() => 'Scada(siteId: $siteId,)';
+}
+
+class Passphrases {
+  List<Passphrase> passphrase;
+  Passphrases({
+    required this.passphrase,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'passphrase': passphrase.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  factory Passphrases.fromList(List<dynamic> map) {
+    List<Passphrase> mypassphase = [];
+
+    for (var i = 0; i < map.length; i++) {
+      Passphrase temp = Passphrase.fromMap(map[i]);
+      mypassphase.add(temp);
+    }
+    return Passphrases(passphrase: mypassphase);
+  }
+
+  String toJson() => json.encode(toMap());
+
+  // factory Stations.fromJson(String source) =>
+  //     Stations.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  // Stations copyWith({
+  //   List<Passphrase>? passphrases,
+  // }) {
+  //   return Stations(
+  //     stations: passphrases ?? this.passphrases,
+  //   );
+  // }
+
+  @override
+  String toString() => 'Stations(stations: )';
+
+  factory Passphrases.fromMap(Map<String, dynamic> map) {
+    return Passphrases(
+      passphrase: List<Passphrase>.from(
+        (map['passphrase'] as List<dynamic>).map<Passphrase>(
+          (x) => Passphrase.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+    );
+  }
+
+  factory Passphrases.fromJson(String source) =>
+      Passphrases.fromMap(json.decode(source) as Map<String, dynamic>);
+}
+
+class Passphrase {
+  String siteId;
+  String name;
+  String url;
+  int stationId;
+
+  Passphrase(
+      {required this.siteId,
+      required this.name,
+      required this.url,
+      required this.stationId});
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'site_id': siteId,
+      'name': name,
+      'url': url,
+      'station_id': stationId
+    };
+  }
+
+  factory Passphrase.fromMap(Map<String, dynamic> map) {
+    return Passphrase(
+      siteId: map['site_id'] as String,
+      name: map['name'] as String,
+      url: map['url'] as String,
+      stationId: map['station_id'] as int,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Passphrase.fromJson(String source) =>
+      Passphrase.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  Passphrase copyWith(
+      {String? siteId, String? name, String? url, int? stationId}) {
+    return Passphrase(
+        siteId: siteId ?? this.siteId,
+        name: name ?? this.name,
+        url: url ?? this.url,
+        stationId: stationId ?? this.stationId);
+  }
+
+  @override
+  String toString() {
+    return 'Passphrase(siteId: $siteId,  name: $name, url: $url)';
+  }
 }

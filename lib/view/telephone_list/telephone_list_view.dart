@@ -37,8 +37,11 @@ class _TelephoneListState extends State<TelephoneList> {
     var result = await Contact.getAllStationList(accessToken);
     List<dynamic> data = result['data'];
     for (var i = 0; i < data.length; i++) {
-      ContactStation temp =
-          ContactStation(id: data[i]['id'], name: data[i]['name']);
+      ContactStation temp = ContactStation(
+        id: data[i]['id'],
+        name: data[i]['name'],
+        lite_name: '',
+      );
       contactStation.add(temp);
     }
     setState(() {});
@@ -128,53 +131,65 @@ class _TelephoneListState extends State<TelephoneList> {
   Widget contentView() {
     return Stack(
       children: [
-        SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 80,
-                ),
-                Row(
-                  children: [
-                    const ImageIcon(
-                        AssetImage('asset/images/bi_journals.png')),
-                    TextWidget.textTitle('ข้อมูลการติดต่อทั้งหมด'),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: TextWidget.textTitle('ศูนย์จัดการบริหารคุณภาพน้ำ'),
-                  ),
-                ),
-                DropDown.dropdownButton(context, dropdownshow, () async {
-                  ContactStation result = await Get.to(DropDownSelect(
-                    contactStation: contactStation,
-                  ));
-
-                  setState(() {
-                    dropdownshow = result.name;
-                    selectId = result.id;
-                    _getContact();
-                  });
-                }),
-                listView()
-              ],
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: ExactAssetImage('asset/images/waterbg.jpg'),
+              fit: BoxFit.fill,
             ),
           ),
         ),
-        Container(
-          height: 80,
-          alignment: Alignment.topCenter,
-          child: NavigateBar.NavBar(context, 'ข้อมูลการติดต่อทั้งหมด', () {
-            Get.back();
-          }),
+        Column(
+          children: [
+            Container(
+              height: 70,
+              alignment: Alignment.topCenter,
+              child: NavigateBar.NavBar(context, 'ข้อมูลการติดต่อทั้งหมด', () {
+                Get.back();
+              }),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 163,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: Image.asset('asset/images/iconintro.png')),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              child: TextWidget.textTitle(
+                                  'ศูนย์จัดการบริหารคุณภาพน้ำ'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      DropDown.dropdownButton(context, dropdownshow, () async {
+                        ContactStation result = await Get.to(DropDownSelect(
+                          contactStation: contactStation,
+                        ));
+
+                        setState(() {
+                          dropdownshow = result.name;
+                          selectId = result.id;
+                          _getContact();
+                        });
+                      }),
+                      listView()
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -197,7 +212,6 @@ class _TelephoneListState extends State<TelephoneList> {
       },
     );
   }
-
 
   Future<void> _makePhoneCall(String phoneNumber) async {
     final Uri launchUri = Uri(

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:wma_app/Utils/Color.dart';
+import 'package:wma_app/widget/gradient_text.dart';
 
 class TextWidget {
   static Widget textGeneral(String title) {
     return Text(
       title,
-      style: const TextStyle(
-        fontSize: 16,
+      style: TextStyle(
+        fontSize: 20,
         fontWeight: FontWeight.normal,
-        color: Colors.black,
+        color: blue_navy_n,
       ),
     );
   }
@@ -41,10 +42,10 @@ class TextWidget {
   static Widget textTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.normal,
-        color: Colors.black,
+        color: blue_navy_n,
       ),
     );
   }
@@ -52,10 +53,10 @@ class TextWidget {
   static Widget textTitleBold(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.bold,
-        color: Colors.black,
+        color: blue_navy_n,
       ),
     );
   }
@@ -66,15 +67,48 @@ class TextWidget {
     );
   }
 
+  static Widget textTitleHTMLBoldLenght2(String title) {
+    return Html(
+      data: title,
+    );
+  }
+
+  static Widget textTitleHTMLBoldLimit(String title) {
+    return Html(
+      data: title,
+      style: {
+        '#': Style(
+          fontSize: FontSize(14),
+          color: blue_navy_n,
+          maxLines: 4,
+          textOverflow: TextOverflow.ellipsis,
+        ),
+      },
+    );
+  }
+
+  static Widget textTitleHTMLBoldLimit1(String title) {
+    return Html(
+      data: title,
+      style: {
+        '#': Style(
+          fontSize: FontSize(14),
+          color: blue_navy_n,
+          maxLines: 1,
+          textOverflow: TextOverflow.ellipsis,
+        ),
+      },
+    );
+  }
+
   static Widget textTitleHTMLBoldBlue(String title) {
     return Html(
       data: title,
       style: {
         "body": Style(
-          fontSize: FontSize(18.0),
-          fontWeight: FontWeight.bold,
-          color: blueNews
-        ),
+            fontSize: FontSize(18.0),
+            fontWeight: FontWeight.bold,
+            color: blueNews),
       },
     );
   }
@@ -83,10 +117,10 @@ class TextWidget {
     return Text(
       title,
       textAlign: TextAlign.center,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.bold,
-        color: Colors.black,
+        color: blue_navy_n,
       ),
     );
   }
@@ -106,7 +140,7 @@ class TextWidget {
     return Text(
       title,
       style: TextStyle(
-        fontSize: 8,
+        fontSize: 10,
         fontWeight: FontWeight.bold,
         color: color,
       ),
@@ -157,13 +191,80 @@ class TextWidget {
     );
   }
 
+  static Widget textTitleBoldWithColorSize(
+      String title, Color color, double size) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: size,
+        fontWeight: FontWeight.bold,
+        color: color,
+      ),
+    );
+  }
+
+  static Widget textTitleWithGradient(String title, Color color, double size) {
+    return GradientText(title,
+        style: TextStyle(
+          fontSize: size,
+          fontWeight: FontWeight.normal,
+          color: color,
+        ),
+        gradient: const LinearGradient(colors: [
+          Color.fromARGB(255, 12, 53, 113),
+          Color.fromARGB(255, 130, 191, 240),
+        ]));
+  }
+
+  static Widget textSubTitleWithSizeGradient(
+      String title, double size, Color color) {
+    return GradientText(title,
+        style: TextStyle(
+          fontSize: size,
+          fontWeight: FontWeight.normal,
+          color: color,
+        ),
+        gradient: const LinearGradient(colors: [
+          Color.fromARGB(255, 12, 53, 113),
+          Color.fromARGB(255, 130, 191, 240),
+        ]));
+  }
+
+  static Widget textSubTitleWithSizeGradient2(
+      String title, double size, Color color) {
+    return GradientText(title,
+        style: TextStyle(
+          fontSize: size,
+          fontWeight: FontWeight.normal,
+          color: color,
+        ),
+        gradient: const LinearGradient(colors: [
+          Color.fromARGB(255, 130, 191, 240),
+          Color.fromARGB(255, 12, 53, 113),
+        ]));
+  }
+
+  static Widget textSubTitleBoldWithSizeGradient(
+      String title, double size, Color color) {
+    return GradientText(title,
+        style: TextStyle(
+          fontSize: size,
+          fontWeight: FontWeight.bold,
+          color: color,
+        ),
+        gradient: const LinearGradient(colors: [
+          Color.fromARGB(255, 44, 78, 128),
+          Color.fromARGB(255, 130, 191, 240),
+        ]));
+  }
+
   static Widget textSubTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.normal,
-        color: Colors.black,
+        color: blue_navy_n,
       ),
     );
   }
@@ -171,21 +272,33 @@ class TextWidget {
   static Widget textSubTitleBold(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
-        color: Colors.black,
+        color: blue_navy_n,
       ),
     );
   }
 
+    static Widget textSubTitleBoldMedium(String title) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 17,
+        fontWeight: FontWeight.bold,
+        color: blue_navy_n,
+      ),
+    );
+  }
+
+
   static Widget textSubTitleBoldPh(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.bold,
-        color: Colors.black,
+        color: blue_navy_n,
       ),
     );
   }
@@ -196,7 +309,7 @@ class TextWidget {
       style: TextStyle(
         fontSize: size,
         fontWeight: FontWeight.normal,
-        color: Colors.black,
+        color: blue_navy_n,
       ),
     );
   }

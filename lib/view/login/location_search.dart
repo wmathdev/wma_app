@@ -32,72 +32,86 @@ class _LocationSearchState extends State<LocationSearch> {
         title: const Text('ค้นหาศูนย์บำบัดน้ำ'),
         elevation: 0.0,
       ),
-      body: Column(
-        children: <Widget>[
+      body: Stack(
+        children: [
           Container(
-            color: Theme.of(context).primaryColor,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                child: ListTile(
-                  leading: const Icon(Icons.search),
-                  title: TextField(
-                    controller: controller,
-                    decoration: const InputDecoration(
-                        hintText: 'ค้นหาศูนย์บำบัดน้ำ',
-                        border: InputBorder.none),
-                    onChanged: onSearchTextChanged,
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.cancel),
-                    onPressed: () {
-                      controller.clear();
-                      onSearchTextChanged('');
-                    },
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: ExactAssetImage('asset/images/waterbg.jpg'),
+          fit: BoxFit.fill,
+        ),
+      ),),
+          Column(
+            children: <Widget>[
+              Container(
+                color:Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    color: Colors.white,
+                    child: ListTile(
+                      leading: const Icon(Icons.search),
+                      title: TextField(
+                        controller: controller,
+                        decoration: const InputDecoration(
+                            hintText: 'ค้นหาศูนย์บำบัดน้ำ',
+                            border: InputBorder.none),
+                        onChanged: onSearchTextChanged,
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.cancel),
+                        onPressed: () {
+                          controller.clear();
+                          onSearchTextChanged('');
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-          Expanded(
-            child: _searchResult.isNotEmpty || controller.text.isNotEmpty
-                ? ListView.builder(
-                    itemCount: _searchResult.length,
-                    itemBuilder: (context, i) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context, _searchResult[i]['id']);
+              Expanded(
+                child: _searchResult.isNotEmpty || controller.text.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: _searchResult.length,
+                        itemBuilder: (context, i) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context, _searchResult[i]['id']);
+                            },
+                            child: Card(
+                              margin: const EdgeInsets.all(10.0),
+                              child: ListTile(
+                                // leading: new CircleAvatar(
+                                //   backgroundImage: new NetworkImage(
+                                //     _searchResult[i].profileUrl,
+                                //   ),
+                                // ),
+                                title: Text(_searchResult[i]['name']),
+                              ),
+                            ),
+                          );
                         },
-                        child: Card(
-                          margin: const EdgeInsets.all(0.0),
-                          child: ListTile(
-                            // leading: new CircleAvatar(
-                            //   backgroundImage: new NetworkImage(
-                            //     _searchResult[i].profileUrl,
-                            //   ),
-                            // ),
-                            title: Text(_searchResult[i]['name']),
-                          ),
-                        ),
-                      );
-                    },
-                  )
-                : ListView.builder(
-                    itemCount: widget.station.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context, widget.station[index]['id']);
+                      )
+                    : ListView.builder(
+                        itemCount: widget.station.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context, widget.station[index]['id']);
+                            },
+                            child: Card(
+                              margin: const EdgeInsets.all(10.0),
+                              child: ListTile(
+                                title: Text(widget.station[index]['name']),
+                              ),
+                            ),
+                          );
                         },
-                        child: Card(
-                          margin: const EdgeInsets.all(0.0),
-                          child: ListTile(
-                            title: Text(widget.station[index]['name']),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                      ),
+              ),
+            ],
           ),
         ],
       ),

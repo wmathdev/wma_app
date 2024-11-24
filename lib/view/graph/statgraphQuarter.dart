@@ -180,7 +180,7 @@ class _StatGraphQuaterState extends State<StatGraphQuater> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: maxValue > 50000 ? 50000 : 10000,
+            interval: maxValue > 200000 ? 200000 : 100000,
             getTitlesWidget: leftTitleWidgets,
             reservedSize: 80,
           ),

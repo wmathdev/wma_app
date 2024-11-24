@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:wma_app/view/report_list/report_list_filter_view.dart';
 import 'package:wma_app/view/report_list/report_list_view.dart';
+import 'package:wma_app/view/report_list/report_list_view_officer.dart';
 import 'package:wma_app/view/report_list/station_list_filter_view.dart';
 
 import '../../Utils/Color.dart';
@@ -103,9 +104,9 @@ class _StationListState extends State<StationList> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Lottie.asset(
-                        'asset/lottie/animation_lk0uamsc.json',
-                        width: 200,
-                        height: 200,
+                        'asset/lottie/Loading1.json',
+                        width: 150,
+                        height: 150,
                         fit: BoxFit.fill,
                       ),
                       TextWidget.textGeneralWithColor(
@@ -114,7 +115,16 @@ class _StationListState extends State<StationList> {
                   ),
                 ),
               )
-            : contentView(),
+            : Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: ExactAssetImage('asset/images/waterbg.jpg'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                child: contentView()),
       ),
     ));
   }
@@ -139,7 +149,7 @@ class _StationListState extends State<StationList> {
                     child: TextWidget.textSubTitle(
                         'สำรวจสถานะการดำเนินงาน ของศูนย์บริหารคุณภาพน้ำแต่ละพื้นที่'),
                   ),
-                  filterMenu(),
+                  // filterMenu(),
                   listView()
                 ],
               ),
@@ -158,11 +168,94 @@ class _StationListState extends State<StationList> {
     );
   }
 
+  // Widget filterMenu() {
+  //   return Row(
+  //     children: [
+  //       Expanded(
+  //           flex: 1,
+  //           child: TextButton(
+  //               onPressed: null,
+  //               child: Container(
+  //                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+  //                 width: MediaQuery.of(context).size.width,
+  //                 padding: const EdgeInsets.all(8.0),
+  //                 decoration: BoxDecoration(
+  //                     color: blueButton,
+  //                     border: Border.all(
+  //                       color: blueButtonBorder,
+  //                     ),
+  //                     borderRadius:
+  //                         const BorderRadius.all(Radius.circular(10))),
+  //                 child: Center(
+  //                     child: TextWidget.textGeneralWithColor(
+  //                         month, blueButtonText)),
+  //               ))),
+  //       Expanded(
+  //           flex: 1,
+  //           child: TextButton(
+  //               onPressed: null,
+  //               child: Container(
+  //                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+  //                 width: MediaQuery.of(context).size.width,
+  //                 padding: const EdgeInsets.all(8.0),
+  //                 decoration: BoxDecoration(
+  //                     color: blueButton,
+  //                     border: Border.all(
+  //                       color: blueButtonBorder,
+  //                     ),
+  //                     borderRadius:
+  //                         const BorderRadius.all(Radius.circular(10))),
+  //                 child: Center(
+  //                     child: TextWidget.textGeneralWithColor(
+  //                         '${int.parse(year) + 543}', blueButtonText)),
+  //               ))),
+  //       Expanded(
+  //           flex: 1,
+  //           child: GestureDetector(
+  //             onTap: () async {
+  //               setState(() {
+  //                 loading = true;
+  //               });
+
+  //               dynamic result = await Get.to(const StationListFilterView());
+  //               print('object : $result');
+
+  //               if (result != null) {
+  //                 var res = await OfficerRequest.getReportList(accessToken,
+  //                     'DAILY', result['workflow'], result['reportat']);
+  //                 setState(() {
+  //                   year = result['reportat'].substring(0, 4);
+  //                   month = Month.getMonthFullLabel(result['reportat']);
+  //                   data = res['data'];
+  //                   loading = false;
+  //                 });
+  //               } else {
+  //                 setState(() {
+  //                   loading = false;
+  //                 });
+  //               }
+  //             },
+  //             child: Row(
+  //               children: [
+  //                 IconButton(
+  //                   icon: Image.asset(
+  //                     'asset/images/bi_funnel.png',
+  //                   ),
+  //                   onPressed: () {},
+  //                 ),
+  //                 TextWidget.textGeneralWithColor('ตัวกรอง', blueButtonText)
+  //               ],
+  //             ),
+  //           ))
+  //     ],
+  //   );
+  // }
+
   Widget filterMenu() {
     return Row(
       children: [
         Expanded(
-            flex: 1,
+            flex: 3,
             child: TextButton(
                 onPressed: null,
                 child: Container(
@@ -175,13 +268,13 @@ class _StationListState extends State<StationList> {
                         color: blueButtonBorder,
                       ),
                       borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
+                          const BorderRadius.all(Radius.circular(15))),
                   child: Center(
-                      child: TextWidget.textGeneralWithColor(
-                          month, blueButtonText)),
+                      child:
+                          TextWidget.textGeneralWithColor(month, Colors.black)),
                 ))),
         Expanded(
-            flex: 1,
+            flex: 3,
             child: TextButton(
                 onPressed: null,
                 child: Container(
@@ -197,7 +290,7 @@ class _StationListState extends State<StationList> {
                           const BorderRadius.all(Radius.circular(10))),
                   child: Center(
                       child: TextWidget.textGeneralWithColor(
-                          '${int.parse(year) + 543}', blueButtonText)),
+                          '${int.parse(year) + 543}', Colors.black)),
                 ))),
         Expanded(
             flex: 1,
@@ -225,16 +318,23 @@ class _StationListState extends State<StationList> {
                   });
                 }
               },
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Image.asset(
-                      'asset/images/bi_funnel.png',
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: Colors.white,
                     ),
-                    onPressed: () {},
-                  ),
-                  TextWidget.textGeneralWithColor('ตัวกรอง', blueButtonText)
-                ],
+                    borderRadius: const BorderRadius.all(Radius.circular(15))),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Image.asset(
+                        'asset/images/setting.png',
+                      ),
+                      onPressed: null,
+                    ),
+                  ],
+                ),
               ),
             ))
       ],
@@ -258,10 +358,12 @@ class _StationListState extends State<StationList> {
             '${data[index]['state_code']}', () async {
           print(data[index]);
           Station station = Station(
-              id: data[index]['id'],
-              name: data[index]['name'],
-              pivot: Pivot(stationId: data[index]['id'], userId: -1));
-          await Get.to(ReportList(
+            id: data[index]['id'],
+            name: data[index]['name'],
+            lite_name: data[index]['lite_name'] != null ? data[index]['lite_name'] : '',
+            pivot: Pivot(stationId: data[index]['id'], userId: -1),
+          );
+          await Get.to(ReportListOfficer(
             station: station,
             role: widget.role,
           ));

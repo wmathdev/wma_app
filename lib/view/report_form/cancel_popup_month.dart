@@ -28,48 +28,55 @@ class _CancelPopupMonthState extends State<CancelPopupMonth> {
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
+    return Scaffold(
         body: SafeArea(
       child: Container(
-        color: Colors.grey[60],
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: ExactAssetImage('asset/images/waterbg.jpg'),
+            fit: BoxFit.fill,
+          ),
+        ),
         child: Stack(
           children: [
             contentView(),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child:
-                  Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-                Container(
-                    height: 80,
-                    child: ButtonApp.buttonSecondary(context, 'ปิดหน้าต่างนี้',
-                        () {
-                      Get.back();
-                    })),
-                SizedBox(
-                    height: 40,
-                    child: ButtonApp.buttonOutline(
-                        context, 'ยกเลิกการส่งรายงาน', () async {
-                      final SharedPreferences prefs = await _prefs;
-                      accessToken = (prefs.getString('access_token') ?? '');
-                     var result = await OperatorRequest.deleteDocument(
-                          accessToken, widget.documentId);
+            // Container(
+            //   width: MediaQuery.of(context).size.width,
+            //   height: MediaQuery.of(context).size.height,
+            //   child:
+            //       Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+            //     Container(
+            //         height: 80,
+            //         child: ButtonApp.buttonSecondary(context, 'ปิดหน้าต่างนี้',
+            //             () {
+            //           Get.back();
+            //         })),
+            //     SizedBox(
+            //         height: 40,
+            //         child: ButtonApp.buttonOutline(
+            //             context, 'ยกเลิกการส่งรายงาน', () async {
+            //           final SharedPreferences prefs = await _prefs;
+            //           accessToken = (prefs.getString('access_token') ?? '');
+            //          var result = await OperatorRequest.deleteDocument(
+            //               accessToken, widget.documentId);
 
-                      if (result['code'] != '200') {
-                        MyDialog.showAlertDialogOk(
-                            context, '${result['message']}', () {
-                          Get.back();
-                        });
-                      } else {
-                        Get.back();
-                        Get.back();
-                      }
-                    })),
-                const SizedBox(
-                  height: 30,
-                )
-              ]),
-            )
+            //           if (result['code'] != '200') {
+            //             MyDialog.showAlertDialogOk(
+            //                 context, '${result['message']}', () {
+            //               Get.back();
+            //             });
+            //           } else {
+            //             Get.back();
+            //             Get.back();
+            //           }
+            //         })),
+            //     const SizedBox(
+            //       height: 30,
+            //     )
+            //   ]),
+            // )
           ],
         ),
       ),
@@ -108,8 +115,8 @@ class _CancelPopupMonthState extends State<CancelPopupMonth> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 TextWidget.textBigWithColor('ของวันที่', Colors.black),
-                TextWidget.textBigWithColor(widget.dateLabel, blueSelected),
+                TextWidget.textBigWithColor('ของวันที่', Colors.black),
+                TextWidget.textBigWithColor(widget.dateLabel, blue_n),
                 TextWidget.textBigWithColor(' ใช่หรือไม่', Colors.black),
               ],
             ),
@@ -130,14 +137,43 @@ class _CancelPopupMonthState extends State<CancelPopupMonth> {
             //   height: 25,
             // ),
             //reportSummary(),
-            const SizedBox(
-              height: 50,
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.5,
             ),
-            //footer()
+            footer()
           ],
         ),
       )
     ]);
   }
-}
 
+  Widget footer() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ButtonApp.buttonSecondaryHalf(
+          context,
+          'ปิดหน้าต่างนี้',
+          () {
+            Get.back();
+          },
+        ),
+        ButtonApp.buttonMainhalf(context, 'ยกเลิกการส่ง', () async {
+          final SharedPreferences prefs = await _prefs;
+          accessToken = (prefs.getString('access_token') ?? '');
+          var result = await OperatorRequest.deleteDocument(
+              accessToken, widget.documentId);
+
+          if (result['code'] != '200') {
+            MyDialog.showAlertDialogOk(context, '${result['message']}', () {
+              Get.back();
+            });
+          } else {
+            Get.back();
+            Get.back();
+          }
+        }, true),
+      ],
+    );
+  }
+}

@@ -194,7 +194,7 @@ class _StationListFilterViewState extends State<StationListFilterView> {
             ButtonApp.buttonSecondaryFix(context, 'ยกเลิก', () {
               Get.back();
             }, true),
-            ButtonApp.buttonMainFix(context, 'นำไปใช้', () async {
+            ButtonApp.buttonMainFixGradient(context, 'นำไปใช้', () async {
               var stt = '';
               if (statusIndex != -1) {
                 stt = Status.status[statusIndex]['status'];
