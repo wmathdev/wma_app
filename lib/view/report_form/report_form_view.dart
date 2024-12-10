@@ -66,13 +66,22 @@ class _ReportFormState extends State<ReportForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: Container(
-        color: Colors.grey[60],
-        child: contentView(),
-      ),
-    ));
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          return;
+        }
+        showAlertDialog(context);
+      },
+      child: Scaffold(
+          body: SafeArea(
+        child: Container(
+          color: Colors.grey[60],
+          child: contentView(),
+        ),
+      )),
+    );
   }
 
   Widget contentView() {
@@ -112,13 +121,14 @@ class _ReportFormState extends State<ReportForm> {
                         width: 50,
                         height: 50,
                         child: Image.asset('asset/images/iconintro.png')),
-                Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
-                  TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
-                ],
-              )
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
+                        TextWidget.textSubTitleBoldMedium(
+                            widget.station.lite_name),
+                      ],
+                    )
                   ],
                 ),
                 widget.role == 'ADMIN'

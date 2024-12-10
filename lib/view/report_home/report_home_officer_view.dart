@@ -359,7 +359,7 @@ class _ReportHomeOfficerState extends State<ReportHomeOfficer> {
     print('ROLE : ${user.role}');
     _getAccessToken();
     return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
+      height: MediaQuery.of(context).size.height * 0.75,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -588,7 +588,7 @@ class _ReportHomeOfficerState extends State<ReportHomeOfficer> {
                               width: 10,
                             ),
                             Text(
-                              'จากศูนย์บำบัด $total แห่งทั่วประเทศ',
+                              'จากศูนย์บริหารจัดการคุณภาพน้ำ $total แห่งทั่วประเทศ',
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.normal,
@@ -792,11 +792,38 @@ class _ReportHomeOfficerState extends State<ReportHomeOfficer> {
                                 width: 10,
                               ),
                               Text(
-                                'ข่าวประชาสัมพันธ์ (เพิ่มเติม)',
+                                'ข่าวประชาสัมพันธ์',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: blue_navy_n,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Card(
+                                color: Colors.white,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'เพิ่มเติม',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: blue_navy_n,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Image.asset(
+                                        'asset/images/arrow_n.png',
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

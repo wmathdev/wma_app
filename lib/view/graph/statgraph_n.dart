@@ -175,7 +175,7 @@ class Statgraph_nState extends State<Statgraph_n> {
 
   BarChartData mainBarData() {
     return BarChartData(
-      maxY: maxValue,
+      maxY: maxValue * 1.2,
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
           getTooltipColor: (_) => red_n,
@@ -193,7 +193,7 @@ class Statgraph_nState extends State<Statgraph_n> {
               ),
               children: <TextSpan>[
                 const TextSpan(
-                  text: ' mg/l',
+                  text: ' m\u{00B3} ',
                   style: TextStyle(
                     color: Colors.white, //widget.touchedBarColor,
                     fontSize: 16,
@@ -221,8 +221,12 @@ class Statgraph_nState extends State<Statgraph_n> {
         rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
+          topTitles: AxisTitles(
+          sideTitles: SideTitles(
+            getTitlesWidget: (value, meta) => Container(),
+            showTitles: true,
+            reservedSize: 10,
+          ),
         ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
@@ -234,7 +238,7 @@ class Statgraph_nState extends State<Statgraph_n> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 28,
+            reservedSize: 35,
             interval: 1,
             getTitlesWidget: leftTitleWidgets,
           ),
@@ -321,7 +325,11 @@ class Statgraph_nState extends State<Statgraph_n> {
 
     const style2 = TextStyle(
         fontWeight: FontWeight.bold, fontSize: 8, color: Colors.black);
-    String text = '${value.toInt() * 1000}';
+    String text = '${(value * 10000).toInt()}';
+
+     if (value.toInt() == (maxValue * 1.2).toInt()) {
+       text = '';
+    }
 
     return SideTitleWidget(
       axisSide: meta.axisSide,

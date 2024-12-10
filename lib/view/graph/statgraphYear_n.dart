@@ -194,15 +194,15 @@ class _StatgraphyearNState extends State<StatgraphyearN> {
             return BarTooltipItem(
               total,
               const TextStyle(
-                color: textColor,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
               children: <TextSpan>[
                 TextSpan(
-                  text: ' mg/l',
+                  text: ' m\u{00B3}',
                   style: const TextStyle(
-                    color: textColor, //widget.touchedBarColor,
+                    color: Colors.white, //widget.touchedBarColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
@@ -228,8 +228,12 @@ class _StatgraphyearNState extends State<StatgraphyearN> {
         rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(
+            getTitlesWidget: (value, meta) => Container(),
+            showTitles: true,
+            reservedSize: 10,
+          ),
         ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
@@ -242,7 +246,7 @@ class _StatgraphyearNState extends State<StatgraphyearN> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 50,
-            interval: 20,
+            interval: 5,
             getTitlesWidget: leftTitleWidgets,
           ),
         ),
@@ -331,7 +335,11 @@ class _StatgraphyearNState extends State<StatgraphyearN> {
     const style2 = TextStyle(
         fontWeight: FontWeight.bold, fontSize: 5, color: Colors.white);
 
-    String text = '${value.toInt() * 1000}';
+    String text = '${value.toInt()} M';
+
+    if (value.toInt() == (maxValue * 1.2).toInt()) {
+      text = '';
+    }
 
     return SideTitleWidget(
       axisSide: meta.axisSide,

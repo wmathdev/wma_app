@@ -228,7 +228,7 @@ class ButtonApp {
             //     ),
             //     borderRadius: const BorderRadius.all(Radius.circular(10))),
             child: Center(
-                child: TextWidget.textTitleBoldWithColor(
+                child: TextWidget.textTitleBoldWithColorstatisticFilter(
               title,
               isDisable ? Colors.white : Colors.black,
             )),

@@ -386,7 +386,8 @@ class ListItemWidget {
       onTap: () async {
         Get.to(StationOfficerMenu(
           menu: 'download',
-          role: role, passphrases: [],
+          role: role,
+          passphrases: [],
         ));
       },
       child: Card(
@@ -508,8 +509,8 @@ class ListItemWidget {
       onTap: () async {
         Get.to(StationOfficerMenu(
           menu: 'maintenance',
-          role: role, passphrases: [],
-    
+          role: role,
+          passphrases: [],
         ));
       },
       child: Card(
@@ -613,7 +614,7 @@ class ListItemWidget {
   }
 
   static Widget cardListScadaOfficer(BuildContext context, User user,
-      String role, String authorization,List<dynamic> passphrases) {
+      String role, String authorization, List<dynamic> passphrases) {
     return GestureDetector(
       onTap: () async {
         Get.to(StationOfficerMenu(
@@ -808,7 +809,7 @@ class ListItemWidget {
   //reportlist
   static Widget reportListHeader(BuildContext context, String date,
       String fullDate, String time, String role, GestureTapCallback onClick) {
-    if (( Time.checkTimeStatus('00:00AM', '10:00AM') &&
+    if (( //Time.checkTimeStatus('00:00AM', '10:00AM') &&
             role == 'OPERATOR') ||
         role == 'ADMIN') {
       return Card(
@@ -884,9 +885,10 @@ class ListItemWidget {
     }
 
     return Card(
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: greyBorder,
+          color: Colors.white,
         ),
         borderRadius: BorderRadius.circular(20.0), //<-- SEE HERE
       ),
@@ -934,8 +936,14 @@ class ListItemWidget {
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  Image.asset(
+                    'asset/images/required.png',
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
                   Text(
                     role == 'OPERATOR'
                         ? 'รายการล่าช้า ติดต่อส่วนกลาง'
@@ -945,12 +953,6 @@ class ListItemWidget {
                       fontWeight: FontWeight.normal,
                       color: Colors.red,
                     ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Image.asset(
-                    'asset/images/required.png',
                   ),
                 ],
               ),
@@ -966,7 +968,7 @@ class ListItemWidget {
 
   static Widget reportListHeaderMonth(BuildContext context, String date,
       String fullDate, String time, String role, GestureTapCallback onClick) {
-    if ((  Time.checkTimeStatus('00:00AM', '10:00AM') &&
+    if (( //Time.checkTimeStatus('00:00AM', '10:00AM') &&
             role == 'OPERATOR') ||
         role == 'ADMIN') {
       return Card(
@@ -1038,9 +1040,10 @@ class ListItemWidget {
     }
 
     return Card(
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: greyBorder,
+          color: Colors.white,
         ),
         borderRadius: BorderRadius.circular(20.0), //<-- SEE HERE
       ),
@@ -1088,8 +1091,14 @@ class ListItemWidget {
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  Image.asset(
+                    'asset/images/required.png',
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
                   Text(
                     role == 'OPERATOR'
                         ? 'รายการล่าช้า ติดต่อส่วนกลาง'
@@ -1099,12 +1108,6 @@ class ListItemWidget {
                       fontWeight: FontWeight.normal,
                       color: Colors.red,
                     ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Image.asset(
-                    'asset/images/required.png',
                   ),
                 ],
               ),
@@ -2913,13 +2916,22 @@ class ListItemWidget {
               padding: const EdgeInsets.all(20.0),
               child: Row(
                 children: [
-                  Expanded(child: TextWidget.textTitle(title)),
+                  Expanded(child: TextWidget.textTitle("ศูนย์บริหารจัดการคุณภาพน้ำ")),
                   Image.asset(
                     'asset/images/arrow_n.png',
                   ),
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Row(
+                children: [
+                  Expanded(child: TextWidget.textTitleBoldWithColorSize(title,blue_navy_n,18)),
+                ],
+              ),
+            ),
+
             Container(
               margin: const EdgeInsets.fromLTRB(5, 10, 5, 2),
               width: MediaQuery.of(context).size.width,
@@ -3410,22 +3422,25 @@ class ListItemWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextWidget.textSubTitleBoldWithSizeGradient(
-                    noti['title'], 20, Colors.white),
-                Row(
-                  children: [
-                    Container(
-                      alignment: Alignment.bottomLeft,
-                      child: TextWidget.textSubTitleWithSizeColor(
-                          noti['created_at'], 10, Colors.grey),
-                    ),
-                  ],
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextWidget.textSubTitleBoldWithSizeGradient(
+                      noti['body'], 15, Colors.white),
+                  Row(
+                    children: [
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        child: TextWidget.textSubTitleWithSizeColor(
+                            noti['created_at'], 10, Colors.grey),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
             noti['read']
                 ? Container()
@@ -3681,7 +3696,8 @@ class ListItemWidget {
                   await Reportdownloadrequest.getReportDownload(
                       authorization, station.id, data['date'], 'xlsx');
                   var snackBar = const SnackBar(
-                      content: Text('ดาวน์โหลดรายงานสำเร็จแล้ว กรุณาตรวจสอบไฟล์ ในพื้นที่เก็บไฟล์ดาวน์โหลดในโทรศัพท์ของคุณ'));
+                      content: Text(
+                          'ดาวน์โหลดรายงานสำเร็จแล้ว กรุณาตรวจสอบไฟล์ ในพื้นที่เก็บไฟล์ดาวน์โหลดในโทรศัพท์ของคุณ'));
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 },
                 child: Row(
@@ -3706,7 +3722,8 @@ class ListItemWidget {
                   await Reportdownloadrequest.getReportDownload(
                       authorization, station.id, data['date'], 'pdf');
                   var snackBar = const SnackBar(
-                      content: Text('ดาวน์โหลดรายงานประจำเดือนสำเร็จ'));
+                      content: Text(
+                          'ดาวน์โหลดรายงานสำเร็จแล้ว กรุณาตรวจสอบไฟล์ ในพื้นที่เก็บไฟล์ดาวน์โหลดในโทรศัพท์ของคุณ'));
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 },
                 child: Row(

@@ -29,7 +29,7 @@ class _LocationSearchState extends State<LocationSearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ค้นหาศูนย์บำบัดน้ำ'),
+        title: const Text('ค้นหาศูนย์บริหารจัดการคุณภาพน้ำ'),
         elevation: 0.0,
       ),
       body: Stack(

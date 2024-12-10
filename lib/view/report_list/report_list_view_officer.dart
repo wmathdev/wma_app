@@ -62,6 +62,8 @@ class _ReportListOfficerState extends State<ReportListOfficer> {
   List<dynamic> data = [];
   List<bool> publicList = [];
 
+  bool isReadyPublic = false;
+
   Future<void> _getDocumentList(
     String peroid,
   ) async {
@@ -202,7 +204,7 @@ class _ReportListOfficerState extends State<ReportListOfficer> {
               ),
               filterMenu(),
               SizedBox(
-                height: MediaQuery.of(context).size.height - 300,
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(18.0),
@@ -221,12 +223,28 @@ class _ReportListOfficerState extends State<ReportListOfficer> {
                   ),
                 ),
               ),
-              Container(
-                  height: 50,
-                  child: ButtonApp.buttonSecondaryGradient(context, 'เผยแพร่',
-                      () async {
-                    showAlertDialog(context);
-                  }))
+              isReadyPublic
+                  ? Container(
+                      height: 50,
+                      child: ButtonApp.buttonSecondaryGradient(
+                          context, 'เผยแพร่', () async {
+                        List<int> docId = [];
+                        for (var i = 0; i < publicList.length; i++) {
+                          if (publicList[i]) {
+                            docId.add(data[i]['document']['id']);
+                          }
+                        }
+
+                        if (docId.isNotEmpty) {
+                          showAlertDialog(context);
+                        } else {
+                          var snackBar = SnackBar(
+                              content:
+                                  Text('กรุณาเลือกรายการที่ต้องการเผยเเพร่'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
+                      }))
+                  : Container()
             ],
           ),
         ],
@@ -258,6 +276,9 @@ class _ReportListOfficerState extends State<ReportListOfficer> {
         _getDocumentList(
           '',
         );
+        setState(() {
+          isReadyPublic = false;
+        });
         Get.back();
       },
     );
@@ -407,7 +428,7 @@ class _ReportListOfficerState extends State<ReportListOfficer> {
                 Month.getMonthTitleReverse(data[index]['date']),
                 '10.00',
                 widget.role, () async {
-              if (( Time.checkTimeStatus('00:00AM', '10:00AM') &&
+              if (( // Time.checkTimeStatus('00:00AM', '10:00AM') &&
                       widget.role == 'OPERATOR') ||
                   widget.role == 'ADMIN') {
                 await Get.to(ReportForm(
@@ -494,7 +515,16 @@ class _ReportListOfficerState extends State<ReportListOfficer> {
                   (value) {
                     setState(() {
                       publicList[index] = value;
+                      isReadyPublic = false;
                     });
+
+                    for (var i = 0; i < publicList.length; i++) {
+                      if (publicList[i]) {
+                        setState(() {
+                          isReadyPublic = true;
+                        });
+                      }
+                    }
                   },
                   publicList[index]);
             }

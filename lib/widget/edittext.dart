@@ -307,7 +307,7 @@ class Edittext {
           Stack(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextWidget.textTitleBold(title),
                   SizedBox(

@@ -221,7 +221,7 @@ class _DooGraphWeekState extends State<DooGraphWeek> {
                           int rodIndex,
                         ) {
                           return BarTooltipItem(
-                            'ก่อนบำบัด ${rod.fromY} หลังบำบัด ${rod.toY}',
+                            'ก่อนบำบัดdfdf ${rod.fromY} หลังบำบัด ${rod.toY}',
                             TextStyle(
                               color: Colors.black,
                               fontSize: 8.0,

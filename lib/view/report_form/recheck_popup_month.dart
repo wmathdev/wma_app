@@ -145,7 +145,7 @@ class _RecheckPopupMonthState extends State<RecheckPopupMonth> {
             ),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.87,
+            height: MediaQuery.of(context).size.height * 0.8,
             child: SingleChildScrollView(
               child: Column(
                 children: [

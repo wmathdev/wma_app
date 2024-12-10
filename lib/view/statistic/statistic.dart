@@ -157,14 +157,14 @@ class _StatisticState extends State<Statistic> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.6,
                     child: TextWidget.textTitleWithColorSize(
-                        'ปริมาณน้ำเสียที่ผ่านการบำบัด', Colors.black, 18),
+                        'ปริมาณน้ำเสียที่ผ่านการบำบัด', Colors.black, 15),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.6,
                     child: TextWidget.textTitleWithColorSize(
-                        'จากศูนย์บำบัดทั่วไทยทั้งหมด ${data['data']['stations']} แห่ง',
+                        'จากศูนย์บริหารจัดการคุณภาพน้ำ ${data['data']['stations']} แห่ง',
                         const Color.fromARGB(255, 111, 111, 111),
-                        14),
+                        11),
                   )
                 ],
               )

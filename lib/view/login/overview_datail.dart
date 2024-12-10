@@ -12,6 +12,7 @@ import 'package:wma_app/widget/gradient_text.dart';
 
 import '../../Utils/Color.dart';
 import '../../Utils/MapUtils.dart';
+import '../../Utils/label.dart';
 import '../../widget/button_app.dart';
 import '../../widget/text_widget.dart';
 import '../graph/TempGraphMonth.dart';
@@ -224,6 +225,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
                                           13),
                                     )
                                   : Container(),
+
                               widget.isSubmited ? monthScroll() : Container(),
                               widget.isSubmited
                                   ? monthValueScroll()
@@ -314,10 +316,33 @@ class _OverviewDertailState extends State<OverviewDertail> {
                             const SizedBox(
                               height: 10,
                             ),
-                            widget.isSubmited ? waterDetail() : Container(),
+                            // widget.isSubmited ? waterDetail() : Container(),
                             const SizedBox(
                               height: 3,
                             ),
+                            monthScroll(),
+                            monthValueScroll(),
+
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(const VocabDetail());
+                              },
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                // padding: EdgeInsets.all(10),
+                                height: 50,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Center(
+                                    child:
+                                        TextWidget.textTitle('อ่านเพิ่มเติม')),
+                              ),
+                            ),
+                            // compare(),
                             // Container(
                             //     height: 70,
                             //     child: ButtonApp.buttonSecondaryGradient2(
@@ -576,7 +601,7 @@ class _OverviewDertailState extends State<OverviewDertail> {
                             GradientText(
                               data['data']['document'] == null
                                   ? '-'
-                                  : '${data['data']['document']['treated_doo']}',
+                                  : Label.commaFormat('${data['data']['document']['treated_water']}'),
                               style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,
@@ -940,7 +965,8 @@ class _OverviewDertailState extends State<OverviewDertail> {
                       ),
                       SizedBox(
                           width: 35,
-                          child: data2[defaultposition.toInt()]['document'] != null
+                          child: data2[defaultposition.toInt()]['document'] !=
+                                  null
                               ? TextWidget.textTitleWithColorSize(
                                   '${data2[defaultposition.toInt()]['document']['treated_doo']} mg/l',
                                   Colors.black,
@@ -1005,7 +1031,8 @@ class _OverviewDertailState extends State<OverviewDertail> {
                       ),
                       SizedBox(
                           width: 35,
-                          child: data2[defaultposition.toInt()]['document'] != null
+                          child: data2[defaultposition.toInt()]['document'] !=
+                                  null
                               ? TextWidget.textTitleWithColorSize(
                                   '${data2[defaultposition.toInt()]['document']['treated_ph']} pH',
                                   Colors.black,
@@ -1070,7 +1097,8 @@ class _OverviewDertailState extends State<OverviewDertail> {
                       ),
                       SizedBox(
                           width: 35,
-                          child: data2[defaultposition.toInt()]['document'] != null
+                          child: data2[defaultposition.toInt()]['document'] !=
+                                  null
                               ? TextWidget.textTitleWithColorSize(
                                   '${data2[defaultposition.toInt()]['document']['treated_temp']} °C',
                                   Colors.black,

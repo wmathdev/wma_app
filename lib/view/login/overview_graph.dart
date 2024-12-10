@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:wma_app/Utils/Color.dart';
+import 'package:wma_app/Utils/label.dart';
 import 'package:wma_app/api/MapRequest.dart';
 import 'package:wma_app/view/graph/doographmonth.dart';
 import 'package:wma_app/view/graph/doographquarter.dart';
@@ -250,21 +251,23 @@ class _OverviewGraphState extends State<OverviewGraph> {
     if (graphHeaderIndex[0]) {
       print('object 0');
       if (graphFilterIndex[0]) {
+        print('DooGraphWeek');
         return DooGraphWeek(
             data: statisticDataDooWeek['data']['report'],
             rule: getRuleDOOValue(data['data']['measure']));
       } else if (graphFilterIndex[1]) {
-        // return dooMONTHgraph();
+        print('DooGraphMonth');
         return DooGraphMonth(
           data: statisticDataDooMonth['data']['report'],
           rule: getRuleDOOValue(data['data']['measure']),
         );
       } else if (graphFilterIndex[2]) {
-        // return dooQuartergraph();
+        print('DooGraphQuarter');
         return DooGraphQuarter(
             data: statisticDataDooQuater['data']['report'],
             rule: getRuleDOOValue(data['data']['measure']));
       } else if (graphFilterIndex[3]) {
+        print('DooYearGraph');
         return DooYearGraph(
             data: statisticDataDooYear['data']['report'],
             rule: getRuleDOOValue(data['data']['measure']));
@@ -272,22 +275,22 @@ class _OverviewGraphState extends State<OverviewGraph> {
     } else if (graphHeaderIndex[1]) {
       print('object 1');
       if (graphFilterIndex[0]) {
-        // return phWEEKgraph();
+        print('PhGraphWeek');
         return PhGraphWeek(
             data: statisticDataPHWeek['data']['report'],
             rule: getRulePHValue(data['data']['measure']));
       } else if (graphFilterIndex[1]) {
-        // return phMONTHgraph();
+        print('PhGraphMonth');
         return PhGraphMonth(
             data: statisticDataPHMonth['data']['report'],
             rule: getRulePHValue(data['data']['measure']));
       } else if (graphFilterIndex[2]) {
-        // return phQuartergraph();
+        print('PhGraphQuarter');
         return PhGraphQuarter(
             data: statisticDataPHQuater['data']['report'],
             rule: getRulePHValue(data['data']['measure']));
       } else if (graphFilterIndex[3]) {
-        // return phYeargraph();
+        print('PhGraphYear');
         return PhGraphYear(
             data: statisticDataPHYear['data']['report'],
             rule: getRulePHValue(data['data']['measure']));
@@ -295,20 +298,22 @@ class _OverviewGraphState extends State<OverviewGraph> {
     } else if (graphHeaderIndex[2]) {
       print('object 2');
       if (graphFilterIndex[0]) {
+        print('TempGraphWeek');
         return TempGraphWeek(
             data: statisticDataTEMPWeek['data']['report'],
             rule: getRuleTEMPValue(data['data']['measure']));
       } else if (graphFilterIndex[1]) {
+        print('TempGraphMonth');
         return TempGraphMonth(
             data: statisticDataTEMPMonth['data']['report'],
             rule: getRuleTEMPValue(data['data']['measure']));
       } else if (graphFilterIndex[2]) {
-        // return tempQuartergraph();
+        print('TempGraphQuarter');
         return TempGraphQuarter(
             data: statisticDataTEMPQuater['data']['report'],
             rule: getRuleTEMPValue(data['data']['measure']));
       } else if (graphFilterIndex[3]) {
-        // return tempYeargraph();
+        print('TempGraphYear');
         return TempGraphYear(
             data: statisticDataTEMPYear['data']['report'],
             rule: getRuleTEMPValue(data['data']['measure']));
@@ -332,25 +337,27 @@ class _OverviewGraphState extends State<OverviewGraph> {
               aspectRatio: 5.0,
               enableInfiniteScroll: false,
               onPageChanged: (index, reason) {
+                print('_current=====');
+                print(index);
                 setState(() {
                   loading = true;
                 });
 
-                if (_current == 0) {
-                  graphHeaderIndex = [false, true, false];
+                if (index == 0) {
                   setState(() {
+                    graphHeaderIndex = [true, false, false];
                     _current = index;
                     loading = false;
                   });
-                } else if (_current == 1) {
-                  graphHeaderIndex = [false, false, true];
+                } else if (index == 1) {
                   setState(() {
+                    graphHeaderIndex = [false, true, false];
                     _current = index;
                     loading = false;
                   });
-                } else {
-                  graphHeaderIndex = [true, false, false];
+                } else if (index == 2) {
                   setState(() {
+                    graphHeaderIndex = [false, false, true];
                     _current = index;
                     loading = false;
                   });
@@ -377,10 +384,10 @@ class _OverviewGraphState extends State<OverviewGraph> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextWidget.textTitleBold(
-                              itemIndex == 1 ? 'Dissolved oxygen' : ''),
-                          TextWidget.textTitleBold(itemIndex == 1
-                              ? 'ค่ามาตรฐานออกซิเจนในน้ำ'
-                              : itemIndex == 2
+                              itemIndex == 0 ? 'Dissolved oxygen' : ''),
+                          TextWidget.textTitleBold(itemIndex == 0
+                              ? ' ค่ามาตรฐานออกซิเจนในน้ำ'
+                              : itemIndex == 1
                                   ? 'ค่าความเป็นกรด-ด่าง'
                                   : 'ค่าอุณหภูมิ')
                         ],
@@ -455,7 +462,8 @@ class _OverviewGraphState extends State<OverviewGraph> {
                             GradientText(
                               data['data']['document'] == null
                                   ? '-'
-                                  : '${data['data']['document']['treated_doo']}',
+                                  : Label.commaFormat(
+                                      '${data['data']['document']['treated_water']}'),
                               style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,

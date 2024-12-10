@@ -11,6 +11,7 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wma_app/api/OfficerRequest.dart';
 import 'package:wma_app/model/user.dart';
+import 'package:wma_app/view/report_form/preview_img.dart';
 import 'package:wma_app/view/report_home/progress_detail.dart';
 
 import '../../Utils/Color.dart';
@@ -531,10 +532,17 @@ class _ReportDetailState extends State<ReportDetail> {
               itemCount: img.length,
               itemBuilder: (context, index) {
                 return Card(
-                  child: Image.network(
-                    img[index],
-                    height: 170,
-                    width: 100,
+                  child: GestureDetector(
+                     onTap: () {
+                      Get.to(PreviewImage(
+                        img: img[index],
+                      ));
+                    },
+                    child: Image.network(
+                      img[index],
+                      height: 170,
+                      width: 100,
+                    ),
                   ),
                 );
               },

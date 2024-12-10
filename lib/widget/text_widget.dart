@@ -136,6 +136,18 @@ class TextWidget {
     );
   }
 
+    static Widget textTitleBoldWithColorstatisticFilter(String title, Color color) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 9,
+        fontWeight: FontWeight.bold,
+        color: color,
+      ),
+    );
+  }
+
+
   static Widget textTitleBoldWithColorMarker(String title, Color color) {
     return Text(
       title,

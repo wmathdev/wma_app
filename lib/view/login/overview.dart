@@ -42,6 +42,7 @@ class _OverviewState extends State<Overview> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   bool loading = true;
+  bool mapFetch = false;
   bool bottomfiltermenu = false;
 
   String searchtitle = 'ค้นหาศูนย์บริหารจัดการคุณภาพน้ำ';
@@ -69,6 +70,10 @@ class _OverviewState extends State<Overview> {
   var location_consent = false;
 
   Future<void> _getStation() async {
+    setState(() {
+      location = [];
+      mapData = [];
+    });
     var res1 = await MapRequest.getDocumentShow();
     var loc = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.low);
@@ -86,12 +91,12 @@ class _OverviewState extends State<Overview> {
       total = '${treatedWater['data']['total']}';
       location_consent = share;
     });
-    print(mapData);
-    location.clear();
+    // print(mapData);
+
     for (var i = 0; i < mapData.length; i++) {
       List<String> words = mapData[i]['location'].trim().split(",");
       try {
-        print('doMin $doMin : doMax $doMax');
+        // print('doMin $doMin : doMax $doMax');
         if (mapData[i]['document'] != null) {
           if (mapData[i]['document']['treated_doo'] >= doMin &&
               mapData[i]['document']['treated_doo'] <= doMax) {
@@ -100,7 +105,7 @@ class _OverviewState extends State<Overview> {
                   marker: Marker(
                     onTap: () {
                       //this is what you're looking for!
-                      print('${mapData[i]['document']['treated_doo']}');
+                      // print('${mapData[i]['document']['treated_doo']}');
 
                       for (var j = 0; j < location.length; j++) {
                         if (location[j].marker.markerId ==
@@ -161,6 +166,7 @@ class _OverviewState extends State<Overview> {
 
     setState(() {
       loading = false;
+      mapFetch = false;
     });
   }
 
@@ -233,9 +239,11 @@ class _OverviewState extends State<Overview> {
                 },
               ),
               overlayout(),
-              Container(
-                  color: Colors.black26,
-                  child: const Center(child: CircularProgressIndicator()))
+              mapFetch
+                  ? Container(
+                      color: Colors.black26,
+                      child: const Center(child: CircularProgressIndicator()))
+                  : Container()
             ],
           );
         }
@@ -251,7 +259,11 @@ class _OverviewState extends State<Overview> {
                 _controller.complete(controller);
               },
             ),
-            overlayout()
+            overlayout(),
+            mapFetch
+                  ? Container(
+                color: Colors.black26,
+                child: const Center(child: CircularProgressIndicator())) : Container()
           ],
         );
       },
@@ -282,16 +294,16 @@ class _OverviewState extends State<Overview> {
     return Stack(
       children: [
         SizedBox(
-            width: 60,
-            height: 60,
+            width: 45,
+            height: 45,
             child: rule == 1
                 ? Image.asset('asset/images/blue_pin_n.png')
                 : rule == 2
                     ? Image.asset('asset/images/red_pin_n.png')
                     : Image.asset('asset/images/blue_pin_n.png')),
         Positioned(
-          left: 15,
-          top: 10,
+          left: 8,
+          top: 6,
           child: Container(
             width: 30,
             height: 30,
@@ -311,12 +323,12 @@ class _OverviewState extends State<Overview> {
     return Stack(
       children: [
         SizedBox(
-            width: 60,
-            height: 60,
+            width: 45,
+            height: 45,
             child: Image.asset('asset/images/markerselect.png')),
         Positioned(
-          left: 20,
-          top: 8,
+          left: 8,
+          top: 6,
           child: Container(
             width: 20,
             height: 20,
@@ -670,6 +682,7 @@ class _OverviewState extends State<Overview> {
                               onChanged: (SfRangeValues values) async {
                                 print(values);
                                 setState(() {
+                                  mapFetch = true;
                                   _values = values;
                                   doMin = values.start;
                                   doMax = values.end;

@@ -195,7 +195,7 @@ class _ReportFormMonthOfficerState extends State<ReportFormMonthOfficer> {
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height - 100,
+              height: MediaQuery.of(context).size.height *0.8,
               child: SingleChildScrollView(
                 child: Column(
                   children: [

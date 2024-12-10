@@ -190,20 +190,20 @@ class _StatgraphMonthNState extends State<StatgraphMonthN> {
           tooltipHorizontalAlignment: FLHorizontalAlignment.right,
           tooltipMargin: -10,
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
-     String total =
+            String total =
                 Label.commaFormat('${widget.data[group.x]['total']}');
             return BarTooltipItem(
               total,
               const TextStyle(
-                color: textColor,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
               children: <TextSpan>[
                 TextSpan(
-                  text: ' mg/l',
+                  text: ' m\u{00B3}',
                   style: const TextStyle(
-                    color: textColor, //widget.touchedBarColor,
+                    color: Colors.white, //widget.touchedBarColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
@@ -229,8 +229,12 @@ class _StatgraphMonthNState extends State<StatgraphMonthN> {
         rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
+        topTitles: AxisTitles(
+          sideTitles: SideTitles(
+            getTitlesWidget: (value, meta) => Container(),
+            showTitles: true,
+            reservedSize: 10,
+          ),
         ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
@@ -243,7 +247,7 @@ class _StatgraphMonthNState extends State<StatgraphMonthN> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 50,
-            interval: 1,
+            interval: 2,
             getTitlesWidget: leftTitleWidgets,
           ),
         ),
@@ -252,7 +256,7 @@ class _StatgraphMonthNState extends State<StatgraphMonthN> {
         show: false,
       ),
       barGroups: showingGroups(),
-      gridData: const FlGridData(show:true),
+      gridData: const FlGridData(show: true),
     );
   }
 
@@ -287,7 +291,8 @@ class _StatgraphMonthNState extends State<StatgraphMonthN> {
             color: lebelactive[i] ? Colors.blue : Colors.white,
           ),
           child: Center(
-            child: Text(Month.getGraphDayMonth(widget.data[i]['label']), style: style2),
+            child: Text(Month.getGraphDayMonth(widget.data[i]['label']),
+                style: style2),
           ));
     } else {
       text = const Text('-', style: style);
@@ -332,7 +337,11 @@ class _StatgraphMonthNState extends State<StatgraphMonthN> {
     const style2 = TextStyle(
         fontWeight: FontWeight.bold, fontSize: 5, color: Colors.white);
 
-     String text = '${value.toInt()*1000}';
+    String text = '${value.toInt() * 1000}';
+
+    if (value.toInt() == (maxValue * 1.2).toInt()) {
+       text = '';
+    }
 
     return SideTitleWidget(
       axisSide: meta.axisSide,

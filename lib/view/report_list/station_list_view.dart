@@ -134,27 +134,8 @@ class _StationListState extends State<StationList> {
       onRefresh: () => _getDocumentList(
         '',
       ),
-      child: Stack(
+      child: Column(
         children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 80,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: TextWidget.textSubTitle(
-                        'สำรวจสถานะการดำเนินงาน ของศูนย์บริหารคุณภาพน้ำแต่ละพื้นที่'),
-                  ),
-                  // filterMenu(),
-                  listView()
-                ],
-              ),
-            ),
-          ),
           Container(
             height: 80,
             alignment: Alignment.topCenter,
@@ -162,6 +143,25 @@ class _StationListState extends State<StationList> {
                 context, 'รายงานประจำวันทั้งหมด', () {
               Get.back();
             }),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.85,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: TextWidget.textSubTitle(
+                          'สำรวจสถานะการดำเนินงาน ของศูนย์บริหารคุณภาพน้ำแต่ละพื้นที่'),
+                    ),
+                    // filterMenu(),
+                    listView()
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -352,7 +352,7 @@ class _StationListState extends State<StationList> {
         //     if (widget.role == 'MANAGER') {
         return ListItemWidget.reportListStation(
             context,
-            '${data[index]['name']}',
+            '${data[index]['lite_name']}',
             '${data[index]['state']}',
             '${data[index]['date']}',
             '${data[index]['state_code']}', () async {
@@ -360,7 +360,9 @@ class _StationListState extends State<StationList> {
           Station station = Station(
             id: data[index]['id'],
             name: data[index]['name'],
-            lite_name: data[index]['lite_name'] != null ? data[index]['lite_name'] : '',
+            lite_name: data[index]['lite_name'] != null
+                ? data[index]['lite_name']
+                : '',
             pivot: Pivot(stationId: data[index]['id'], userId: -1),
           );
           await Get.to(ReportListOfficer(

@@ -572,7 +572,7 @@ class _StationSelectState extends State<StationSelect> {
                               width: 10,
                             ),
                             Text(
-                              'จากศูนย์บำบัด $total แห่งทั่วประเทศ',
+                              'จากศูนย์บริหารจัดการคุณภาพน้ำ $total แห่งทั่วประเทศ',
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.normal,
@@ -764,7 +764,7 @@ class _StationSelectState extends State<StationSelect> {
                             ),
                           ],
                         ),
-                        GestureDetector(
+                         GestureDetector(
                           onTap: () {
                             Get.to(NewsList(
                               news: news,
@@ -776,11 +776,38 @@ class _StationSelectState extends State<StationSelect> {
                                 width: 10,
                               ),
                               Text(
-                                'ข่าวประชาสัมพันธ์ (เพิ่มเติม)',
+                                'ข่าวประชาสัมพันธ์',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: blue_navy_n,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Card(
+                                color: Colors.white,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'เพิ่มเติม',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: blue_navy_n,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Image.asset(
+                                        'asset/images/arrow_n.png',
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

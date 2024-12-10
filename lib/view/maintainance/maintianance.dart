@@ -86,14 +86,14 @@ class _MaintainanceState extends State<Maintainance> {
               )
           ],
         ),
-        Row(
-          children: [
-            const SizedBox(
-              width: 20,
-            ),
-            Expanded(child: TextWidget.textTitle('${widget.data['detail']}')),
-          ],
-        ),
+        // Row(
+        //   children: [
+        //     const SizedBox(
+        //       width: 20,
+        //     ),
+        //     Expanded(child: TextWidget.textTitle('${widget.data['detail']}')),
+        //   ],
+        // ),
         Row(
           children: [
             const SizedBox(
