@@ -325,7 +325,7 @@ class Statgraph_nState extends State<Statgraph_n> {
 
     const style2 = TextStyle(
         fontWeight: FontWeight.bold, fontSize: 8, color: Colors.black);
-    String text = '${(value * 10000).toInt()}';
+    String text = '${(value * 10).toInt()} K';
 
      if (value.toInt() == (maxValue * 1.2).toInt()) {
        text = '';

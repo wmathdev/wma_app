@@ -21,27 +21,27 @@ class MyDialog {
     );
   }
 
-  static showPermissionDialogOk(BuildContext context, String message,
-      GestureTapCallback onOkPressed, GestureTapCallback onDenyPressed) async {
-    Widget acceptButton =
-        TextButton(child: Text("Accept"), onPressed: onOkPressed);
+      static showPermissionDialogOk(BuildContext context, String message,
+          GestureTapCallback onOkPressed, GestureTapCallback onDenyPressed) async {
+        Widget acceptButton =
+            TextButton(child: Text("Accept"), onPressed: onOkPressed);
 
-    Widget denyButton =
-        TextButton(child: Text("Deny"), onPressed: onDenyPressed);
+        Widget denyButton =
+            TextButton(child: Text("Deny"), onPressed: onDenyPressed);
 
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("การเข้าถึงตำแหน่ง"),
-      content: Text(message),
-      actions: [denyButton, acceptButton],
-    );
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("การเข้าถึงตำแหน่ง"),
+          content: Text(message),
+          actions: [denyButton, acceptButton],
+        );
 
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
+        // show the dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
 }

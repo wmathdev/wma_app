@@ -164,7 +164,7 @@ class _ReportDetailState extends State<ReportDetail> {
           }),
         ),
         SizedBox(
-          height: MediaQuery.of(context).size.height - 100,
+          height: MediaQuery.of(context).size.height * 0.8,
           child: SingleChildScrollView(
             child: Column(
               children: [

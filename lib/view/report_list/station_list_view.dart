@@ -142,10 +142,10 @@ class _StationListState extends State<StationList> {
             child: NavigateBar.NavBarWithNotification(
                 context, 'รายงานประจำวันทั้งหมด', () {
               Get.back();
-            }),
+            },widget.role),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.85,
+            height: MediaQuery.of(context).size.height * 0.8,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(18.0),

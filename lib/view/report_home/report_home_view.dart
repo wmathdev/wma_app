@@ -270,7 +270,7 @@ class _ReportHomeState extends State<ReportHome> {
                                                   noti: notifications['unread'],
                                                   onPress: () async {
                                                     await Get.to(
-                                                        NotificationList());
+                                                        NotificationList(role: widget.role,));
                                                     _getNotificationList();
                                                   },
                                                 )

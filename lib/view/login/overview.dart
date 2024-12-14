@@ -208,19 +208,19 @@ class _OverviewState extends State<Overview> {
       )));
     }
 
-    if (!location_consent) {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        MyDialog.showPermissionDialogOk(context,
-            'WMA Clear Water APP collects location data to enable identification of nearby Wastewater Stations even when the app is closed or not in use.',
-            () async {
-          final SharedPreferences prefs = await _prefs;
-          await prefs.setBool('location_consent', true);
-          Get.back();
-        }, () {
-          exit(0);
-        });
-      });
-    }
+    // if (!location_consent) {
+    //   Future.delayed(const Duration(milliseconds: 500), () {
+    //     MyDialog.showPermissionDialogOk(context,
+    //         'WMA Clear Water APP collects location data to enable identification of nearby Wastewater Stations even when the app is closed or not in use.',
+    //         () async {
+    //       final SharedPreferences prefs = await _prefs;
+    //       await prefs.setBool('location_consent', true);
+    //       Get.back();
+    //     }, () {
+    //       exit(0);
+    //     });
+    //   });
+    // }
 
     return Scaffold(
         body: CustomGoogleMapMarkerBuilder(

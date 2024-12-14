@@ -4,7 +4,7 @@ import 'ApiConstants.dart';
 
 class DashboardRequest {
   static dynamic getQualityOverview() async {
-    final response = await ApiConstants.dio
+    final response = await ApiConstants.dioNoLog
         .get('${ApiConstants.baseUrl}/api/v1/statistic/quality',
             options: Options(
               headers: {
@@ -20,7 +20,7 @@ class DashboardRequest {
 
   static dynamic getStatistic() async {
     final response =
-        await ApiConstants.dio.get('${ApiConstants.baseUrl}/api/v1/statistic',
+        await ApiConstants.dioNoLog.get('${ApiConstants.baseUrl}/api/v1/statistic',
             options: Options(
               headers: {
                 'Accept': "application/json",
@@ -34,7 +34,7 @@ class DashboardRequest {
   }
 
   static dynamic getTreatedWater() async {
-    final response = await ApiConstants.dio
+    final response = await ApiConstants.dioNoLog
         .get('${ApiConstants.baseUrl}/api/v1/statistic/treated-water',
             options: Options(
               headers: {
@@ -54,7 +54,7 @@ class DashboardRequest {
       String  status) async {
     var params = {'status': status};
 
-    final response = await ApiConstants.dio
+    final response = await ApiConstants.dioNoLog
         .get('${ApiConstants.baseUrl}/api/v1/statistic/quality/stations',
             queryParameters: params,
             options: Options(

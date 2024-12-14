@@ -33,7 +33,7 @@ class _ScadaPageState extends State<ScadaPage> {
           print('URLWMA : $url');
         },
         onPageFinished: (String url) {
-               print('URLWMA : $url');
+          print('URLWMA : $url');
         },
         onHttpError: (HttpResponseError error) {},
         onWebResourceError: (WebResourceError error) {},
@@ -50,11 +50,12 @@ class _ScadaPageState extends State<ScadaPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('object url ${widget.url}');
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            NavigateBar.NavBar(context, widget.name, () {
+            NavigateBar.NavBar(context, '', () {
               Get.back();
             }),
             contentView()
@@ -83,7 +84,7 @@ class _ScadaPageState extends State<ScadaPage> {
           Container(
               margin: const EdgeInsets.all(8),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.75,
+              height: MediaQuery.of(context).size.height * 0.68,
               child: Card(
                   color: Colors.white,
                   shape: RoundedRectangleBorder(

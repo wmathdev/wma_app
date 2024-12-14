@@ -62,10 +62,18 @@ class _ReportDownloadListState extends State<ReportDownloadList> {
     super.initState();
     if (loading) {
       formattedDate = DateFormat('yyyy-MM-dd').format(today);
-      _getReportDownloadList(formattedDate.substring(0, 4));
+      String month = formattedDate.substring(5, 7);
+      String yyyy = formattedDate.substring(0, 4);
+      if (month == '10' || month == '11' || month == '12') {
+        int forward = int.parse(formattedDate.substring(0, 4));
+        forward = forward + 1;
+        yyyy = '$forward';
+      }
+      print('month ${month}');
+      _getReportDownloadList(yyyy);
       setState(() {
         month = Month.getMonthFullLabel(formattedDate);
-        year = formattedDate.substring(0, 4);
+        year = yyyy;
       });
     }
   }

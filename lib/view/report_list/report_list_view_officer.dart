@@ -178,7 +178,7 @@ class _ReportListOfficerState extends State<ReportListOfficer> {
                 child: NavigateBar.NavBarWithNotification(
                     context, 'รายงานประจำวันทั้งหมด', () {
                   Get.back();
-                }),
+                },widget.role),
               ),
               SizedBox(
                 height: 80,
@@ -428,7 +428,7 @@ class _ReportListOfficerState extends State<ReportListOfficer> {
                 Month.getMonthTitleReverse(data[index]['date']),
                 '10.00',
                 widget.role, () async {
-              if (( // Time.checkTimeStatus('00:00AM', '10:00AM') &&
+              if ((  Time.checkTimeStatus('00:00AM', '10:00AM') &&
                       widget.role == 'OPERATOR') ||
                   widget.role == 'ADMIN') {
                 await Get.to(ReportForm(

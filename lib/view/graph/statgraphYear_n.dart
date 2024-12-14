@@ -335,7 +335,7 @@ class _StatgraphyearNState extends State<StatgraphyearN> {
     const style2 = TextStyle(
         fontWeight: FontWeight.bold, fontSize: 5, color: Colors.white);
 
-    String text = '${value.toInt()} M';
+    String text = '${(value /10)} M';
 
     if (value.toInt() == (maxValue * 1.2).toInt()) {
       text = '';

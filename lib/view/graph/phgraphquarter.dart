@@ -217,11 +217,11 @@ class _PhGraphQuarterState extends State<PhGraphQuarter> {
                           extraLinesData: ExtraLinesData(
                               horizontalLines: listRule,
                               verticalLines: listSelect),
-                          maxY: maxValue,
+                          maxY: 14,
                           barTouchData: BarTouchData(
                             touchTooltipData:
                                 BarTouchTooltipData(getTooltipColor: ((group) {
-                              return Colors.white;
+                              return red_n;
                             }), getTooltipItem: (
                               BarChartGroupData group,
                               int groupIndex,
@@ -229,9 +229,9 @@ class _PhGraphQuarterState extends State<PhGraphQuarter> {
                               int rodIndex,
                             ) {
                               return BarTooltipItem(
-                                'ก่อนบำบัด ${rod.fromY} หลังบำบัด ${rod.toY}',
+                                   'ก่อนบำบัด ${group.barRods[0].toY} หลังบำบัด ${group.barRods[1].toY}',
                                 TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontSize: 8.0,
                                 ),
                               );
@@ -243,8 +243,12 @@ class _PhGraphQuarterState extends State<PhGraphQuarter> {
                             rightTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
                             ),
-                            topTitles: const AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
+                          topTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                getTitlesWidget: (value, meta) => Container(),
+                                showTitles: true,
+                                reservedSize: 10,
+                              ),
                             ),
                             bottomTitles: AxisTitles(
                               sideTitles: SideTitles(
@@ -266,7 +270,7 @@ class _PhGraphQuarterState extends State<PhGraphQuarter> {
                             show: false,
                           ),
                           barGroups: showingBarGroups,
-                          gridData: const FlGridData(show: false),
+                          gridData: const FlGridData(show: true),
                         ),
                       ),
                     ),
@@ -293,6 +297,8 @@ class _PhGraphQuarterState extends State<PhGraphQuarter> {
     if (value % 2 == 0) {
       text = '${value}';
     }
+
+  
     //   text = '1K';
     // } else if (value == 10) {
     //   text = '5K';

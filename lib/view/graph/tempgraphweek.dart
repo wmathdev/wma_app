@@ -7,7 +7,6 @@ import 'package:wma_app/widget/text_widget.dart';
 
 import '../../Utils/month.dart';
 
-
 class TempGraphWeek extends StatefulWidget {
   dynamic data;
   String rule;
@@ -17,13 +16,12 @@ class TempGraphWeek extends StatefulWidget {
     required this.rule,
   }) : super(key: key);
 
-
   @override
   State<TempGraphWeek> createState() => _TempGraphWeekState();
 }
 
 class _TempGraphWeekState extends State<TempGraphWeek> {
- static const Color primary = contentColorCyan;
+  static const Color primary = contentColorCyan;
   static const Color menuBackground = Color(0xFF090912);
   static const Color itemsBackground = Color(0xFF1B2339);
   static const Color pageBackground = Color(0xFF282E45);
@@ -211,11 +209,11 @@ class _TempGraphWeekState extends State<TempGraphWeek> {
                     BarChartData(
                       extraLinesData: ExtraLinesData(
                           horizontalLines: listRule, verticalLines: listSelect),
-                      maxY: maxValue,
+                      maxY: maxValue * 1.5,
                       barTouchData: BarTouchData(
                         touchTooltipData:
                             BarTouchTooltipData(getTooltipColor: ((group) {
-                          return Colors.white;
+                          return red_n;
                         }), getTooltipItem: (
                           BarChartGroupData group,
                           int groupIndex,
@@ -223,9 +221,9 @@ class _TempGraphWeekState extends State<TempGraphWeek> {
                           int rodIndex,
                         ) {
                           return BarTooltipItem(
-                            'ก่อนบำบัด ${rod.fromY} หลังบำบัด ${rod.toY}',
+                         'ก่อนบำบัด ${group.barRods[0].toY} หลังบำบัด ${group.barRods[1].toY}',
                             TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontSize: 8.0,
                             ),
                           );
@@ -237,9 +235,13 @@ class _TempGraphWeekState extends State<TempGraphWeek> {
                         rightTitles: const AxisTitles(
                           sideTitles: SideTitles(showTitles: false),
                         ),
-                        topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
+                       topTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                getTitlesWidget: (value, meta) => Container(),
+                                showTitles: true,
+                                reservedSize: 10,
+                              ),
+                            ),
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
@@ -260,7 +262,7 @@ class _TempGraphWeekState extends State<TempGraphWeek> {
                         show: false,
                       ),
                       barGroups: showingBarGroups,
-                      gridData: const FlGridData(show: false),
+                      gridData: const FlGridData(show: true),
                     ),
                   ),
                 ),
@@ -284,6 +286,10 @@ class _TempGraphWeekState extends State<TempGraphWeek> {
     String text = '';
     if (value % 5 == 0) {
       text = '${value}';
+    }
+
+    if (value.toInt() == (maxValue * 1.5).toInt()) {
+      text = '';
     }
     //   text = '1K';
     // } else if (value == 10) {

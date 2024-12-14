@@ -456,6 +456,7 @@ class ListItemWidget {
         Get.to(TypeEqList(
           station: station,
           name: station.name,
+          role: role,
         ));
       },
       child: Card(
@@ -560,57 +561,60 @@ class ListItemWidget {
 
   static Widget cardListScada(BuildContext context, User user, String name,
       String url, String authorization) {
-    return GestureDetector(
-      onTap: () async {
-        Get.to(ScadaPage(
-          name: name,
-          url: url,
-        ));
-      },
-      child: Card(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                        flex: 8,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                child: TextWidget.textTitleBold(
-                                    'การเปิด - ปิดอุปกรณ์ระยะไกล')),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: TextWidget.textSubTitleWithSize(
-                                  'การควบคุมการเปิด - ปิดอุปกรณ์ระยะไกล', 13),
-                            )
-                          ],
-                        )),
-                    Expanded(
-                        flex: 2,
-                        child: IconButton(
-                          iconSize: 100,
-                          icon: Image.asset(
-                            'asset/images/arrow_n.png',
-                          ),
-                          onPressed: null,
-                        )),
-                  ],
-                )
-              ],
+    return url != 'https://wma.or.th/home-eng'
+        ? GestureDetector(
+            onTap: () async {
+              Get.to(ScadaPage(
+                name: name,
+                url: url,
+              ));
+            },
+            child: Card(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                              flex: 8,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: TextWidget.textTitleBold(
+                                          'การเปิด - ปิดอุปกรณ์ระยะไกล')),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: TextWidget.textSubTitleWithSize(
+                                        'การควบคุมการเปิด - ปิดอุปกรณ์ระยะไกล',
+                                        13),
+                                  )
+                                ],
+                              )),
+                          Expanded(
+                              flex: 2,
+                              child: IconButton(
+                                iconSize: 100,
+                                icon: Image.asset(
+                                  'asset/images/arrow_n.png',
+                                ),
+                                onPressed: null,
+                              )),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          )
+        : Container();
   }
 
   static Widget cardListScadaOfficer(BuildContext context, User user,
@@ -809,8 +813,7 @@ class ListItemWidget {
   //reportlist
   static Widget reportListHeader(BuildContext context, String date,
       String fullDate, String time, String role, GestureTapCallback onClick) {
-    if (( //Time.checkTimeStatus('00:00AM', '10:00AM') &&
-            role == 'OPERATOR') ||
+    if ((Time.checkTimeStatus('00:00AM', '10:00AM') && role == 'OPERATOR') ||
         role == 'ADMIN') {
       return Card(
         color: Colors.white,
@@ -968,8 +971,7 @@ class ListItemWidget {
 
   static Widget reportListHeaderMonth(BuildContext context, String date,
       String fullDate, String time, String role, GestureTapCallback onClick) {
-    if (( //Time.checkTimeStatus('00:00AM', '10:00AM') &&
-            role == 'OPERATOR') ||
+    if ((Time.checkTimeStatus('00:00AM', '10:00AM') && role == 'OPERATOR') ||
         role == 'ADMIN') {
       return Card(
         shape: RoundedRectangleBorder(
@@ -1711,24 +1713,27 @@ class ListItemWidget {
           ),
           Status(context, data['workflow']['progress'],
               data['workflow']['label'], data['workflow']['state']),
-          Divider(color: greyBorder),
+         Time.checkTimeStatus('00:00AM', '10:00AM') ? Divider(color: greyBorder) : Container(),
           data['workflow']['state'] == 'REVISION'
               ? ButtonApp.buttonMain(context, 'แก้ไข', onPressed, true)
               : data['workflow']['state'] == 'COMPLETED' ||
                       data['workflow']['state'] == 'REVIEW' ||
-                      data['workflow']['state'] == 'REVIEWING'
+                      data['workflow']['state'] == 'REVIEWING' ||
+                      data['workflow']['state'] == 'RECHECK'
                   ? ButtonApp.buttonSecondaryGradient(
                       context, 'ดูรายละเอียด', onPressed)
-                  : Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ButtonApp.buttonSecondaryFixCard(
-                            context, 'ยกเลิกการส่ง', onCancel, true),
-                        ButtonApp.buttonOutlineFixGradient(
-                            context, 'แก้ไข', onPressed)
-                      ],
-                    )
+                  : Time.checkTimeStatus('00:00AM', '10:00AM')
+                      ? Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ButtonApp.buttonSecondaryFixCard(
+                                context, 'ยกเลิกการส่ง', onCancel, true),
+                            ButtonApp.buttonOutlineFixGradient(
+                                context, 'แก้ไข', onPressed)
+                          ],
+                        )
+                      : Container()
         ],
       ),
     );
@@ -1994,13 +1999,49 @@ class ListItemWidget {
                   ]),
             ],
           ),
-          Status(context, data['workflow']['progress'],
-              data['workflow']['label'], data['workflow']['state']),
+          Time.checkTimeStatus('00:00AM', '10:00AM')
+              ? Status(context, data['workflow']['progress'],
+                  data['workflow']['label'], data['workflow']['state'])
+              : Container(
+                  margin: const EdgeInsets.fromLTRB(5, 10, 5, 0),
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                      color: Colors.red[50],
+                      border: Border.all(
+                        color: Colors.transparent,
+                      ),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          'asset/images/required.png',
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          'รายการล่าช้า ติดต่อส่วนกลาง',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
           Divider(color: greyBorder),
           data['workflow']['state'] == 'REVIEW' ||
                   data['workflow']['state'] == 'REVIEWING' ||
                   data['workflow']['state'] == 'REVISION' ||
-                  data['workflow']['state'] == 'COMPLETED'
+                  data['workflow']['state'] == 'COMPLETED' ||
+                  !Time.checkTimeStatus('00:00AM', '10:00AM')
               ? ButtonApp.buttonSecondaryGradient(
                   context, 'ดูรายละเอียด', onClick)
               : ButtonApp.buttonMainGradient(context, 'ตรวจสอบ', onClick, true)
@@ -2916,7 +2957,9 @@ class ListItemWidget {
               padding: const EdgeInsets.all(20.0),
               child: Row(
                 children: [
-                  Expanded(child: TextWidget.textTitle("ศูนย์บริหารจัดการคุณภาพน้ำ")),
+                  Expanded(
+                      child:
+                          TextWidget.textTitle("ศูนย์บริหารจัดการคุณภาพน้ำ")),
                   Image.asset(
                     'asset/images/arrow_n.png',
                   ),
@@ -2927,7 +2970,9 @@ class ListItemWidget {
               padding: const EdgeInsets.only(left: 20),
               child: Row(
                 children: [
-                  Expanded(child: TextWidget.textTitleBoldWithColorSize(title,blue_navy_n,18)),
+                  Expanded(
+                      child: TextWidget.textTitleBoldWithColorSize(
+                          title, blue_navy_n, 18)),
                 ],
               ),
             ),

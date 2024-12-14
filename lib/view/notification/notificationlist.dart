@@ -11,9 +11,12 @@ import 'package:wma_app/widget/list_item_widget.dart';
 import 'package:wma_app/widget/text_widget.dart';
 
 class NotificationList extends StatefulWidget {
-  NotificationList({
+  String role;
+ NotificationList({
     Key? key,
+    required this.role
   }) : super(key: key);
+
 
   @override
   State<NotificationList> createState() => _NotificationListState();
@@ -137,7 +140,7 @@ class _NotificationListState extends State<NotificationList> {
                   return ListItemWidget.notificationsCard(
                       context, notifications['notifications'][index], () async {
                     var a = await Get.to(NotificationDetail(
-                      id: notifications['notifications'][index]['id'],
+                      id: notifications['notifications'][index]['id'], role: widget.role,
                     ));
                     setState(() {
                       loading = true;

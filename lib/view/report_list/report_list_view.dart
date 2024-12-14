@@ -172,10 +172,10 @@ class _ReportListState extends State<ReportList> {
             child: NavigateBar.NavBarWithNotification(
                 context, 'รายงานประจำวันทั้งหมด', () {
               Get.back();
-            }),
+            },widget.role),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height - 173,
+            height: MediaQuery.of(context).size.height * 0.77,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(18.0),
@@ -309,7 +309,7 @@ class _ReportListState extends State<ReportList> {
 
   Widget listView() {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.6,
+     
       child: ListView.builder(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -342,7 +342,7 @@ class _ReportListState extends State<ReportList> {
                   Month.getMonthTitleReverse(data[index]['date']),
                   '10.00',
                   widget.role, () async {
-                if ((// Time.checkTimeStatus('00:00AM', '10:00AM') &&
+                if (( Time.checkTimeStatus('00:00AM', '10:00AM') &&
                         widget.role == 'OPERATOR') ||
                     widget.role == 'ADMIN') {
                   await Get.to(ReportForm(
@@ -360,7 +360,7 @@ class _ReportListState extends State<ReportList> {
                 }
               });
             } else {
-              if (widget.role == 'MANAGER') {
+              if (   widget.role == 'MANAGER') {
                 return ListItemWidget.reportListItemTodayManager(
                     context,
                     '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
@@ -370,7 +370,7 @@ class _ReportListState extends State<ReportList> {
                       data[index]['document']['workflow']['state'] ==
                           'REVISION' ||
                       data[index]['document']['workflow']['state'] ==
-                          'COMPLETED') {
+                          'COMPLETED' || !Time.checkTimeStatus('00:00AM', '10:00AM') ) {
                     Get.to(ReportDetail(
                         documentId: '${data[index]['document']['id']}',
                         station: widget.station,
@@ -434,7 +434,7 @@ class _ReportListState extends State<ReportList> {
                     publicList[index]);
               }
       
-              if (widget.role == 'ADMIN') {
+              if (widget.role == 'ADMIN') { 
                 print('role ; ${widget.role}');
                 return ListItemWidget.reportListItemTodayAdmin(
                     context,
@@ -482,7 +482,9 @@ class _ReportListState extends State<ReportList> {
               }, () async {
                 if (data[index]['document']['workflow']['state'] == 'COMPLETED' ||
                     data[index]['document']['workflow']['state'] == 'REVIEW' ||
-                    data[index]['document']['workflow']['state'] == 'REVIEWING') {
+                    data[index]['document']['workflow']['state'] == 'REVIEWING' || 
+                      data[index]['document']['workflow']['state'] == 'RECHECK'
+                    ) {
                   Get.to(ReportDetail(
                       documentId: '${data[index]['document']['id']}',
                       role: widget.role, station: widget.station,));

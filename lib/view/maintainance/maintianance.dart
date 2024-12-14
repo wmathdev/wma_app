@@ -19,10 +19,12 @@ import 'package:wma_app/widget/text_widget.dart';
 class Maintainance extends StatefulWidget {
   Station station;
   dynamic data;
+  String role;
   Maintainance({
     Key? key,
     required this.station,
     required this.data,
+    required this.role
   }) : super(key: key);
 
   @override
@@ -77,13 +79,13 @@ class _MaintainanceState extends State<Maintainance> {
                 width: 50,
                 height: 50,
                 child: Image.asset('asset/images/iconintro.png')),
-               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
-                  TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
-                ],
-              )
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
+                TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
+              ],
+            )
           ],
         ),
         // Row(
@@ -155,40 +157,46 @@ class _MaintainanceState extends State<Maintainance> {
         const SizedBox(
           height: 20,
         ),
-        Row(
-          children: [
-            const SizedBox(
-              width: 20,
-            ),
-            TextWidget.textTitle('การบำรุงรักษา'),
-          ],
-        ),
-        Edittext.edittextAreaFormWhite('', '', commentController, false),
-        uploadPhotoCard(),
-        ButtonApp.buttonMain(context, 'ส่งรายงาน', () async {
-          final SharedPreferences prefs = await _prefs;
-          String? authorization = prefs.getString('access_token');
+        widget.data['state'] == 'OPEN' ? widget.role == 'OPERATOR' ?
+             Row(
+                children: [
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  TextWidget.textTitle('การบำรุงรักษา'),
+                ],
+              )
+            : Container() : Container(),
+        widget.data['state'] == 'OPEN'
+            ? widget.role == 'OPERATOR' ?Edittext.edittextAreaFormWhite('', '', commentController, false)
+            : Container() : Container(),
+        widget.data['state'] == 'OPEN' ?  widget.role == 'OPERATOR' ?uploadPhotoCard(): Container() : Container(),
+        widget.data['state'] == 'OPEN'  ? widget.role == 'OPERATOR' ?
+             ButtonApp.buttonMain(context, 'ส่งรายงาน', () async {
+                final SharedPreferences prefs = await _prefs;
+                String? authorization = prefs.getString('access_token');
 
-          if (validate()) {
-            List<String> dataImg = [];
-            for (var i = 0; i < img.length; i++) {
-              String temp = convertIntoBase64(img[i]);
-              dataImg.add(temp);
-            }
-            print('object ${commentController.text}');
-            var result = await Maintainancerequest.revisionDocument(
-                authorization!,
-                widget.data['id'],
-                commentController.text,
-                dataImg);
-            if (result['success'] == true) {
-              Get.back();
-              Get.back(); 
-            } else {
-              _showSnackBarAlert(result['message']);
-            }
-          }
-        }, true),
+                if (validate()) {
+                  List<String> dataImg = [];
+                  for (var i = 0; i < img.length; i++) {
+                    String temp = convertIntoBase64(img[i]);
+                    dataImg.add(temp);
+                  }
+                  print('object ${commentController.text}');
+                  var result = await Maintainancerequest.revisionDocument(
+                      authorization!,
+                      widget.data['id'],
+                      commentController.text,
+                      dataImg);
+                  if (result['success'] == true) {
+                    Get.back();
+                    Get.back();
+                  } else {
+                    _showSnackBarAlert(result['message']);
+                  }
+                }
+              }, true)
+            : Container() :Container(),
       ]),
     );
   }

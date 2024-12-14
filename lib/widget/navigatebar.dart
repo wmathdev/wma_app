@@ -4,7 +4,7 @@ import 'package:wma_app/view/notification/notificationlist.dart';
 
 class NavigateBar {
   static Widget NavBar(
-      BuildContext context, String title, GestureTapCallback onBack) {
+      BuildContext context, String title, GestureTapCallback onBack,) {
     return Container(
       color: Colors.transparent,
       child: Padding(
@@ -47,7 +47,7 @@ class NavigateBar {
   }
 
   static Widget NavBarWithNotification(
-      BuildContext context, String title, GestureTapCallback onBack) {
+      BuildContext context, String title, GestureTapCallback onBack,String role) {
     return Container(
       color: Colors.transparent,
       child: Padding(
@@ -102,7 +102,7 @@ class NavigateBar {
                             'asset/images/bi_bell.png',
                           ),
                           onPressed: () {
-                            Get.to(NotificationList());
+                            Get.to(NotificationList(role:role ,));
                           }),
                     )
                   ],

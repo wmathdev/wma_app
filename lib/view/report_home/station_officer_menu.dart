@@ -231,7 +231,7 @@ class _StationOfficerMenuState extends State<StationOfficerMenu> {
                         } else if (widget.menu == 'maintenance') {
                           Get.to(TypeEqList(
                             name: stations[index].name,
-                            station: stations[index],
+                            station: stations[index], role: widget.role,
                           ));
                         } else if (widget.menu == 'scada') {
                           Get.to(ScadaPage(

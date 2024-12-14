@@ -11,11 +11,13 @@ import 'package:wma_app/widget/text_widget.dart';
 class EQList extends StatefulWidget {
   dynamic eqdata;
   Station station;
+  String role;
 
   EQList({
     Key? key,
     required this.eqdata,
     required this.station,
+    required this.role
   }) : super(key: key);
 
   @override
@@ -38,7 +40,7 @@ class _EQListState extends State<EQList> {
           height: MediaQuery.of(context).size.height,
           child: Column(
             children: [
-              NavigateBar.NavBar(context, widget.station.name, () {
+              NavigateBar.NavBar(context, '', () {
                 Get.back();
               }),
               contentView()
@@ -62,7 +64,7 @@ class _EQListState extends State<EQList> {
                   width: 50,
                   height: 50,
                   child: Image.asset('asset/images/iconintro.png')),
-               Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
@@ -82,7 +84,9 @@ class _EQListState extends State<EQList> {
                   return ListItemWidget.eqCard(context, widget.eqdata[index],
                       () async {
                     Get.to(Maintainance(
-                      station: widget.station, data: widget.eqdata[index],
+                      station: widget.station,
+                      data: widget.eqdata[index],
+                      role: widget.role,
                     ));
                   });
                 }),

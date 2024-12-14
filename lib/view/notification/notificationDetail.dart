@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wma_app/Utils/Color.dart';
+import 'package:wma_app/api/MaintainanceRequest.dart';
 import 'package:wma_app/api/Notification.dart';
 import 'package:wma_app/model/user.dart';
 import 'package:wma_app/view/maintainance/maintianance.dart';
@@ -12,9 +13,11 @@ import 'package:wma_app/widget/text_widget.dart';
 
 class NotificationDetail extends StatefulWidget {
   String id;
+  String role;
   NotificationDetail({
     Key? key,
     required this.id,
+    required this.role
   }) : super(key: key);
 
   @override
@@ -141,13 +144,43 @@ class _NotificationDetailState extends State<NotificationDetail> {
           ],
         ),
         notification['type'] == 'MAINTENANCE'
-            ? ButtonApp.buttonMainGradient(context, 'ส่งรายงาน', () async {
-                Get.to(Maintainance(station: Station(id: notification['morph']['id'], name: notification['morph']['station_name'], pivot: Pivot(userId: 0, stationId: notification['morph']['id']), lite_name: ''), data: notification['morph'],));
+            ? ButtonApp.buttonMainGradient(context, widget.role == 'OPERATOR' ? 'ส่งรายงาน' : 'ดูรายงาน', () async {
+                final Future<SharedPreferences> _prefs =
+                    SharedPreferences.getInstance();
+                final SharedPreferences prefs = await _prefs;
+                var auth = await prefs.getString('access_token');
+                var res1 = await Maintainancerequest.getMaintainance(
+                    auth!, notification['morph']['id']);
+
+                Get.to(Maintainance(
+                  station: Station(
+                      id: res1['data']['station_id'],
+                      name: res1['data']['station']['name'],
+                      pivot: Pivot(
+                          userId: 0, stationId: res1['data']['station_id']),
+                      lite_name: ''),
+                  data: res1['data'],
+                  role: widget.role,
+                ));
               }, true)
             : Container(),
       ]),
     );
   }
+
+  // Future<void> _getMaintainance() async {
+  //   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  //   final SharedPreferences prefs = await _prefs;
+  //   var auth = await prefs.getString('access_token');
+  //   var res1 =
+  //       await Maintainancerequest.getMaintainance(auth!, notification['morph']['id']);
+  //   print('object $res1');
+
+  //   setState(() {
+  //     eQType = res1['data'];
+  //     loading = false;
+  //   });
+  // }
 
   Widget appbar() {
     return Container(

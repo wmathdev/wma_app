@@ -35,9 +35,11 @@ import '../telephone_list/telephone_list_view.dart';
 
 class ReportHomeOfficer extends StatefulWidget {
   dynamic news;
+  String role;
   ReportHomeOfficer({
     Key? key,
     required this.news,
+    required this.role
   }) : super(key: key);
 
   @override
@@ -260,7 +262,7 @@ class _ReportHomeOfficerState extends State<ReportHomeOfficer> {
                                                   noti: notifications['unread'],
                                                   onPress: () async {
                                                     await Get.to(
-                                                        NotificationList());
+                                                        NotificationList(role: widget.role,));
                                                     _getNotificationList();
                                                   },
                                                 ),

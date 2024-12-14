@@ -15,7 +15,8 @@ import 'package:wma_app/widget/text_widget.dart';
 class TypeEqList extends StatefulWidget {
   String name;
   Station station;
-  TypeEqList({super.key, required this.name, required this.station});
+  String role;
+  TypeEqList({super.key, required this.name, required this.station,required this.role});
 
   @override
   State<TypeEqList> createState() => _TypeEqListState();
@@ -82,16 +83,17 @@ class _TypeEqListState extends State<TypeEqList> {
                 height: MediaQuery.of(context).size.height,
                 child: Column(
                   children: [
-                    NavigateBar.NavBar(context, widget.name, () {
+                    NavigateBar.NavBar(context, '', () {
                       Get.back();
                     }),
-                    eQType
-                    .length > 0 ? contentView() :
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height* 0.6,
-                        child: Center(
-                          child: TextWidget.textSubTitleWithSizeGradient('ไม่มีการแจ้งเตือน',25,Colors.white),
-                        ))
+                    eQType.length > 0
+                        ? contentView()
+                        : SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.6,
+                            child: Center(
+                              child: TextWidget.textSubTitleWithSizeGradient(
+                                  'ไม่มีการแจ้งเตือน', 25, Colors.white),
+                            ))
                   ],
                 ),
               ),
@@ -134,6 +136,7 @@ class _TypeEqListState extends State<TypeEqList> {
                     var res = await Get.to(EQList(
                       station: widget.station,
                       eqdata: eQType[index]['items'],
+                      role: widget.role,
                     ));
                     _getEQType();
                   });

@@ -19,7 +19,7 @@ class MapRequest {
   }
 
   static dynamic getTreatedWater() async {
-    final response = await ApiConstants.dio
+    final response = await ApiConstants.dioNoLog
         .get('${ApiConstants.baseUrl}/api/v1/map/treated-water',
             options: Options(
               headers: {

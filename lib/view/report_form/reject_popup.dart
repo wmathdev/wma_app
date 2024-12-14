@@ -133,7 +133,7 @@ class _RejectPopupState extends State<RejectPopup> {
             ),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.87,
+            height: MediaQuery.of(context).size.height * 0.8,
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -146,13 +146,14 @@ class _RejectPopupState extends State<RejectPopup> {
                           width: 50,
                           height: 50,
                           child: Image.asset('asset/images/iconintro.png')),
-                   Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
-                  TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
-                ],
-              )
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
+                          TextWidget.textSubTitleBoldMedium(
+                              widget.station.lite_name),
+                        ],
+                      )
                     ],
                   ),
                   Column(children: [
@@ -254,17 +255,23 @@ class _RejectPopupState extends State<RejectPopup> {
                             img: widget.img[index],
                           ));
                         },
-                        child: widget.img[index]['type'] == 'url'
+                        child: widget.role == 'OFFICER'
                             ? Image.network(
                                 widget.img[index],
                                 height: 170,
                                 width: 100,
                               )
-                            : Image.file(
-                                widget.img[index]['value'],
-                                height: 170,
-                                width: 100,
-                              ),
+                            : widget.img[index]['type'] == 'url'
+                                ? Image.network(
+                                    widget.img[index]['value'],
+                                    height: 170,
+                                    width: 100,
+                                  )
+                                : Image.file(
+                                    widget.img[index]['value'],
+                                    height: 170,
+                                    width: 100,
+                                  ),
                       ),
                     ),
                     // GestureDetector(
@@ -337,7 +344,8 @@ class _RejectPopupState extends State<RejectPopup> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TextWidget.textTitle('${Label.commaFormat(widget.treatedWater)} ลบ.ม.')
+                    TextWidget.textTitle(
+                        '${Label.commaFormat(widget.treatedWater)} ลบ.ม.')
                   ],
                 ),
               ),

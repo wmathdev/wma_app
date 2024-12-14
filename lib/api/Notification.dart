@@ -3,7 +3,7 @@ import 'package:wma_app/api/ApiConstants.dart';
 
 class NotificationRequest {
   static dynamic getNotificationList(String authorization) async {
-    final response = await ApiConstants.dio
+    final response = await ApiConstants.dioNoLog
         .get('${ApiConstants.baseUrl}/api/v1/notifications',
             options: Options(
               headers: {

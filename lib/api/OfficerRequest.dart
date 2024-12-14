@@ -47,7 +47,7 @@ class OfficerRequest {
     });
 
 
-    final response = await ApiConstants.dio
+    final response = await ApiConstants.dioNoLog
         .post('${ApiConstants.baseUrl}/api/v1/officer/document/approval',
             data: formData,
             options: Options(
@@ -69,7 +69,7 @@ class OfficerRequest {
     //     {'station_id': stationid, 'type': type, 'period': period});
     // print('ddddd $formData');
     var params = {'station_id': stationid, 'type': type, 'period': period};
-    final response = await ApiConstants.dio
+    final response = await ApiConstants.dioNoLog
         .get('${ApiConstants.baseUrl}/api/v1/officer/document/list',
             queryParameters: params,
             options: Options(
@@ -104,7 +104,7 @@ class OfficerRequest {
 
   static dynamic getReportList(String authorization, String type,
       String workflow, String reportAt) async {
-    final response = await ApiConstants.dio.get(
+    final response = await ApiConstants.dioNoLog.get(
         '${ApiConstants.baseUrl}/api/v1/officer/report',
         queryParameters: {
           'type': type,

@@ -12,7 +12,7 @@ class Reportdownloadrequest {
       String authorization, int stationid, String year) async {
     var params = {'station_id': stationid, 'year': year};
 
-    final response = await ApiConstants.dio
+    final response = await ApiConstants.dioNoLog
         .get('${ApiConstants.baseUrl}/api/v1/utils/report/document/list',
             queryParameters: params,
             options: Options(
@@ -50,7 +50,7 @@ class Reportdownloadrequest {
         }
       }
 
-      response = await ApiConstants.dio.download(
+      response = await ApiConstants.dioNoLog.download(
           '${ApiConstants.baseUrl}/api/v1/utils/report/document/download',
           mimes == 'xlsx'
               ? '${directory}report$date.xlsx'

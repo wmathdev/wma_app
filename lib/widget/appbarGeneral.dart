@@ -1,18 +1,25 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:wma_app/view/notification/notificationlist.dart';
 
 import '../api/Authentication.dart';
 
 class MyAppBarGeneral extends StatelessWidget {
   final String title;
+  String role;
 
   static const double kToolbarHeight = 110.0;
 
-  MyAppBarGeneral({this.title = ""});
+  MyAppBarGeneral({
+    Key? key,
+    required this.title,
+    required this.role,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +92,7 @@ class MyAppBarGeneral extends StatelessWidget {
                           'asset/images/bi_bell.png',
                         ),
                         onPressed: () {
-                                Get.to(NotificationList());
+                          Get.to(NotificationList(role: role,));
                         }),
                   )
                 ],

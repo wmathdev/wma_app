@@ -21,7 +21,7 @@ class PhGraphWeek extends StatefulWidget {
 }
 
 class _PhGraphWeekState extends State<PhGraphWeek> {
-static const Color primary = contentColorCyan;
+  static const Color primary = contentColorCyan;
   static const Color menuBackground = Color(0xFF090912);
   static const Color itemsBackground = Color(0xFF1B2339);
   static const Color pageBackground = Color(0xFF282E45);
@@ -139,7 +139,7 @@ static const Color primary = contentColorCyan;
 
   @override
   Widget build(BuildContext context) {
-     return AspectRatio(
+    return AspectRatio(
       aspectRatio: 1,
       child: Container(
         margin: const EdgeInsets.all(10),
@@ -209,11 +209,11 @@ static const Color primary = contentColorCyan;
                     BarChartData(
                       extraLinesData: ExtraLinesData(
                           horizontalLines: listRule, verticalLines: listSelect),
-                      maxY: 10,
+                      maxY: 14,
                       barTouchData: BarTouchData(
                         touchTooltipData:
                             BarTouchTooltipData(getTooltipColor: ((group) {
-                          return Colors.white;
+                          return red_n;
                         }), getTooltipItem: (
                           BarChartGroupData group,
                           int groupIndex,
@@ -221,9 +221,9 @@ static const Color primary = contentColorCyan;
                           int rodIndex,
                         ) {
                           return BarTooltipItem(
-                            'ก่อนบำบัด ${rod.fromY} หลังบำบัด ${rod.toY}',
+                            'ก่อนบำบัด ${group.barRods[0].toY} หลังบำบัด ${group.barRods[1].toY}',
                             TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontSize: 8.0,
                             ),
                           );
@@ -235,9 +235,13 @@ static const Color primary = contentColorCyan;
                         rightTitles: const AxisTitles(
                           sideTitles: SideTitles(showTitles: false),
                         ),
-                        topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
+                          topTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                getTitlesWidget: (value, meta) => Container(),
+                                showTitles: true,
+                                reservedSize: 10,
+                              ),
+                            ),
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
@@ -258,7 +262,7 @@ static const Color primary = contentColorCyan;
                         show: false,
                       ),
                       barGroups: showingBarGroups,
-                      gridData: const FlGridData(show: false),
+                      gridData: const FlGridData(show: true),
                     ),
                   ),
                 ),

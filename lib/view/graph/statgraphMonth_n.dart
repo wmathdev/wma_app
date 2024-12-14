@@ -337,7 +337,7 @@ class _StatgraphMonthNState extends State<StatgraphMonthN> {
     const style2 = TextStyle(
         fontWeight: FontWeight.bold, fontSize: 5, color: Colors.white);
 
-    String text = '${value.toInt() * 1000}';
+    String text = '${value.toInt() * 10} K';
 
     if (value.toInt() == (maxValue * 1.2).toInt()) {
        text = '';

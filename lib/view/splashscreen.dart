@@ -66,10 +66,12 @@ class _SplashScreenState extends State<SplashScreen> {
             if (user.role.slug == 'OFFICER' || user.role.slug == 'ADMIN') {
               Get.to(ReportHomeOfficer(
                 news: resultNews,
+                role: user.role.slug,
               ));
             } else {
               Get.to(StationSelect(
                 news: resultNews,
+                role: user.role.slug,
               ));
             }
           } else {
@@ -89,10 +91,12 @@ class _SplashScreenState extends State<SplashScreen> {
           if (user.role.slug == 'OFFICER' || user.role.slug == 'ADMIN') {
             Get.to(ReportHomeOfficer(
               news: resultNews,
+              role: user.role.slug,
             ));
           } else {
             Get.to(StationSelect(
               news: resultNews,
+              role: user.role.slug,
             ));
           }
         } else {

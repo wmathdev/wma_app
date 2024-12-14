@@ -1097,7 +1097,6 @@ class _LoginState extends State<Login> {
                       header.toString());
                   final SharedPreferences prefs = await _prefs;
                   if (result['success']) {
-                    // print(result);
                     // print(result['data']['access_token']);
                     prefs.setString('access_token',
                         '${result['data']['token_type']} ${result['data']['access_token']}');
@@ -1123,11 +1122,11 @@ class _LoginState extends State<Login> {
                     if (result['data']['user']['role']['slug'] == 'OFFICER' ||
                         result['data']['user']['role']['slug'] == 'ADMIN') {
                       Get.off(ReportHomeOfficer(
-                        news: resultNews,
+                        news: resultNews, role: result['data']['user']['role']['slug'] ,
                       ));
                     } else {
                       Get.off(StationSelect(
-                        news: resultNews,
+                        news: resultNews, role: result['data']['user']['role']['slug'] ,
                       ));
                     }
                   } else {

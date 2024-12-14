@@ -246,7 +246,7 @@ class _StatgraphquarterNState extends State<StatgraphquarterN> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 50,
-            interval: 1,
+            interval: 10,
             getTitlesWidget: leftTitleWidgets,
           ),
         ),
@@ -335,7 +335,7 @@ class _StatgraphquarterNState extends State<StatgraphquarterN> {
     const style2 = TextStyle(
         fontWeight: FontWeight.bold, fontSize: 5, color: Colors.white);
 
-    String text = '${value.toInt() * 10000}';
+    String text = '${value.toInt() * 10} K';
 
 
     if (value.toInt() == (maxValue * 1.2).toInt()) {

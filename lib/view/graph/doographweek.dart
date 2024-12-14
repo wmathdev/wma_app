@@ -213,7 +213,7 @@ class _DooGraphWeekState extends State<DooGraphWeek> {
                       barTouchData: BarTouchData(
                         touchTooltipData:
                             BarTouchTooltipData(getTooltipColor: ((group) {
-                          return Colors.white;
+                          return red_n;
                         }), getTooltipItem: (
                           BarChartGroupData group,
                           int groupIndex,
@@ -221,9 +221,9 @@ class _DooGraphWeekState extends State<DooGraphWeek> {
                           int rodIndex,
                         ) {
                           return BarTooltipItem(
-                            'ก่อนบำบัดdfdf ${rod.fromY} หลังบำบัด ${rod.toY}',
+                            'ก่อนบำบัด ${group.barRods[0].toY} หลังบำบัด ${group.barRods[1].toY}',
                             TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontSize: 8.0,
                             ),
                           );
@@ -235,8 +235,12 @@ class _DooGraphWeekState extends State<DooGraphWeek> {
                         rightTitles: const AxisTitles(
                           sideTitles: SideTitles(showTitles: false),
                         ),
-                        topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
+                        topTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            getTitlesWidget: (value, meta) => Container(),
+                            showTitles: true,
+                            reservedSize: 10,
+                          ),
                         ),
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
@@ -258,7 +262,7 @@ class _DooGraphWeekState extends State<DooGraphWeek> {
                         show: false,
                       ),
                       barGroups: showingBarGroups,
-                      gridData: const FlGridData(show: false),
+                      gridData: const FlGridData(show: true),
                     ),
                   ),
                 ),

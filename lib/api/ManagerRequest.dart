@@ -39,7 +39,7 @@ class ManagerRequest {
     var params = {'station_id': stationid, 'type': type, 'period': period};
 
     print('ddddd $stationid');
-    final response = await ApiConstants.dio
+    final response = await ApiConstants.dioNoLog
         .get('${ApiConstants.baseUrl}/api/v1/manager/document/list',
             queryParameters: params,
             options: Options(
@@ -56,7 +56,7 @@ class ManagerRequest {
   }
 
   static dynamic getDocumentShow(String authorization, String docId) async {
-    final response = await ApiConstants.dio
+    final response = await ApiConstants.dioNoLog
         .get('${ApiConstants.baseUrl}/api/v1/manager/document/show',
             queryParameters: {'document_id': docId},
             options: Options(

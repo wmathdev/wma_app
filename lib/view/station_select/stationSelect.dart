@@ -30,9 +30,11 @@ import '../statistic/statistic.dart';
 
 class StationSelect extends StatefulWidget {
   dynamic news;
+  String role;
   StationSelect({
     Key? key,
     required this.news,
+    required this.role
   }) : super(key: key);
 
   @override
@@ -228,7 +230,9 @@ class _StationSelectState extends State<StationSelect> {
                                             title: '',
                                             noti: notifications['unread'],
                                             onPress: () async {
-                                              await Get.to(NotificationList());
+                                              await Get.to(NotificationList(
+                                                role: widget.role,
+                                              ));
                                               _getNotificationList();
                                             },
                                           ),
@@ -600,7 +604,7 @@ class _StationSelectState extends State<StationSelect> {
                                   margin:
                                       const EdgeInsets.fromLTRB(10, 10, 10, 10),
                                   decoration: BoxDecoration(
-                                    color: green_n,
+                                    color: blue_n,
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(25)),
                                     boxShadow: [
@@ -764,7 +768,7 @@ class _StationSelectState extends State<StationSelect> {
                             ),
                           ],
                         ),
-                         GestureDetector(
+                        GestureDetector(
                           onTap: () {
                             Get.to(NewsList(
                               news: news,
