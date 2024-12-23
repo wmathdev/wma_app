@@ -1,7 +1,11 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wma_app/Utils/Color.dart';
 import 'package:wma_app/api/OtherRequest.dart';
+import 'package:wma_app/view/graph/solarcell/solarcellreport.dart';
+import 'package:wma_app/view/graph/solarcell/solarcellreportyear.dart';
 import 'package:wma_app/view/graph/statgraphMonth_n.dart';
 import 'package:wma_app/view/graph/statgraphQuarter_n.dart';
 import 'package:wma_app/view/graph/statgraphYear_n.dart';
@@ -36,8 +40,21 @@ class _StatisticState extends State<Statistic> {
   List<dynamic> graphYear = [];
 
   bool loading = true;
+  bool swapinggraph = false;
 
   var select = 0;
+  int tab = 0;
+
+  String solarReportType = 'DAILY';
+  dynamic solarReport = '';
+  String solarReportCache = '';
+  dynamic solarReportData = '';
+
+  bool dailytab = true;
+  bool monthlytab = false;
+
+  String treeReportCache = '';
+  dynamic treeReportData = '';
 
   Future<void> _getData() async {
     var res = await OtherRequest.statistic('WEEK');
@@ -55,6 +72,15 @@ class _StatisticState extends State<Statistic> {
     var res4 = await OtherRequest.statistic('YEAR');
     dataYear = res4;
     graphYear = dataYear['data']['graph'];
+
+    var res5 = await OtherRequest.statisticSolarcellPlant(solarReportType);
+    solarReport = res5;
+    solarReportCache = solarReport['data']['collect_at'];
+    solarReportData = solarReport['data']['data'];
+
+    var res6 = await OtherRequest.statisticSolarcellPlant('YEARLY');
+    treeReportCache = res6['data']['collect_at'];
+    treeReportData = res6['data']['data'];
 
     setState(() {
       loading = false;
@@ -95,43 +121,161 @@ class _StatisticState extends State<Statistic> {
     }
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: ExactAssetImage('asset/images/waterbg.jpg'),
-                fit: BoxFit.fill,
+        child: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: ExactAssetImage('asset/images/waterbg.jpg'),
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
               ),
-            ),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                headerBar(),
-                const SizedBox(
-                  height: 10,
-                ),
-                valueCard(),
-                const SizedBox(
-                  height: 20,
-                ),
-                graphFilter(),
-                const SizedBox(
-                  height: 20,
-                ),
-                select == 0
-                    ? weekgraph()
-                    : select == 1
-                        ? monthgraph()
-                        : select == 2
-                            ? quartergraph()
-                            : yeargraph()
-              ],
-            ),
+              ToggleSwitch(
+                minWidth: MediaQuery.of(context).size.width * 0.8,
+                minHeight: MediaQuery.of(context).size.width * 0.15,
+                initialLabelIndex: tab,
+                totalSwitches: 2,
+                activeBgColor: [
+                  bottomNav_blue,
+                  blue_n_txt1,
+                ],
+                activeFgColor: Colors.white,
+                inactiveBgColor: Colors.white,
+                inactiveFgColor: blue_navy_n,
+                labels: ['ปริมาณน้ำเสีย\nที่ผ่านการบำบัด', 'พลังงานสะอาด'],
+                onToggle: (index) {
+                  setState(() {
+                    tab = index!;
+                  });
+                },
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.78,
+                child: SingleChildScrollView(
+                    child: tab == 0 ? statisticTab() : solarTab()),
+              ),
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget solarTab() {
+    return Column(
+      children: [
+        headerBarSolar(),
+        SizedBox(
+          height: 15,
+        ),
+        menu(),
+        SizedBox(
+          height: 15,
+        ),
+        filterMenu(),
+        SizedBox(
+          height: 15,
+        ),
+        TextWidget.textTitleWithColorSize(
+            'อัปเดตเมื่อ $solarReportCache', Colors.black, 8),
+        solargraph(),
+      ],
+    );
+  }
+
+  Widget filterMenu() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ButtonApp.buttonGraphFilter2(context, 'ย้อนหลัง 1 เดือน', () async {
+          setState(() {
+            loading = true;
+            dailytab = true;
+            monthlytab = false;
+            solarReportType = 'DAILY';
+
+            solarReport = '';
+            solarReportCache = '';
+            solarReportData = '';
+          });
+          await _getData();
+        }, dailytab),
+        SizedBox(
+          width: 20,
+        ),
+        ButtonApp.buttonGraphFilter2(context, 'ย้อนหลัง 1 ปี', () async {
+          setState(() {
+            loading = true;
+            dailytab = false;
+            monthlytab = true;
+            solarReportType = 'MONTHLY';
+
+            solarReport = '';
+            solarReportCache = '';
+            solarReportData = '';
+          });
+          await _getData();
+        }, monthlytab),
+      ],
+    );
+  }
+
+  Widget solargraph() {
+    return Container(
+        height: MediaQuery.of(context).size.height * 0.6,
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        margin: const EdgeInsetsDirectional.all(20),
+        child: dailytab
+            ? SolarcellReportGraph(
+                data: solarReportData,
+                type: _current,
+              )
+            : SolarcellReportyearGraph(
+                data: solarReportData,
+                type: _current,
+              ));
+  }
+
+  Widget statisticTab() {
+    return Column(
+      children: [
+        headerBar(),
+        const SizedBox(
+          height: 10,
+        ),
+        valueCard(),
+        const SizedBox(
+          height: 20,
+        ),
+        graphFilter(),
+        const SizedBox(
+          height: 20,
+        ),
+        select == 0
+            ? weekgraph()
+            : select == 1
+                ? monthgraph()
+                : select == 2
+                    ? quartergraph()
+                    : yeargraph()
+      ],
     );
   }
 
@@ -163,6 +307,46 @@ class _StatisticState extends State<Statistic> {
                     width: MediaQuery.of(context).size.width * 0.6,
                     child: TextWidget.textTitleWithColorSize(
                         'จากศูนย์บริหารจัดการคุณภาพน้ำ ${data['data']['stations']} แห่ง',
+                        const Color.fromARGB(255, 111, 111, 111),
+                        11),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget headerBarSolar() {
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        // height: MediaQuery.of(context).size.height * 0.1,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.asset(
+                'asset/images/pine-tree.png',
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: TextWidget.textSubTitleBoldWithSizeGradient(
+                        '${treeReportData[0]['reduction_total_tree'].ceil()}',30, Colors.black),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: TextWidget.textTitleWithColorSize(
+                        'Equivalent trees planted',
                         const Color.fromARGB(255, 111, 111, 111),
                         11),
                   )
@@ -520,8 +704,6 @@ class _StatisticState extends State<Statistic> {
   //   );
   // }
 
-
-
   Widget yeargraph() {
     return Container(
       height: MediaQuery.of(context).size.height * 0.6,
@@ -630,4 +812,93 @@ class _StatisticState extends State<Statistic> {
   //     ),
   //   );
   // }
+
+  int _current = 0;
+  Widget menu() {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        CarouselSlider.builder(
+            itemCount: 2,
+            options: CarouselOptions(
+              enlargeCenterPage: true,
+              aspectRatio: 5.0,
+              enableInfiniteScroll: false,
+              onPageChanged: (index, reason) {
+                print('_current=====');
+                print(index);
+                setState(() {
+                  loading = true;
+                });
+
+                if (index == 0) {
+                  setState(() {
+                    // graphHeaderIndex = [true, false, false];
+                    _current = index;
+                    loading = false;
+                  });
+                } else if (index == 1) {
+                  setState(() {
+                    // graphHeaderIndex = [false, true, false];
+                    _current = index;
+                    loading = false;
+                  });
+                } else if (index == 2) {
+                  setState(() {
+                    // graphHeaderIndex = [false, false, true];
+                    _current = index;
+                    loading = false;
+                  });
+                }
+              },
+            ),
+            itemBuilder:
+                (BuildContext context, int itemIndex, int pageViewIndex) {
+              return SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Card(
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextWidget.textSubTitleBoldWithSizeGradient(
+                          itemIndex == 0
+                              ? 'Standard coal saved'
+                              : itemIndex == 1
+                                  ? 'CO₂ Emission reduction'
+                                  : 'Equivalent trees planted',
+                          20,
+                          Colors.white),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     TextWidget.textTitleBold(
+                      //         itemIndex == 0 ? 'Dissolved oxygen' : ''),
+                      //     TextWidget.textTitleBold(itemIndex == 0
+                      //         ? ' ค่ามาตรฐานออกซิเจนในน้ำ'
+                      //         : itemIndex == 1
+                      //             ? 'ค่าความเป็นกรด-ด่าง'
+                      //             : 'ค่าอุณหภูมิ')
+                      //   ],
+                      // )
+                    ],
+                  ),
+                ),
+              );
+
+              //  ListItemWidget.newsCard_n(
+              //     context,
+              //     news[itemIndex]['title']['rendered'],
+              //     news[itemIndex]['jetpack_featured_media_url'],
+              //     news[itemIndex],
+              //     showDate(news[itemIndex]['date']));
+            }),
+        // const SizedBox(
+        //   height: 10,
+        // ),
+      ],
+    );
+  }
 }

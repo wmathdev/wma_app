@@ -1,14 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:wma_app/api/MapRequest.dart';
 import 'package:wma_app/view/login/overview_graph.dart';
 import 'package:wma_app/widget/gradient_text.dart';
+import 'package:wma_app/widget/list_item_widget.dart';
 
 import '../../Utils/Color.dart';
 import '../../Utils/MapUtils.dart';
@@ -74,11 +77,17 @@ class _OverviewDertailState extends State<OverviewDertail> {
   List<bool> graphFilterIndex = [true, false, false, false];
   List<bool> graphHeaderIndex = [true, false, false];
 
+  List<dynamic> gallery = [];
+
   Future<void> _getData() async {
     var res = await MapRequest.getMapStation(widget.stationId);
+
+    print('gallery ${res['data']['station']['gallery']}');
+
     setState(() {
       data = res;
       listdata = data['data']['report'];
+      gallery = data['data']['station']['gallery'];
     });
     if (!widget.isSubmited) {
       setState(() {
@@ -214,6 +223,10 @@ class _OverviewDertailState extends State<OverviewDertail> {
                               const SizedBox(
                                 height: 10,
                               ),
+                              gallery.isEmpty ? Container() : galleryUI(),
+                              const SizedBox(
+                                height: 10,
+                              ),
                               widget.isSubmited ? waterDetail() : Container(),
                               const SizedBox(
                                 height: 3,
@@ -316,6 +329,10 @@ class _OverviewDertailState extends State<OverviewDertail> {
                             const SizedBox(
                               height: 10,
                             ),
+                            gallery.isEmpty ? Container() : galleryUI(),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             // widget.isSubmited ? waterDetail() : Container(),
                             const SizedBox(
                               height: 3,
@@ -365,6 +382,52 @@ class _OverviewDertailState extends State<OverviewDertail> {
                     ),
                   ),
                 )),
+    );
+  }
+
+  int _current = 0;
+  Widget galleryUI() {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        CarouselSlider.builder(
+            itemCount: gallery.length,
+            options: CarouselOptions(
+              autoPlay: true,
+              enlargeCenterPage: true,
+              aspectRatio: 3.0,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  _current = index;
+                });
+              },
+            ),
+            itemBuilder:
+                (BuildContext context, int itemIndex, int pageViewIndex) {
+              return ListItemWidget.cardStationGellery(
+                context,
+                gallery[itemIndex]['url'],
+              );
+            }),
+        const SizedBox(
+          height: 10,
+        ),
+        AnimatedSmoothIndicator(
+          activeIndex: _current,
+          count: gallery.length,
+          effect: const ScrollingDotsEffect(
+              spacing: 8.0,
+              // radius: 4.0,
+              dotWidth: 12.0,
+              dotHeight: 12.0,
+              paintStyle: PaintingStyle.fill,
+              strokeWidth: 1.5,
+              dotColor: Colors.black12,
+              activeDotColor: Colors.white),
+        ),
+      ],
     );
   }
 
@@ -601,7 +664,8 @@ class _OverviewDertailState extends State<OverviewDertail> {
                             GradientText(
                               data['data']['document'] == null
                                   ? '-'
-                                  : Label.commaFormat('${data['data']['document']['treated_water']}'),
+                                  : Label.commaFormat(
+                                      '${data['data']['document']['treated_water']}'),
                               style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,

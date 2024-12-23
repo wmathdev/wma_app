@@ -43,4 +43,19 @@ class OtherRequest {
     );
     return response.data;
   }
+
+   static dynamic statisticSolarcellPlant(String period) async {
+    
+    final response = await ApiConstants.dio.request(
+      '${ApiConstants.baseUrl}/api/v1/statistic/solar-cell/report',
+      queryParameters: {'type':period},
+      options: Options(
+        headers: {
+          'Accept': "application/json",
+        },
+        method: 'GET',
+      ),
+    );
+    return response.data;
+  }
 }

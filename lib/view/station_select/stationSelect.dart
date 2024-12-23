@@ -31,11 +31,8 @@ import '../statistic/statistic.dart';
 class StationSelect extends StatefulWidget {
   dynamic news;
   String role;
-  StationSelect({
-    Key? key,
-    required this.news,
-    required this.role
-  }) : super(key: key);
+  StationSelect({Key? key, required this.news, required this.role})
+      : super(key: key);
 
   @override
   State<StationSelect> createState() => _StationSelectState();
@@ -207,8 +204,11 @@ class _StationSelectState extends State<StationSelect> {
                     ),
                   )
                 : _selectedIndex == 0
-                    ? Container(
-                        child: newsTab(),
+                    ? RefreshIndicator(
+                        onRefresh: () => _getDashboard(),
+                        child: Container(
+                          child: newsTab(),
+                        ),
                       )
                     : _selectedIndex == 1
                         ? const Overview()

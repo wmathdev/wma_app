@@ -1713,7 +1713,10 @@ class ListItemWidget {
           ),
           Status(context, data['workflow']['progress'],
               data['workflow']['label'], data['workflow']['state']),
-         Time.checkTimeStatus('00:00AM', '10:00AM') ? Divider(color: greyBorder) : Container(),
+          Time.checkTimeStatus('00:00AM', '10:00AM')
+              ? Divider(color: greyBorder)
+              : Container(),
+          //Divider(color: greyBorder),
           data['workflow']['state'] == 'REVISION'
               ? ButtonApp.buttonMain(context, 'แก้ไข', onPressed, true)
               : data['workflow']['state'] == 'COMPLETED' ||
@@ -1722,18 +1725,18 @@ class ListItemWidget {
                       data['workflow']['state'] == 'RECHECK'
                   ? ButtonApp.buttonSecondaryGradient(
                       context, 'ดูรายละเอียด', onPressed)
-                  : Time.checkTimeStatus('00:00AM', '10:00AM')
-                      ? Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ButtonApp.buttonSecondaryFixCard(
-                                context, 'ยกเลิกการส่ง', onCancel, true),
-                            ButtonApp.buttonOutlineFixGradient(
-                                context, 'แก้ไข', onPressed)
-                          ],
-                        )
-                      : Container()
+                  : //Time.checkTimeStatus('00:00AM', '10:00AM') ?
+                  Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ButtonApp.buttonSecondaryFixCard(
+                            context, 'ยกเลิกการส่ง', onCancel, true),
+                        ButtonApp.buttonOutlineFixGradient(
+                            context, 'แก้ไข', onPressed)
+                      ],
+                    )
+          // : Container()
         ],
       ),
     );
@@ -2040,8 +2043,8 @@ class ListItemWidget {
           data['workflow']['state'] == 'REVIEW' ||
                   data['workflow']['state'] == 'REVIEWING' ||
                   data['workflow']['state'] == 'REVISION' ||
-                  data['workflow']['state'] == 'COMPLETED' ||
-                  !Time.checkTimeStatus('00:00AM', '10:00AM')
+                  data['workflow']['state'] == 'COMPLETED'
+              //   || !Time.checkTimeStatus('00:00AM', '10:00AM' )
               ? ButtonApp.buttonSecondaryGradient(
                   context, 'ดูรายละเอียด', onClick)
               : ButtonApp.buttonMainGradient(context, 'ตรวจสอบ', onClick, true)
@@ -3439,6 +3442,32 @@ class ListItemWidget {
                       date, 10, Colors.grey),
                 ),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget cardStationGellery(BuildContext context, String url) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        // margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+        decoration: const BoxDecoration(
+          // color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(25)),
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.4,
+              child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                  child: Image.network(url, fit: BoxFit.cover)),
             ),
           ],
         ),

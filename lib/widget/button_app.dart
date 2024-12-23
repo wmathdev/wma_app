@@ -171,6 +171,38 @@ class ButtonApp {
     );
   }
 
+  static Widget buttonMenuFixGradient(BuildContext context, String title,
+      GestureTapCallback onPressed, bool isDisable) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.08,
+      child: TextButton(
+          onPressed:  onPressed ,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.4,
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: isDisable
+                      ? [
+                          bottomNav_blue,
+                          blue_n_txt1,
+                        ]
+                      : [
+                          Colors.white,
+                          Colors.white,
+                        ],
+                )),
+            child: Center(
+                child: TextWidget.textTitleBoldWithColor(
+              title,
+             isDisable ?  Colors.white : blue_navy_n, 
+            )),
+          )),
+    );
+  }
+
   static Widget buttonTab(BuildContext context, String title,
       GestureTapCallback onPressed, bool isDisable) {
     return SizedBox(
@@ -235,6 +267,41 @@ class ButtonApp {
           )),
     );
   }
+
+
+  static Widget buttonGraphFilter2(BuildContext context, String title,
+      GestureTapCallback onPressed, bool isDisable) {
+    return SizedBox(
+      height: 50,
+      width: MediaQuery.of(context).size.width * 0.3,
+      child: TextButton(
+          style: OutlinedButton.styleFrom(
+            backgroundColor: isDisable ? blue_n : Colors.white,
+            side: BorderSide(
+              width: 1.0,
+              color: isDisable ? blue_n : Colors.white,
+              style: BorderStyle.solid,
+            ),
+          ),
+          onPressed: onPressed,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.3,
+            // padding: const EdgeInsets.all(8.0),
+            // decoration: BoxDecoration(
+            //     // color: blueSelected,
+            //     border: Border.all(
+            //       color: blueSelected,
+            //     ),
+            //     borderRadius: const BorderRadius.all(Radius.circular(10))),
+            child: Center(
+                child: TextWidget.textTitleBoldWithColorstatisticFilter(
+              title,
+              isDisable ? Colors.white : Colors.black,
+            )),
+          )),
+    );
+  }
+
 
   static Widget buttonSecondary(
       BuildContext context, String title, GestureTapCallback onPressed) {

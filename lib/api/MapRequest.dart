@@ -34,7 +34,7 @@ class MapRequest {
   }
 
   static dynamic getMapStation(String stationId) async {
-    final response = await ApiConstants.dio
+    final response = await ApiConstants.dioNoLog
         .get('${ApiConstants.baseUrl}/api/v1/map/station',
             queryParameters: {"station_id": stationId},
             options: Options(

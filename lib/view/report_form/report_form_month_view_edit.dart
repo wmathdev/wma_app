@@ -215,13 +215,15 @@ class _ReportformMonthViewEditState extends State<ReportformMonthViewEdit> {
                               width: 50,
                               height: 50,
                               child: Image.asset('asset/images/iconintro.png')),
-                  Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
-                  TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
-                ],
-              )
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextWidget.textTitle(
+                                  'ศูนย์บริหารจัดการคุณภาพน้ำ'),
+                              TextWidget.textSubTitleBoldMedium(
+                                  widget.station.lite_name),
+                            ],
+                          )
                         ],
                       ),
                       Container(
@@ -434,6 +436,9 @@ class _ReportformMonthViewEditState extends State<ReportformMonthViewEdit> {
                                       ],
                                     )
                                   ])))),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.4,
+                      )
 
                       // Column(
                       //   children: [

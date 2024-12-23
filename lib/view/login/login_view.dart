@@ -227,8 +227,11 @@ class _LoginState extends State<Login> {
                     ),
                   )
                 : _selectedIndex == 0
-                    ? Container(
-                        child: newsTab(),
+                    ? RefreshIndicator(
+                        onRefresh: () => _getDashboard(),
+                        child: Container(
+                          child: newsTab(),
+                        ),
                       )
                     : _selectedIndex == 1
                         ? const Overview()
@@ -1078,7 +1081,7 @@ class _LoginState extends State<Login> {
                 final uaData = await userAgentData();
                 final header = await userAgentClientHintsHeader();
                 print(
-                    '{username : ${username.text} , password : ${password.text}, moti : $token, deviceToken : $_deviceId,');
+                    '{username : ${username.text} , password : ${password.text}, moti : $token, deviceToken : $_deviceId, uaData.package.appVersion : ${uaData.package.appVersion}');
                 if (validate()) {
                   LocationPermission permission =
                       await Geolocator.checkPermission();
@@ -1122,11 +1125,13 @@ class _LoginState extends State<Login> {
                     if (result['data']['user']['role']['slug'] == 'OFFICER' ||
                         result['data']['user']['role']['slug'] == 'ADMIN') {
                       Get.off(ReportHomeOfficer(
-                        news: resultNews, role: result['data']['user']['role']['slug'] ,
+                        news: resultNews,
+                        role: result['data']['user']['role']['slug'],
                       ));
                     } else {
                       Get.off(StationSelect(
-                        news: resultNews, role: result['data']['user']['role']['slug'] ,
+                        news: resultNews,
+                        role: result['data']['user']['role']['slug'],
                       ));
                     }
                   } else {

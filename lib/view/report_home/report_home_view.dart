@@ -230,8 +230,11 @@ class _ReportHomeState extends State<ReportHome> {
                       ),
                     )
                   : _selectedIndex == 0
-                      ? Container(
-                          child: newsTab(),
+                      ? RefreshIndicator(
+                          onRefresh: () => _getDashboard(),
+                          child: Container(
+                            child: newsTab(),
+                          ),
                         )
                       : _selectedIndex == 1
                           ? const Overview()
@@ -270,12 +273,13 @@ class _ReportHomeState extends State<ReportHome> {
                                                   noti: notifications['unread'],
                                                   onPress: () async {
                                                     await Get.to(
-                                                        NotificationList(role: widget.role,));
+                                                        NotificationList(
+                                                      role: widget.role,
+                                                    ));
                                                     _getNotificationList();
                                                   },
                                                 )
-                                              : NavigateBar.NavBar(
-                                                  context, '',
+                                              : NavigateBar.NavBar(context, '',
                                                   () {
                                                   Get.back();
                                                 }),

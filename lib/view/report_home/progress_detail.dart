@@ -117,65 +117,64 @@ class _ProgressDetailState extends State<ProgressDetail> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextWidget.textTitle('ศูนย์บริหารจัดการคุณภาพน้ำ'),
-                      TextWidget.textSubTitleBoldMedium(widget.station.lite_name),
+                      TextWidget.textSubTitleBoldMedium(
+                          widget.station.lite_name),
                     ],
                   )
                 ],
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.4,
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-     
-                    ),
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            TextWidget.textTitle('ข้อมูลคุณภาพน้ำ'),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Row(
-                          children: [
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            TextWidget.textSubTitleBold(
-                                'ประจำวันที่ ${widget.dateLebal}'),
-                          ],
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          height: MediaQuery.of(context).size.height * 0.25,
-                          child: ListView.builder(
-                              padding: const EdgeInsets.all(8),
-                              itemCount: trans.length + 1,
-                              itemBuilder: (BuildContext context, int index) {
-                                if (index == 0) {
-                                  return ListItemWidget.progressItemHightlight(
-                                      '${workflow.completedAt.length > 0 ? workflow.completedAt.substring(12) : '--:--'} น.',
-                                      workflow.label);
-                                }
-                                return ListItemWidget.progressItem(
-                                    '${trans[index - 1].time}',
-                                    trans[index - 1].type);
-                              }),
-                        ),
-                      ],
-                    ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          TextWidget.textTitle('ข้อมูลคุณภาพน้ำ'),
+                        ],
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          TextWidget.textSubTitleBold(
+                              'ประจำวันที่ ${widget.dateLebal}'),
+                        ],
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        // height: MediaQuery.of(context).size.height * 0.25,
+                        child: ListView.builder(
+                            padding: const EdgeInsets.all(8),
+                            itemCount: trans.length + 1,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index == 0) {
+                                return ListItemWidget.progressItemHightlight(
+                                    '${workflow.completedAt.length > 0 ? workflow.completedAt.substring(12) : '--:--'} น.',
+                                    workflow.label);
+                              }
+                              return ListItemWidget.progressItem(
+                                  '${trans[index - 1].time}',
+                                  trans[index - 1].type);
+                            }),
+                      ),
+                    ],
                   ),
                 ),
               ),
