@@ -246,7 +246,7 @@ class _StatgraphyearNState extends State<StatgraphyearN> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 50,
-            interval: 5,
+            interval: 1,
             getTitlesWidget: leftTitleWidgets,
           ),
         ),
@@ -335,7 +335,7 @@ class _StatgraphyearNState extends State<StatgraphyearN> {
     const style2 = TextStyle(
         fontWeight: FontWeight.bold, fontSize: 5, color: Colors.white);
 
-    String text = '${(value /10)} M';
+    String text = '${(value)} M';
 
     if (value.toInt() == (maxValue * 1.2).toInt()) {
       text = '';

@@ -24,16 +24,16 @@ class MyDialog {
       static showPermissionDialogOk(BuildContext context, String message,
           GestureTapCallback onOkPressed, GestureTapCallback onDenyPressed) async {
         Widget acceptButton =
-            TextButton(child: Text("Accept"), onPressed: onOkPressed);
+            TextButton(child: Text("Continue"), onPressed: onOkPressed);
 
-        Widget denyButton =
-            TextButton(child: Text("Deny"), onPressed: onDenyPressed);
+        // Widget denyButton =
+        //     TextButton(child: Text("Deny"), onPressed: onDenyPressed);
 
         // set up the AlertDialog
         AlertDialog alert = AlertDialog(
           title: Text("การเข้าถึงตำแหน่ง"),
           content: Text(message),
-          actions: [denyButton, acceptButton],
+          actions: [ acceptButton],
         );
 
         // show the dialog

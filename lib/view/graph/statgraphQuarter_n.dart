@@ -246,7 +246,7 @@ class _StatgraphquarterNState extends State<StatgraphquarterN> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 50,
-            interval: 10,
+            interval: 1,
             getTitlesWidget: leftTitleWidgets,
           ),
         ),

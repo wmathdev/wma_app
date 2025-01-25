@@ -813,7 +813,8 @@ class ListItemWidget {
   //reportlist
   static Widget reportListHeader(BuildContext context, String date,
       String fullDate, String time, String role, GestureTapCallback onClick) {
-    if ((Time.checkTimeStatus('00:00AM', '10:00AM') && role == 'OPERATOR') ||
+    if (( Time.checkTimeStatus('00:00AM', '10:00AM') && 
+    role == 'OPERATOR') ||
         role == 'ADMIN') {
       return Card(
         color: Colors.white,
@@ -971,7 +972,8 @@ class ListItemWidget {
 
   static Widget reportListHeaderMonth(BuildContext context, String date,
       String fullDate, String time, String role, GestureTapCallback onClick) {
-    if ((Time.checkTimeStatus('00:00AM', '10:00AM') && role == 'OPERATOR') ||
+    if (( Time.checkTimeStatus('00:00AM', '10:00AM') && 
+    role == 'OPERATOR') ||
         role == 'ADMIN') {
       return Card(
         shape: RoundedRectangleBorder(

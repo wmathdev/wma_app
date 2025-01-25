@@ -75,7 +75,7 @@ class Authentication {
   static dynamic checkin(String authorization, String location) async {
     final formData = FormData.fromMap({'location': location});
 
-    final response = await ApiConstants.dioNoLog
+    final response = await ApiConstants.dio
         .post('${ApiConstants.baseUrl}/api/v1/account/check-in',
             data: formData,
             options: Options(

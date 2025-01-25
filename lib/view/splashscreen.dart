@@ -55,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         MyDialog.showPermissionDialogOk(context,
-            'WMA Clear Water ต้องการเขาถึงตำแหน่งเบื้องหลังเพื่อการใช้ฟังก์ชันต่อไปนี้\n- แผนที่ศูนย์บำบัดน้ำ\n- Check-in ผู้รายงาน',
+            'WMA Clear Water ต้องการเขาถึงตำแหน่งเบื้องหลังเพื่อการใช้ฟังก์ชันต่อไปนี้\n- แผนที่ศูนย์บำบัดน้ำ\n- Check-in ผู้รายงาน โดยใช้พิกัดตำแหน่ง Latitude Logitude ในการบันทึกรายงาน',
             () async {
           await Geolocator.requestPermission();
           final SharedPreferences prefs = await _prefs;
@@ -130,7 +130,7 @@ class _SplashScreenState extends State<SplashScreen> {
         width: MediaQuery.of(context).size.width * 0.4,
         height: MediaQuery.of(context).size.width * 0.4,
         child: Image.asset(
-          'asset/images/appicon.png',
+          'asset/images/258.png',
         ),
       )),
     );
