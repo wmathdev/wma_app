@@ -365,12 +365,14 @@ class _ReportListState extends State<ReportList> {
                     context,
                     '${data[index]['date'].toString().substring(8)}\n${Month.getMonthLabel(data[index]['date'])}',
                     '10.00', () async {
-                  if (data[index]['document']['workflow']['state'] == 'REVIEW' ||
+                  if ((data[index]['document']['workflow']['state'] == 'REVIEW' ||
                       data[index]['document']['workflow']['state'] == 'Review' ||
                       data[index]['document']['workflow']['state'] ==
                           'REVISION' ||
                       data[index]['document']['workflow']['state'] ==
-                          'COMPLETED' /* || !Time.checkTimeStatus('00:00AM', '10:00AM') */) {
+                          'COMPLETED') 
+                          //&& !Time.checkTimeStatus('00:00AM', '09:50PM') 
+                          ) {
                     Get.to(ReportDetail(
                         documentId: '${data[index]['document']['id']}',
                         station: widget.station,
@@ -484,6 +486,7 @@ class _ReportListState extends State<ReportList> {
                     data[index]['document']['workflow']['state'] == 'REVIEW' ||
                     data[index]['document']['workflow']['state'] == 'REVIEWING' || 
                       data[index]['document']['workflow']['state'] == 'RECHECK'
+                       || !Time.checkTimeStatus('00:00AM', '10:00AM')
                     ) {
                   Get.to(ReportDetail(
                       documentId: '${data[index]['document']['id']}',

@@ -51,6 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
       });
     } else {
       resultNews = await OtherRequest.news();
+      
 
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {

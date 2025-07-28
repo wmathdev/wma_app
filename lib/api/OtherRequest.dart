@@ -5,14 +5,22 @@ import 'ApiConstants.dart';
 class OtherRequest {
   static dynamic news() async {
     final response = await ApiConstants.dioNoLog.request(
-      'https://wma.or.th/wp-json/wp/v2/posts?categories=10,11&per_page=100',
+       'https://wma.or.th/wp-json/wp/v2/posts?categories=10,11&per_page=100',
+       //'https://wma.or.th/wp-json/wp/v2/pos',
       options: Options(
         headers: {
           'Accept': "application/json",
         },
         method: 'GET',
+        followRedirects: false,
+        validateStatus: (status) {
+          return status! < 500;
+        },
       ),
     );
+    if (response.statusCode != 200) {
+      return [];
+    }
     return response.data;
   }
 
@@ -30,25 +38,28 @@ class OtherRequest {
   }
 
   static dynamic statistic(String period) async {
-    
     final response = await ApiConstants.dioNoLog.request(
       '${ApiConstants.baseUrl}/api/v1/statistic',
-      queryParameters: {'period':period},
+      queryParameters: {'period': period},
       options: Options(
         headers: {
           'Accept': "application/json",
         },
         method: 'GET',
+        followRedirects: false,
+        validateStatus: (status) {
+          return status! < 500;
+        },
       ),
     );
+
     return response.data;
   }
 
-   static dynamic statisticSolarcellPlant(String period) async {
-    
+  static dynamic statisticSolarcellPlant(String period) async {
     final response = await ApiConstants.dio.request(
       '${ApiConstants.baseUrl}/api/v1/statistic/solar-cell/report',
-      queryParameters: {'type':period},
+      queryParameters: {'type': period},
       options: Options(
         headers: {
           'Accept': "application/json",

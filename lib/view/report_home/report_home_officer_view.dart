@@ -448,8 +448,7 @@ class _ReportHomeOfficerState extends State<ReportHomeOfficer> {
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: news.length +
-                    1, // Replace with your actual number of news articles
+                itemCount: 21, // Replace with your actual number of news articles
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return Padding(
@@ -785,7 +784,7 @@ class _ReportHomeOfficerState extends State<ReportHomeOfficer> {
                             ),
                           ],
                         ),
-                        GestureDetector(
+                        news.isEmpty ? Container() : GestureDetector(
                           onTap: () {
                             Get.to(NewsList(
                               news: news,
@@ -861,7 +860,7 @@ class _ReportHomeOfficerState extends State<ReportHomeOfficer> {
                     //   ),
                     // );
 
-                    return Column(
+                     return news.isEmpty ? Container(height: 500,) :Column(
                       children: [
                         const SizedBox(
                           height: 10,

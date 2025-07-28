@@ -314,8 +314,9 @@ class _ReportFormMonthState extends State<ReportFormMonth> {
                                 ));
                                 // }
                               }, isCheckBox),
+
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -323,6 +324,7 @@ class _ReportFormMonthState extends State<ReportFormMonth> {
                 ),
                 // ButtonApp.buttonSecondary(
                 //     context, 'ดูประวัติการส่งรายงานทั้งหมด', () {}),
+                 SizedBox(height: MediaQuery.of(context).size.height * 0.4,)
               ],
             ),
           ),

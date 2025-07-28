@@ -33,10 +33,16 @@ class Reportdownloadrequest {
     var params = {'station_id': stationid, 'started_at': date, 'mimes': mimes};
     var response;
     try {
-      String directory;
+      String directory = '';
       if (Platform.isIOS) {
-        directory = (await getDownloadsDirectory())?.path ??
-            (await getTemporaryDirectory()).path;
+        Directory appDocDirectory = await getApplicationDocumentsDirectory();
+
+        await Directory(appDocDirectory.path + '/' + 'dir')
+            .create(recursive: true)
+            .then((Directory dir) {
+          print('Path of New Dir: ' + dir.path);
+          directory = dir.path;
+        });
       } else {
         directory = '/storage/emulated/0/Download/';
         var dirDownloadExists = true;
@@ -71,5 +77,4 @@ class Reportdownloadrequest {
     }
     return 'response.data';
   }
-
 }

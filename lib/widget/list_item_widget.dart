@@ -30,7 +30,7 @@ class ListItemWidget {
     return GestureDetector(
       onTap: () async {
         Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.low);
+            );
 
         await Authentication.checkin(
             authorization, '${position.latitude},${position.longitude}');
@@ -813,8 +813,8 @@ class ListItemWidget {
   //reportlist
   static Widget reportListHeader(BuildContext context, String date,
       String fullDate, String time, String role, GestureTapCallback onClick) {
-    if (( Time.checkTimeStatus('00:00AM', '10:00AM') && 
-    role == 'OPERATOR') ||
+    if (( Time.checkTimeStatus('00:00AM', '10:00AM') &&
+            role == 'OPERATOR') ||
         role == 'ADMIN') {
       return Card(
         color: Colors.white,
@@ -972,9 +972,7 @@ class ListItemWidget {
 
   static Widget reportListHeaderMonth(BuildContext context, String date,
       String fullDate, String time, String role, GestureTapCallback onClick) {
-    if (( Time.checkTimeStatus('00:00AM', '10:00AM') && 
-    role == 'OPERATOR') ||
-        role == 'ADMIN') {
+    if ((role == 'OPERATOR') || role == 'ADMIN') {
       return Card(
         shape: RoundedRectangleBorder(
           side: const BorderSide(
@@ -1715,20 +1713,20 @@ class ListItemWidget {
           ),
           Status(context, data['workflow']['progress'],
               data['workflow']['label'], data['workflow']['state']),
-          Time.checkTimeStatus('00:00AM', '10:00AM')
-              ? Divider(color: greyBorder)
-              : Container(),
-          //Divider(color: greyBorder),
+           Time.checkTimeStatus('00:00AM', '10:00AM')
+          ? Divider(color: greyBorder)
+          : Container(),
+          // Divider(color: greyBorder),
           data['workflow']['state'] == 'REVISION'
               ? ButtonApp.buttonMain(context, 'แก้ไข', onPressed, true)
               : data['workflow']['state'] == 'COMPLETED' ||
                       data['workflow']['state'] == 'REVIEW' ||
                       data['workflow']['state'] == 'REVIEWING' ||
-                      data['workflow']['state'] == 'RECHECK'
+                      data['workflow']['state'] ==
+                          'RECHECK' || !Time.checkTimeStatus('00:00AM', '10:00AM')
                   ? ButtonApp.buttonSecondaryGradient(
                       context, 'ดูรายละเอียด', onPressed)
-                  : //Time.checkTimeStatus('00:00AM', '10:00AM') ?
-                  Row(
+                  : Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -2004,7 +2002,11 @@ class ListItemWidget {
                   ]),
             ],
           ),
-          Time.checkTimeStatus('00:00AM', '10:00AM')
+          Time.checkTimeStatus('00:00AM', '10:00AM') ||
+                  data['workflow']['state'] == 'REVIEW' ||
+                  data['workflow']['state'] == 'REVIEWING' ||
+                  data['workflow']['state'] == 'REVISION' ||
+                  data['workflow']['state'] == 'COMPLETED'
               ? Status(context, data['workflow']['progress'],
                   data['workflow']['label'], data['workflow']['state'])
               : Container(
@@ -2042,14 +2044,16 @@ class ListItemWidget {
                   ),
                 ),
           Divider(color: greyBorder),
-          data['workflow']['state'] == 'REVIEW' ||
-                  data['workflow']['state'] == 'REVIEWING' ||
-                  data['workflow']['state'] == 'REVISION' ||
-                  data['workflow']['state'] == 'COMPLETED'
-              //   || !Time.checkTimeStatus('00:00AM', '10:00AM' )
-              ? ButtonApp.buttonSecondaryGradient(
-                  context, 'ดูรายละเอียด', onClick)
-              : ButtonApp.buttonMainGradient(context, 'ตรวจสอบ', onClick, true)
+          !Time.checkTimeStatus('00:00AM', '10:00AM')
+              ? Container()
+              : (data['workflow']['state'] == 'REVIEW' ||
+                      data['workflow']['state'] == 'REVIEWING' ||
+                      data['workflow']['state'] == 'REVISION' ||
+                      data['workflow']['state'] == 'COMPLETED')
+                  ? ButtonApp.buttonSecondaryGradient(
+                      context, 'ดูรายละเอียด', onClick)
+                  : ButtonApp.buttonMainGradient(
+                      context, 'ตรวจสอบ', onClick, true)
         ],
       ),
     );

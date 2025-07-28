@@ -431,8 +431,7 @@ class _StationSelectState extends State<StationSelect> {
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: news.length +
-                    1, // Replace with your actual number of news articles
+                itemCount: 21, // Replace with your actual number of news articles
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return Padding(
@@ -768,7 +767,7 @@ class _StationSelectState extends State<StationSelect> {
                             ),
                           ],
                         ),
-                        GestureDetector(
+                        news.isEmpty ? Container() : GestureDetector(
                           onTap: () {
                             Get.to(NewsList(
                               news: news,
@@ -844,7 +843,7 @@ class _StationSelectState extends State<StationSelect> {
                     //   ),
                     // );
 
-                    return Column(
+                     return news.isEmpty ? Container(height: 500,) : Column(
                       children: [
                         const SizedBox(
                           height: 10,

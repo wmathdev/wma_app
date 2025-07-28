@@ -95,5 +95,7 @@
         <string>googlechromes</string>
         <string>comgooglemaps</string>
     </array>
+    <key>UIFileSharingEnabled</key>
+    <true/>
 </dict>
 </plist>

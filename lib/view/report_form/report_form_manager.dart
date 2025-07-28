@@ -250,9 +250,11 @@ class _ReportFormManagerState extends State<ReportFormManager> {
                                       const SizedBox(
                                         width: 20,
                                       ),
-                                      Container(
-                                        child: TextWidget.textTitle(
-                                            '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
+                                      Expanded(
+                                        child: Container(
+                                          child: TextWidget.textTitle(
+                                              '${result['data']['workflow']['transactions'][0]['time']} | ${result['data']['workflow']['transactions'][0]['type']}'),
+                                        ),
                                       ),
                                     ],
                                   ),

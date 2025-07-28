@@ -135,7 +135,7 @@ class _ReportDownloadListState extends State<ReportDownloadList> {
           }),
         ),
         Container(
-          height: MediaQuery.of(context).size.height - 173,
+          height: MediaQuery.of(context).size.height - 180,
           child: SingleChildScrollView(
               child: Padding(
                   padding: const EdgeInsets.all(18.0),

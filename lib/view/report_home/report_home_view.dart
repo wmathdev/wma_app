@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_exit_app/flutter_exit_app.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,7 @@ import 'package:wma_app/test.dart';
 import 'package:wma_app/view/login/list_quality_station.dart';
 import 'package:wma_app/view/news/news_list.dart';
 import 'package:wma_app/view/notification/notificationlist.dart';
+import 'package:wma_app/widget/button_app.dart';
 import 'package:wma_app/widget/gradient_text.dart';
 
 import '../../Utils/Color.dart';
@@ -386,8 +388,8 @@ class _ReportHomeState extends State<ReportHome> {
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: news.length +
-                    1, // Replace with your actual number of news articles
+                itemCount:
+                    21, // Replace with your actual number of news articles
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return Padding(
@@ -723,55 +725,57 @@ class _ReportHomeState extends State<ReportHome> {
                             ),
                           ],
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            Get.to(NewsList(
-                              news: news,
-                            ));
-                          },
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'ข่าวประชาสัมพันธ์',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: blue_navy_n,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Card(
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'เพิ่มเติม',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: blue_navy_n,
+                        news.isEmpty
+                            ? Container()
+                            : GestureDetector(
+                                onTap: () {
+                                  Get.to(NewsList(
+                                    news: news,
+                                  ));
+                                },
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'ข่าวประชาสัมพันธ์',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: blue_navy_n,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Card(
+                                      color: Colors.white,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'เพิ่มเติม',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: blue_navy_n,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Image.asset(
+                                              'asset/images/arrow_n.png',
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Image.asset(
-                                        'asset/images/arrow_n.png',
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
                       ],
                     );
                     // return ListItemWidget.newsFirstCard(
@@ -799,53 +803,58 @@ class _ReportHomeState extends State<ReportHome> {
                     //   ),
                     // );
 
-                    return Column(
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CarouselSlider.builder(
-                            itemCount: 5,
-                            options: CarouselOptions(
-                              autoPlay: true,
-                              enlargeCenterPage: true,
-                              aspectRatio: 3.0,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _current = index;
-                                });
-                              },
-                            ),
-                            itemBuilder: (BuildContext context, int itemIndex,
-                                int pageViewIndex) {
-                              return ListItemWidget.newsCard_n(
-                                  context,
-                                  news[itemIndex]['title']['rendered'],
-                                  news[itemIndex]['jetpack_featured_media_url'],
-                                  news[itemIndex],
-                                  showDate(news[itemIndex]['date']));
-                            }),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        AnimatedSmoothIndicator(
-                          activeIndex: _current,
-                          count: news.length,
-                          effect: const ScrollingDotsEffect(
-                              spacing: 8.0,
-                              // radius: 4.0,
-                              dotWidth: 12.0,
-                              dotHeight: 12.0,
-                              paintStyle: PaintingStyle.fill,
-                              strokeWidth: 1.5,
-                              dotColor: Colors.black12,
-                              activeDotColor: Colors.white),
-                        ),
-                        const SizedBox(
-                          height: 100,
-                        ),
-                      ],
-                    );
+                    return news.isEmpty
+                        ? Container(
+                            height: 500,
+                          )
+                        : Column(
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              CarouselSlider.builder(
+                                  itemCount: 5,
+                                  options: CarouselOptions(
+                                    autoPlay: true,
+                                    enlargeCenterPage: true,
+                                    aspectRatio: 3.0,
+                                    onPageChanged: (index, reason) {
+                                      setState(() {
+                                        _current = index;
+                                      });
+                                    },
+                                  ),
+                                  itemBuilder: (BuildContext context,
+                                      int itemIndex, int pageViewIndex) {
+                                    return ListItemWidget.newsCard_n(
+                                        context,
+                                        news[itemIndex]['title']['rendered'],
+                                        news[itemIndex]
+                                            ['jetpack_featured_media_url'],
+                                        news[itemIndex],
+                                        showDate(news[itemIndex]['date']));
+                                  }),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              AnimatedSmoothIndicator(
+                                activeIndex: _current,
+                                count: news.length,
+                                effect: const ScrollingDotsEffect(
+                                    spacing: 8.0,
+                                    // radius: 4.0,
+                                    dotWidth: 12.0,
+                                    dotHeight: 12.0,
+                                    paintStyle: PaintingStyle.fill,
+                                    strokeWidth: 1.5,
+                                    dotColor: Colors.black12,
+                                    activeDotColor: Colors.white),
+                              ),
+                              const SizedBox(
+                                height: 100,
+                              ),
+                            ],
+                          );
                   }
 
                   return Container();
@@ -928,6 +937,15 @@ class _ReportHomeState extends State<ReportHome> {
                       widget.station,
                       user.role.slug,
                       accessToken),
+                  widget.role == 'MANAGER'? ButtonApp.buttonMain(context, 'คัดลอกเพื่อรายงาน กรณีล่าช้า',
+                      () async {
+                    Clipboard.setData(
+                            ClipboardData(text: "https://wma-clearwater.com/"))
+                        .then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("คัดลอก url สำเร็จ")));
+                    });
+                  }, true) : Container(),
 
                   Padding(
                     padding: const EdgeInsets.all(8.0),
