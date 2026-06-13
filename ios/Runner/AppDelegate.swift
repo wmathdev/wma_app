@@ -14,7 +14,7 @@ import GoogleMaps
           UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
     }
       
-        
+
     application.registerForRemoteNotifications()
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

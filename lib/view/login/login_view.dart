@@ -1080,12 +1080,12 @@ class _LoginState extends State<Login> {
                   loading = true;
                 });
 
-                String? token = await FirebaseMessaging.instance.getToken();
+
+                String? token = await FirebaseMessaging.instance.getAPNSToken();
 
                 final uaData = await userAgentData();
                 final header = await userAgentClientHintsHeader();
-                print(
-                    '{username : ${username.text} , password : ${password.text}, moti : $token, deviceToken : $_deviceId, uaData.package.appVersion : ${uaData.package.appVersion}');
+                
                 if (validate()) {
                   LocationPermission permission =
                       await Geolocator.checkPermission();
@@ -1102,6 +1102,9 @@ class _LoginState extends State<Login> {
                       uaData.platformVersion,
                       uaData.package.appVersion,
                       header.toString());
+print(
+                    '{username : ${username.text} , password : ${password.text}, moti : $token, deviceToken : $_deviceId, uaData.package.appVersion : ${uaData.package.appVersion}');
+
                   final SharedPreferences prefs = await _prefs;
                   if (result['success']) {
                     // print(result['data']['access_token']);
